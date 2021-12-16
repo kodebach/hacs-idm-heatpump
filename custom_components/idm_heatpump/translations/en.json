@@ -1,0 +1,30 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "IDM Heat Pump",
+                "description": "If you need help with the configuration have a look here: https://github.com/kodebach/hacs-idm-heatpump",
+                "data": {
+                    "display_name": "Display Name",
+                    "hostname": "Hostname/IP"
+                }
+            }
+        },
+        "error": {
+            "hostname": "Heat pump not found at given hostname/ip."
+        },
+        "abort": {
+            "hostname_in_use": "This hostname is already configured for a different IDM heat pump device."
+        }
+    },
+    "options": {
+        "step": {
+            "user": {
+                "data": {
+                    "binary_sensor": "Binary sensor enabled",
+                    "sensor": "Sensor enabled"
+                }
+            }
+        }
+    }
+}

@@ -1,14 +1,11 @@
-"""Constants for integration_blueprint."""
+"""Constants for idm_heatpump."""
 # Base component constants
-NAME = "Integration blueprint"
-DOMAIN = "integration_blueprint"
+NAME = "IDM Heat Pump"
+MANUFACTURER = "IDM"
+DOMAIN = "idm_heatpump"
 DOMAIN_DATA = f"{DOMAIN}_data"
 VERSION = "0.0.1"
-ATTRIBUTION = "Data provided by http://jsonplaceholder.typicode.com/"
-ISSUE_URL = "https://github.com/custom-components/integration_blueprint/issues"
-
-# Icons
-ICON = "mdi:format-quote-close"
+ISSUE_URL = "https://github.com/kodebach/hacs-idm-heatpump/issues"
 
 # Device classes
 BINARY_SENSOR_DEVICE_CLASS = "connectivity"
@@ -16,14 +13,13 @@ BINARY_SENSOR_DEVICE_CLASS = "connectivity"
 # Platforms
 BINARY_SENSOR = "binary_sensor"
 SENSOR = "sensor"
-SWITCH = "switch"
-PLATFORMS = [BINARY_SENSOR, SENSOR, SWITCH]
+PLATFORMS = [BINARY_SENSOR, SENSOR]
 
 
 # Configuration and options
 CONF_ENABLED = "enabled"
-CONF_USERNAME = "username"
-CONF_PASSWORD = "password"
+CONF_HOSTNAME = "hostname"
+CONF_DISPLAY_NAME = "display_name"
 
 # Defaults
 DEFAULT_NAME = DOMAIN

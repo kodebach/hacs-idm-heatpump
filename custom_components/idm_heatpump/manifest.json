@@ -1,0 +1,15 @@
+{
+  "domain": "idm_heatpump",
+  "name": "IDM heat pump",
+  "documentation": "https://github.com/kodebach/hacs-idm-heatpump",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/kodebach/hacs-idm-heatpump/issues",
+  "version": "0.1.0",
+  "config_flow": true,
+  "requirements": [
+    "pymodbus==2.5.3"
+  ],
+  "codeowners": [
+    "@kodebach"
+  ]
+}
