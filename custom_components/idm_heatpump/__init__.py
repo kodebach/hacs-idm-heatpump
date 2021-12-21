@@ -18,6 +18,7 @@ from .logger import LOGGER
 from .const import (
     CONF_HOSTNAME,
     DOMAIN,
+    OPT_REFRESH_INTERVAL,
     PLATFORMS,
     STARTUP_MESSAGE,
 )
@@ -38,15 +39,16 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
     heatpump = IdmHeatpump(hostname=hostname)
 
+    update_interval = timedelta(seconds=entry.options.get(OPT_REFRESH_INTERVAL, 30))
+    LOGGER.debug(
+        f"Setting up IDM heat pump at {hostname} with update_interval={update_interval}"
+    )
     coordinator = IdmHeatpumpDataUpdateCoordinator(
         hass,
         heatpump=heatpump,
-        update_interval=timedelta(seconds=30),  # TODO: configurable
+        update_interval=update_interval,
     )
-    await coordinator.async_refresh()
-
-    if not coordinator.last_update_success:
-        raise ConfigEntryNotReady
+    await coordinator.async_config_entry_first_refresh()
 
     hass.data[DOMAIN][entry.entry_id] = coordinator
 

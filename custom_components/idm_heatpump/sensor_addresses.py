@@ -6,6 +6,10 @@ from homeassistant.components.sensor import (
     SensorEntityDescription,
     SensorStateClass,
 )
+from homeassistant.components.binary_sensor import (
+    BinarySensorDeviceClass,
+    BinarySensorEntityDescription,
+)
 from homeassistant.const import (
     CURRENCY_EURO,
     ENERGY_KILO_WATT_HOUR,
@@ -15,7 +19,7 @@ from homeassistant.const import (
 )
 from pymodbus.payload import BinaryPayloadDecoder
 
-from .const import CONF_DISPLAY_NAME
+from .const import BINARY_SENSOR, CONF_DISPLAY_NAME
 
 
 @dataclass
@@ -37,6 +41,33 @@ class IdmSensorAddress(ABC):
 
     def entity_description(self, config_entry) -> SensorEntityDescription:
         """SensorEntityDescription for this sensor"""
+
+
+@dataclass
+class IdmBinarySensorAddress:
+    """Describes one of the binary sensors of an IDM heatpump"""
+
+    address: int
+    name: str
+    device_class: BinarySensorDeviceClass
+
+    @property
+    def size(self) -> int:
+        """Number of registers this sensor's value occupies"""
+        return 1
+
+    def decode(self, decoder: BinaryPayloadDecoder) -> bool:
+        """Decode this sensor's value"""
+        value = decoder.decode_16bit_uint()
+        return value == 1
+
+    def entity_description(self, config_entry) -> BinarySensorEntityDescription:
+        """SensorEntityDescription for this sensor"""
+        return BinarySensorEntityDescription(
+            key=self.name,
+            name=f"{config_entry.data.get(CONF_DISPLAY_NAME)}: {SENSOR_NAMES.get(self.address)}",
+            device_class=self.device_class,
+        )
 
 
 @dataclass
@@ -515,12 +546,6 @@ SENSOR_ADDRESSES: Dict[str, IdmSensorAddress] = {
             device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
         ),
-        # TODO
-        # 1099 - binary_sensor failure_heat_pump
-        # 1100 - binary_sensor failure_compressor_1
-        # 1101 - binary_sensor failure_compressor_2
-        # 1102 - binary_sensor failure_compressor_3
-        # 1103 - binary_sensor failure_compressor_4
         _WordSensorAddress(
             address=1104,
             name="load_charge_pump",
@@ -720,10 +745,6 @@ SENSOR_ADDRESSES: Dict[str, IdmSensorAddress] = {
             min_value=10,
             max_value=25,
         ),
-        # TODO
-        # 1710 - binary_sensor request_heating
-        # 1711 - binary_sensor request_cooling
-        # 1712 - binary_sensor request_water
         _FloatSensorAddress(
             address=1750,
             name="energy_heat_total",
@@ -885,6 +906,52 @@ SENSOR_ADDRESSES: Dict[str, IdmSensorAddress] = {
             device_class=SensorDeviceClass.POWER,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,
+        ),
+    ]
+}
+
+BINARY_SENSOR_ADDRESSES: Dict[str, IdmBinarySensorAddress] = {
+    sensor.name: sensor
+    for sensor in [
+        IdmBinarySensorAddress(
+            address=1099,
+            name="failure_heat_pump",
+            device_class=BinarySensorDeviceClass.PROBLEM,
+        ),
+        IdmBinarySensorAddress(
+            address=1100,
+            name="failure_compressor_1",
+            device_class=BinarySensorDeviceClass.PROBLEM,
+        ),
+        IdmBinarySensorAddress(
+            address=1101,
+            name="failure_compressor_2",
+            device_class=BinarySensorDeviceClass.PROBLEM,
+        ),
+        IdmBinarySensorAddress(
+            address=1102,
+            name="failure_compressor_3",
+            device_class=BinarySensorDeviceClass.PROBLEM,
+        ),
+        IdmBinarySensorAddress(
+            address=1103,
+            name="failure_compressor_4",
+            device_class=BinarySensorDeviceClass.PROBLEM,
+        ),
+        IdmBinarySensorAddress(
+            address=1710,
+            name="request_heating",
+            device_class=None,
+        ),
+        IdmBinarySensorAddress(
+            address=1711,
+            name="request_cooling",
+            device_class=None,
+        ),
+        IdmBinarySensorAddress(
+            address=1712,
+            name="request_water",
+            device_class=None,
         ),
     ]
 }

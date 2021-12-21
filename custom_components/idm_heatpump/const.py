@@ -7,9 +7,6 @@ DOMAIN_DATA = f"{DOMAIN}_data"
 VERSION = "0.0.1"
 ISSUE_URL = "https://github.com/kodebach/hacs-idm-heatpump/issues"
 
-# Device classes
-BINARY_SENSOR_DEVICE_CLASS = "connectivity"
-
 # Platforms
 BINARY_SENSOR = "binary_sensor"
 SENSOR = "sensor"
@@ -20,6 +17,8 @@ PLATFORMS = [BINARY_SENSOR, SENSOR]
 CONF_ENABLED = "enabled"
 CONF_HOSTNAME = "hostname"
 CONF_DISPLAY_NAME = "display_name"
+
+OPT_REFRESH_INTERVAL = "refresh_interval"
 
 # Defaults
 DEFAULT_NAME = DOMAIN

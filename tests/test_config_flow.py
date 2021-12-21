@@ -105,3 +105,6 @@ async def test_options_flow(hass):
 
     # Verify that the options were updated
     assert entry.options == {BINARY_SENSOR: True, SENSOR: False, SWITCH: True}
+
+
+# TODO: fix tests

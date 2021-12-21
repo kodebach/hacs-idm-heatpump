@@ -9,7 +9,7 @@ from .const import (
     CONF_HOSTNAME,
     CONF_DISPLAY_NAME,
     DOMAIN,
-    PLATFORMS,
+    OPT_REFRESH_INTERVAL,
 )
 
 
@@ -76,7 +76,7 @@ class IdmHeatpumpFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     async def _test_hostname(self, hostname):
         """Return true if hostname is valid."""
         try:
-            return IdmHeatpump.test_hostname(hostname)
+            return await IdmHeatpump.test_hostname(hostname)
         except Exception:  # pylint: disable=broad-except
             pass
         return False
@@ -104,8 +104,10 @@ class IdmHeatpumpOptionsFlowHandler(config_entries.OptionsFlow):
             step_id="user",
             data_schema=vol.Schema(
                 {
-                    vol.Required(x, default=self.options.get(x, True)): bool
-                    for x in sorted(PLATFORMS)
+                    vol.Required(
+                        OPT_REFRESH_INTERVAL,
+                        default=self.options.get(OPT_REFRESH_INTERVAL, 30),
+                    ): int
                 }
             ),
         )
@@ -113,5 +115,6 @@ class IdmHeatpumpOptionsFlowHandler(config_entries.OptionsFlow):
     async def _update_options(self):
         """Update config entry options."""
         return self.async_create_entry(
-            title=self.config_entry.data.get(CONF_DISPLAY_NAME), data=self.options
+            title=self.config_entry.data.get(CONF_DISPLAY_NAME),
+            data=self.options,
         )
