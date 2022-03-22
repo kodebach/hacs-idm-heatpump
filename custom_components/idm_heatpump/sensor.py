@@ -3,6 +3,13 @@ from homeassistant.components.sensor import SensorEntity
 from homeassistant.const import ATTR_FRIENDLY_NAME
 from homeassistant.core import ServiceCall
 from homeassistant.helpers import entity_platform
+from homeassistant.core import HomeAssistant
+from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
+import homeassistant.helpers.config_validation as cv
+from homeassistant.helpers.device_registry import DeviceEntryType
+from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
 from .sensor_addresses import (
     SENSOR_ADDRESSES,
@@ -13,10 +20,12 @@ from .const import DEFAULT_NAME, DOMAIN, SENSOR
 from .entity import IdmHeatpumpEntity
 
 
-async def async_setup_entry(hass, entry, async_add_devices):
+async def async_setup_entry(
+    hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
+) -> None:
     """Setup sensor platform."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_devices(
+    async_add_entities(
         [
             IdmHeatpumpSensor(
                 coordinator,
@@ -24,7 +33,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
                 sensor_name=name,
             )
             for name, _ in SENSOR_ADDRESSES.items()
-        ]
+        ],
     )
 
 

@@ -1,5 +1,5 @@
 """IdmHeatpumpEntity class"""
-from abc import abstractproperty
+from abc import abstractmethod
 from typing import Union
 from homeassistant.const import (
     ATTR_FRIENDLY_NAME,
@@ -16,11 +16,14 @@ from .const import CONF_DISPLAY_NAME, CONF_HOSTNAME, DOMAIN, MANUFACTURER
 
 
 class IdmHeatpumpEntity(CoordinatorEntity):
+    """IdmHeatpumpEntity"""
+
     def __init__(self, coordinator, config_entry):
         super().__init__(coordinator)
         self.config_entry = config_entry
 
-    @abstractproperty
+    @property
+    @abstractmethod
     def sensor_id(self) -> str:
         """Return the unique ID for this sensor"""
 

@@ -15,6 +15,8 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 from .idm_heatpump import IdmHeatpump
 from .logger import LOGGER
 
+import async_timeout
+
 from .const import (
     CONF_HOSTNAME,
     DOMAIN,
@@ -77,10 +79,11 @@ class IdmHeatpumpDataUpdateCoordinator(DataUpdateCoordinator):
 
     async def _async_update_data(self):
         """Update data via library."""
-        try:
-            return await self.heatpump.async_get_data()
-        except Exception as exception:
-            raise UpdateFailed() from exception
+        async with async_timeout.timeout(10):
+            try:
+                return await self.heatpump.async_get_data()
+            except Exception as exception:
+                raise UpdateFailed() from exception
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:

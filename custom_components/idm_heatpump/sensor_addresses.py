@@ -211,6 +211,7 @@ class _BitFieldSensorAddress(IdmSensorAddress):
 
 
 def heat_circuit_sensors(circuit) -> List[IdmSensorAddress]:
+    """data for heat circuit sensors"""
     offset = ord(circuit) - ord("a")
     return [
         _FloatSensorAddress(
@@ -252,7 +253,7 @@ def heat_circuit_sensors(circuit) -> List[IdmSensorAddress]:
                 5: "manual_cool",
             },
             device_class=None,
-            state_class=SensorStateClass.MEASUREMENT,
+            state_class=None,
         ),
         _FloatSensorAddress(
             address=1401 + offset * 2,
@@ -277,7 +278,7 @@ def heat_circuit_sensors(circuit) -> List[IdmSensorAddress]:
             name=f"curve_circuit_{circuit}",
             unit=None,
             device_class=None,
-            state_class=SensorStateClass.MEASUREMENT,
+            state_class=None,
             min_value=0.1,
             max_value=3.5,
         ),
@@ -344,14 +345,14 @@ def heat_circuit_sensors(circuit) -> List[IdmSensorAddress]:
                 2: "cooling",
             },
             device_class=None,
-            state_class=SensorStateClass.MEASUREMENT,
+            state_class=None,
         ),
         _UCharSensorAddress(
             address=1505 + offset,
             name=f"curve_offset_{circuit}",
             unit=PERCENTAGE,
             device_class=None,
-            state_class=SensorStateClass.MEASUREMENT,
+            state_class=None,
             min_value=0,
             max_value=30,
         ),
@@ -380,7 +381,7 @@ SENSOR_ADDRESSES: Dict[str, IdmSensorAddress] = {
             name="failure_id",
             unit="",
             device_class=None,
-            state_class=SensorStateClass.MEASUREMENT,
+            state_class=None,
         ),
         _EnumSensorAddress(
             address=1005,
@@ -393,7 +394,7 @@ SENSOR_ADDRESSES: Dict[str, IdmSensorAddress] = {
                 5: "heating_cooling_only",
             },
             device_class=None,
-            state_class=SensorStateClass.MEASUREMENT,
+            state_class=None,
         ),
         _EnumSensorAddress(
             address=1006,
@@ -405,7 +406,7 @@ SENSOR_ADDRESSES: Dict[str, IdmSensorAddress] = {
                 4: "grid_blocked_solar_on",
             },
             device_class=None,
-            state_class=SensorStateClass.MEASUREMENT,
+            state_class=None,
         ),
         _FloatSensorAddress(
             address=1008,
@@ -544,7 +545,7 @@ SENSOR_ADDRESSES: Dict[str, IdmSensorAddress] = {
                 8: "defrosting",
             },
             device_class=None,
-            state_class=SensorStateClass.MEASUREMENT,
+            state_class=None,
         ),
         _WordSensorAddress(
             address=1104,
@@ -848,7 +849,7 @@ SENSOR_ADDRESSES: Dict[str, IdmSensorAddress] = {
                 4: "source_pool",
             },
             device_class=None,
-            state_class=SensorStateClass.MEASUREMENT,
+            state_class=None,
         ),
         _FloatSensorAddress(
             address=1857,
@@ -881,7 +882,7 @@ SENSOR_ADDRESSES: Dict[str, IdmSensorAddress] = {
                 8: "source",
             },
             device_class=None,
-            state_class=SensorStateClass.MEASUREMENT,
+            state_class=None,
         ),
         _FloatSensorAddress(
             address=74,
