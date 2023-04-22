@@ -21,15 +21,15 @@ jobs:
         shell: "bash"
         run: |
           yq -i -o json '.version="${{ github.event.release.tag_name }}"' \
-            "${{ github.workspace }}/custom_components/idm_heatpumpt/manifest.json"
+            "${{ github.workspace }}/custom_components/idm_heatpump/manifest.json"
 
       - name: "ZIP the integration directory"
         shell: "bash"
         run: |
-          cd "${{ github.workspace }}/custom_components/idm_heatpumpt"
-          zip idm_heatpumpt.zip -r ./
+          cd "${{ github.workspace }}/custom_components/idm_heatpump"
+          zip idm_heatpump.zip -r ./
 
       - name: "Upload the ZIP file to the release"
         uses: softprops/action-gh-release@v0.1.15
         with:
-          files: ${{ github.workspace }}/custom_components/idm_heatpumpt/idm_heatpumpt.zip
+          files: ${{ github.workspace }}/custom_components/idm_heatpump/idm_heatpump.zip
