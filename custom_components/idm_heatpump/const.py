@@ -1,3 +1,5 @@
+from homeassistant.const import Platform
+
 """Constants for idm_heatpump."""
 # Base component constants
 NAME = "IDM Heat Pump"
@@ -8,8 +10,8 @@ VERSION = "0.0.1"
 ISSUE_URL = "https://github.com/kodebach/hacs-idm-heatpump/issues"
 
 # Platforms
-BINARY_SENSOR = "binary_sensor"
-SENSOR = "sensor"
+BINARY_SENSOR = Platform.BINARY_SENSOR
+SENSOR = Platform.SENSOR
 PLATFORMS = [BINARY_SENSOR, SENSOR]
 
 

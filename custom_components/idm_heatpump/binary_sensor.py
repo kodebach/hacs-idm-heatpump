@@ -13,7 +13,7 @@ from .entity import IdmHeatpumpEntity
 
 
 async def async_setup_entry(hass, entry, async_add_devices):
-    """Setup binary_sensor platform."""
+    """Set up binary_sensor platform."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
     async_add_devices(
         [
@@ -28,7 +28,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
 
 
 class IdmHeatpumpBinarySensor(IdmHeatpumpEntity, BinarySensorEntity):
-    """IDM heatpump binary sensor class"""
+    """IDM heatpump binary sensor class."""
 
     sensor_address: IdmBinarySensorAddress
 

@@ -1,14 +1,11 @@
-"""IdmHeatpumpEntity class"""
+"""IdmHeatpumpEntity class."""
 from abc import abstractmethod
-from typing import Union
 from homeassistant.const import (
-    ATTR_FRIENDLY_NAME,
     ATTR_IDENTIFIERS,
     ATTR_MANUFACTURER,
     ATTR_MODEL,
     ATTR_NAME,
 )
-from homeassistant.helpers.entity import generate_entity_id
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util import slugify
 
@@ -16,7 +13,7 @@ from .const import CONF_DISPLAY_NAME, CONF_HOSTNAME, DOMAIN, MANUFACTURER
 
 
 class IdmHeatpumpEntity(CoordinatorEntity):
-    """IdmHeatpumpEntity"""
+    """IdmHeatpumpEntity."""
 
     def __init__(self, coordinator, config_entry):
         super().__init__(coordinator)
@@ -25,7 +22,7 @@ class IdmHeatpumpEntity(CoordinatorEntity):
     @property
     @abstractmethod
     def sensor_id(self) -> str:
-        """Return the unique ID for this sensor"""
+        """Return the unique ID for this sensor."""
 
     @property
     def unique_id(self):
