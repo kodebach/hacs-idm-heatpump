@@ -1,4 +1,4 @@
-"""logger"""
+"""logger."""
 
 import logging
 

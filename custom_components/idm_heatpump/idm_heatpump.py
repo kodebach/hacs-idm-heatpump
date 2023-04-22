@@ -1,14 +1,12 @@
-"""Abstraction over the modbus interface of IDM heatpumps"""
+"""Abstraction over the modbus interface of IDM heatpumps."""
 
 import asyncio
 from dataclasses import dataclass
 import collections
 from typing import List, Union
 
-from pymodbus.client.asynchronous.async_io import (
-    AsyncioModbusTcpClient,
-    ModbusClientProtocol,
-)
+from pymodbus.client import AsyncModbusTcpClient
+from pymodbus.client.base import ModbusClientProtocol
 from pymodbus.exceptions import ConnectionException, ModbusException
 from pymodbus.payload import BinaryPayloadDecoder
 from pymodbus.constants import Endian
@@ -23,7 +21,7 @@ from custom_components.idm_heatpump.sensor_addresses import (
 
 
 class IdmHeatpump:
-    """Abstraction over the modbus interface of IDM heatpumps"""
+    """Abstraction over the modbus interface of IDM heatpumps."""
 
     @dataclass
     class _SensorGroup:
@@ -31,12 +29,12 @@ class IdmHeatpump:
         count: int
         sensors: List[IdmSensorAddress]
 
-    client: AsyncioModbusTcpClient
+    client: AsyncModbusTcpClient
     sensors: List[IdmHeatpumpSensor]
     sensor_groups: List[_SensorGroup] = []
 
     def __init__(self, hostname: str) -> None:
-        self.client = AsyncioModbusTcpClient(host=hostname)
+        self.client = AsyncModbusTcpClient(host=hostname)
 
         self.sensors: List[IdmSensorAddress] = sorted(
             SENSOR_ADDRESSES.values(), key=lambda s: s.address
@@ -71,17 +69,16 @@ class IdmHeatpump:
                 )
 
     async def _fetch_registers(self, group: _SensorGroup) -> ReadInputRegistersResponse:
-        protocol: ModbusClientProtocol = self.client.protocol
-        if protocol is None:
-            raise ConnectionException()
-
-        return await protocol.read_input_registers(
+        LOGGER.debug("reading registers %d", group.start)
+        return await self.client.read_input_registers(
             address=group.start,
             count=group.count,
-            unit=1,
+            slave=1,
         )
 
     async def _fetch_sensors(self, group: _SensorGroup) -> Union[dict, None]:
+        LOGGER.debug("fetching registers %d", group.start)
+
         try:
             try:
                 result = await self._fetch_registers(group)
@@ -94,12 +91,18 @@ class IdmHeatpump:
                     await self.client.connect()
                 result = await self._fetch_registers(group)
         except ModbusException as exception:
-            LOGGER.error("Failed to fetch registers for group %s: %s", group, exception)
+            LOGGER.error(
+                "Failed to fetch registers for group %d: %s", group.start, exception
+            )
             return None
 
         if result.isError():
-            LOGGER.error("Failed to fetch registers for group %s: %s", group, result)
+            LOGGER.error(
+                "Failed to fetch registers for group %d: %s", group.start, result
+            )
             return None
+
+        LOGGER.debug("got registers %d", group.start)
 
         try:
             decoder = BinaryPayloadDecoder.fromRegisters(
@@ -108,35 +111,47 @@ class IdmHeatpump:
                 wordorder=Endian.Little,
             )
 
+            LOGGER.debug("got decoder %d", group.start)
+
             data = {}
             for sensor in group.sensors:
                 data[sensor.name] = sensor.decode(decoder)
         except ModbusException as exception:
-            LOGGER.error("Failed to fetch registers for group %s: %s", group, exception)
+            LOGGER.error(
+                "Failed to fetch registers for group %d: %s", group.start, exception
+            )
             return None
+
+        LOGGER.debug("decoded registers %d", group.start)
 
         return data
 
     async def async_get_data(self):
-        """Get data from the heatpump"""
+        """Get data from the heatpump."""
 
         if not self.client.connected:
             await self.client.connect()
 
+        LOGGER.debug("connected")
+
         groups = await asyncio.gather(
             *[self._fetch_sensors(group) for group in self.sensor_groups]
         )
+
+        LOGGER.debug("got groups")
 
         data = {}
         for group in groups:
             if group is not None:
                 data.update(group)
 
+        LOGGER.debug("got data")
+
         return data
 
     @staticmethod
     async def test_hostname(hostname: str) -> bool:
-        """Check if the hostname is reachable via Modbus"""
+        """Check if the hostname is reachable via Modbus."""
         heatpump = IdmHeatpump(hostname)
         try:
             data = await heatpump.async_get_data()

@@ -19,12 +19,12 @@ from homeassistant.const import (
 )
 from pymodbus.payload import BinaryPayloadDecoder
 
-from .const import BINARY_SENSOR, CONF_DISPLAY_NAME
+from .const import CONF_DISPLAY_NAME
 
 
 @dataclass
 class IdmSensorAddress(ABC):
-    """Describes one of the sensors of an IDM heatpump"""
+    """Describes one of the sensors of an IDM heatpump."""
 
     address: int
     name: str
@@ -33,19 +33,19 @@ class IdmSensorAddress(ABC):
 
     @abstractproperty
     def size(self) -> int:
-        """Number of registers this sensor's value occupies"""
+        """Get number of registers this sensor's value occupies."""
 
     @abstractmethod
     def decode(self, decoder: BinaryPayloadDecoder):
-        """Decode this sensor's value"""
+        """Decode this sensor's value."""
 
     def entity_description(self, config_entry) -> SensorEntityDescription:
-        """SensorEntityDescription for this sensor"""
+        """Get SensorEntityDescription for this sensor."""
 
 
 @dataclass
 class IdmBinarySensorAddress:
-    """Describes one of the binary sensors of an IDM heatpump"""
+    """Describes one of the binary sensors of an IDM heatpump."""
 
     address: int
     name: str
@@ -53,16 +53,16 @@ class IdmBinarySensorAddress:
 
     @property
     def size(self) -> int:
-        """Number of registers this sensor's value occupies"""
+        """Number of registers this sensor's value occupies."""
         return 1
 
     def decode(self, decoder: BinaryPayloadDecoder) -> bool:
-        """Decode this sensor's value"""
+        """Decode this sensor's value."""
         value = decoder.decode_16bit_uint()
         return value == 1
 
     def entity_description(self, config_entry) -> BinarySensorEntityDescription:
-        """SensorEntityDescription for this sensor"""
+        """SensorEntityDescription for this sensor."""
         return BinarySensorEntityDescription(
             key=self.name,
             name=f"{config_entry.data.get(CONF_DISPLAY_NAME)}: {SENSOR_NAMES.get(self.address)}",
@@ -211,7 +211,7 @@ class _BitFieldSensorAddress(IdmSensorAddress):
 
 
 def heat_circuit_sensors(circuit) -> List[IdmSensorAddress]:
-    """data for heat circuit sensors"""
+    """Get data for heat circuit sensors."""
     offset = ord(circuit) - ord("a")
     return [
         _FloatSensorAddress(
@@ -476,7 +476,7 @@ SENSOR_ADDRESSES: Dict[str, IdmSensorAddress] = {
             unit=CURRENCY_EURO,
             scale=0.001,
             device_class=SensorDeviceClass.MONETARY,
-            state_class=SensorStateClass.MEASUREMENT,
+            state_class=None,
         ),
         _FloatSensorAddress(
             address=1050,

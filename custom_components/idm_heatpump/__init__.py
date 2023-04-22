@@ -1,5 +1,4 @@
-"""
-Custom integration to integrate idm_heatpump with Home Assistant.
+"""Custom integration to integrate idm_heatpump with Home Assistant.
 
 For more details about this integration, please refer to
 https://github.com/custom-components/idm_heatpump
@@ -9,7 +8,6 @@ from datetime import timedelta
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config, HomeAssistant
-from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .idm_heatpump import IdmHeatpump
@@ -50,18 +48,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         heatpump=heatpump,
         update_interval=update_interval,
     )
-    await coordinator.async_config_entry_first_refresh()
-
     hass.data[DOMAIN][entry.entry_id] = coordinator
 
-    for platform in PLATFORMS:
-        if entry.options.get(platform, True):
-            coordinator.platforms.append(platform)
-            hass.async_add_job(
-                hass.config_entries.async_forward_entry_setup(entry, platform)
-            )
+    await coordinator.async_config_entry_first_refresh()
 
-    entry.add_update_listener(async_reload_entry)
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    entry.async_on_unload(entry.add_update_listener(async_reload_entry))
+
     return True
 
 
@@ -83,6 +76,7 @@ class IdmHeatpumpDataUpdateCoordinator(DataUpdateCoordinator):
             try:
                 return await self.heatpump.async_get_data()
             except Exception as exception:
+                LOGGER.exception("error")
                 raise UpdateFailed() from exception
 
 
