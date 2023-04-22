@@ -14,28 +14,13 @@ Platform | Description
 -- | --
 `binary_sensor` | Show something `True` or `False`.
 `sensor` | Show info about the heat pump.
+
 ## Installation
 
-1. Using the tool of choice open the directory (folder) for your HA configuration (where you find `configuration.yaml`).
-2. If you do not have a `custom_components` directory (folder) there, you need to create it.
-3. In the `custom_components` directory (folder) create a new folder called `idm_heatpump`.
-4. Download _all_ the files from the `custom_components/idm_heatpump/` directory (folder) in this repository.
-5. Place the files you downloaded in the new directory (folder) you created.
-6. Restart Home Assistant
-7. In the HA UI go to "Configuration" -> "Integrations" click "+" and search for "IDM heat pump"
-
-Using your HA configuration directory (folder) as a starting point you should now also have this:
-
-```text
-custom_components/idm_heatpump/translations/en.json
-custom_components/idm_heatpump/__init__.py
-custom_components/idm_heatpump/api.py
-custom_components/idm_heatpump/binary_sensor.py
-custom_components/idm_heatpump/config_flow.py
-custom_components/idm_heatpump/const.py
-custom_components/idm_heatpump/manifest.json
-custom_components/idm_heatpump/sensor.py
-```
+1. Install [HACS](https://hacs.xyz/) and complete its setup.
+2. Open HACS and select "Integrations".
+3. Add `kodebach/hacs-idm-heatpump` with category "Integration" as a [Custom Repository](https://hacs.xyz/docs/faq/custom_repositories/).
+4. Select "IDM heat pump" from the list and click "Download".
 
 ## Configuration is done in the UI
 
