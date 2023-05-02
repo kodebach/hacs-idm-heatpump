@@ -22,6 +22,13 @@ Platform | Description
 3. Add `kodebach/hacs-idm-heatpump` with category "Integration" as a [Custom Repository](https://hacs.xyz/docs/faq/custom_repositories/).
 4. Select "IDM heat pump" from the list and click "Download".
 
+## Configuration of the heat pump
+
+The integration communicates with the heat pump via Modbus TCP.
+Before Home Assistant can connect to the heat pump you need to make sure "Modbus TCP" is enabled on the heat pump.
+
+> **Warning**: If "Modbus TCP" is not enabled, the integration will fail to connect, even if the web UI of the heat pump is reachable via it given IP or hostname.
+
 ## Configuration is done in the UI
 
 <!---->
