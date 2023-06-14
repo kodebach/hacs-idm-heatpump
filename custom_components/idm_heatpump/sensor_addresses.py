@@ -2,7 +2,6 @@
 
 from abc import ABC, abstractmethod, abstractproperty
 from dataclasses import dataclass
-from typing import Union
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntityDescription,
@@ -77,8 +76,8 @@ class _FloatSensorAddress(IdmSensorAddress):
     unit: str
     decimal_digits: int = 2
     scale: float = 1
-    min_value: Union[float, None] = None
-    max_value: Union[float, None] = 0xFFFE
+    min_value: float | None = None
+    max_value: float | None = 0xFFFE
 
     @property
     def size(self):
@@ -106,8 +105,8 @@ class _FloatSensorAddress(IdmSensorAddress):
 @dataclass
 class _UCharSensorAddress(IdmSensorAddress):
     unit: str
-    min_value: Union[int, None] = None
-    max_value: Union[int, None] = 0xFFFE
+    min_value: int | None = None
+    max_value: int | None = 0xFFFE
 
     @property
     def size(self):
@@ -135,8 +134,8 @@ class _UCharSensorAddress(IdmSensorAddress):
 @dataclass
 class _WordSensorAddress(IdmSensorAddress):
     unit: str
-    min_value: Union[int, None] = None
-    max_value: Union[int, None] = None
+    min_value: int | None = None
+    max_value: int | None = None
 
     @property
     def size(self):

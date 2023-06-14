@@ -3,7 +3,6 @@
 import asyncio
 from dataclasses import dataclass
 import collections
-from typing import Union
 
 from pymodbus.client import AsyncModbusTcpClient
 from pymodbus.exceptions import ConnectionException, ModbusException
@@ -76,7 +75,7 @@ class IdmHeatpump:
             slave=1,
         )
 
-    async def _fetch_sensors(self, group: _SensorGroup) -> Union[dict, None]:
+    async def _fetch_sensors(self, group: _SensorGroup) -> dict | None:
         LOGGER.debug("fetching registers %d", group.start)
 
         try:
