@@ -1,6 +1,8 @@
+"""Sensor addresses."""
+
 from abc import ABC, abstractmethod, abstractproperty
 from dataclasses import dataclass
-from typing import Dict, List, Union
+from typing import Union
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntityDescription,
@@ -161,7 +163,7 @@ class _WordSensorAddress(IdmSensorAddress):
 
 @dataclass
 class _EnumSensorAddress(IdmSensorAddress):
-    value_labels: Dict[int, str]
+    value_labels: dict[int, str]
 
     @property
     def size(self):
@@ -184,7 +186,7 @@ class _EnumSensorAddress(IdmSensorAddress):
 
 @dataclass
 class _BitFieldSensorAddress(IdmSensorAddress):
-    bit_labels: Dict[int, str]
+    bit_labels: dict[int, str]
 
     @property
     def size(self):
@@ -210,7 +212,7 @@ class _BitFieldSensorAddress(IdmSensorAddress):
         )
 
 
-def heat_circuit_sensors(circuit) -> List[IdmSensorAddress]:
+def heat_circuit_sensors(circuit) -> list[IdmSensorAddress]:
     """Get data for heat circuit sensors."""
     offset = ord(circuit) - ord("a")
     return [
@@ -359,7 +361,7 @@ def heat_circuit_sensors(circuit) -> List[IdmSensorAddress]:
     ]
 
 
-SENSOR_ADDRESSES: Dict[str, IdmSensorAddress] = {
+SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
     s.name: s
     for s in [
         _FloatSensorAddress(
@@ -911,7 +913,7 @@ SENSOR_ADDRESSES: Dict[str, IdmSensorAddress] = {
     ]
 }
 
-BINARY_SENSOR_ADDRESSES: Dict[str, IdmBinarySensorAddress] = {
+BINARY_SENSOR_ADDRESSES: dict[str, IdmBinarySensorAddress] = {
     sensor.name: sensor
     for sensor in [
         IdmBinarySensorAddress(
@@ -957,7 +959,7 @@ BINARY_SENSOR_ADDRESSES: Dict[str, IdmBinarySensorAddress] = {
     ]
 }
 
-SENSOR_NAMES: Dict[int, str] = {
+SENSOR_NAMES: dict[int, str] = {
     1000: "Außentemperatur",
     1002: "Gemittelte Außentemperatur",
     1004: "Aktuelle Störungsnummer",

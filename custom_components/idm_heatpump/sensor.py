@@ -35,6 +35,7 @@ class IdmHeatpumpSensor(IdmHeatpumpEntity, SensorEntity):
     sensor_address: IdmSensorAddress
 
     def __init__(self, coordinator, config_entry, sensor_name: str):
+        """Create sensor."""
         super().__init__(coordinator, config_entry)
         if sensor_name not in SENSOR_ADDRESSES:
             raise Exception(f"Sensor not found: {sensor_name}")
@@ -44,6 +45,7 @@ class IdmHeatpumpSensor(IdmHeatpumpEntity, SensorEntity):
 
     @property
     def sensor_id(self):
+        """Return sensor id."""
         return self.sensor_address.name
 
     @property

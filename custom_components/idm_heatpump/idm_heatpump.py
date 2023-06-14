@@ -3,10 +3,9 @@
 import asyncio
 from dataclasses import dataclass
 import collections
-from typing import List, Union
+from typing import Union
 
 from pymodbus.client import AsyncModbusTcpClient
-from pymodbus.client.base import ModbusClientProtocol
 from pymodbus.exceptions import ConnectionException, ModbusException
 from pymodbus.payload import BinaryPayloadDecoder
 from pymodbus.constants import Endian
@@ -27,16 +26,17 @@ class IdmHeatpump:
     class _SensorGroup:
         start: int
         count: int
-        sensors: List[IdmSensorAddress]
+        sensors: list[IdmSensorAddress]
 
     client: AsyncModbusTcpClient
-    sensors: List[IdmHeatpumpSensor]
-    sensor_groups: List[_SensorGroup] = []
+    sensors: list[IdmHeatpumpSensor]
+    sensor_groups: list[_SensorGroup] = []
 
     def __init__(self, hostname: str) -> None:
+        """Create heatpump."""
         self.client = AsyncModbusTcpClient(host=hostname)
 
-        self.sensors: List[IdmSensorAddress] = sorted(
+        self.sensors: list[IdmSensorAddress] = sorted(
             SENSOR_ADDRESSES.values(), key=lambda s: s.address
         )
 

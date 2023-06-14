@@ -16,6 +16,7 @@ class IdmHeatpumpEntity(CoordinatorEntity):
     """IdmHeatpumpEntity."""
 
     def __init__(self, coordinator, config_entry):
+        """Create entity."""
         super().__init__(coordinator)
         self.config_entry = config_entry
 
@@ -31,6 +32,7 @@ class IdmHeatpumpEntity(CoordinatorEntity):
 
     @property
     def device_info(self):
+        """Return device info."""
         return {
             ATTR_IDENTIFIERS: {(DOMAIN, self.config_entry.entry_id)},
             ATTR_NAME: self.config_entry.data.get(CONF_DISPLAY_NAME),
@@ -40,6 +42,7 @@ class IdmHeatpumpEntity(CoordinatorEntity):
 
     @property
     def extra_state_attributes(self):
+        """Return extra attributes."""
         return {
             "integration": DOMAIN,
         }

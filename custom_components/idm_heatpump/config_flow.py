@@ -56,6 +56,7 @@ class IdmHeatpumpFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     @staticmethod
     @callback
     def async_get_options_flow(config_entry):
+        """Return options flow."""
         return IdmHeatpumpOptionsFlowHandler(config_entry)
 
     async def _show_config_form(self, user_input):

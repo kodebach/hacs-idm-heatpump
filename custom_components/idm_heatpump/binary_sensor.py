@@ -33,6 +33,7 @@ class IdmHeatpumpBinarySensor(IdmHeatpumpEntity, BinarySensorEntity):
     sensor_address: IdmBinarySensorAddress
 
     def __init__(self, coordinator, config_entry, sensor_name: str):
+        """Create binary sensor."""
         super().__init__(coordinator, config_entry)
         if sensor_name not in BINARY_SENSOR_ADDRESSES:
             raise Exception(f"Binary Sensor not found: {sensor_name}")
@@ -42,6 +43,7 @@ class IdmHeatpumpBinarySensor(IdmHeatpumpEntity, BinarySensorEntity):
 
     @property
     def sensor_id(self):
+        """Return sensor id."""
         return self.sensor_address.name
 
     @property

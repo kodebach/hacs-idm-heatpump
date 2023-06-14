@@ -1,6 +1,7 @@
+"""Constants for idm_heatpump."""
+
 from homeassistant.const import Platform
 
-"""Constants for idm_heatpump."""
 # Base component constants
 NAME = "IDM Heat Pump"
 MANUFACTURER = "IDM"
