@@ -1,7 +1,7 @@
 {
     "name": "IDM heat pump",
     "hacs": "1.25.0",
-    "homeassistant": "2023.4.6",
+    "homeassistant": "2023.7.3",
     "hide_default_branch": true,
     "render_readme": true,
     "zip_release": true

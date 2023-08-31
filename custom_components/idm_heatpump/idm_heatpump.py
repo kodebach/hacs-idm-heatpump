@@ -106,8 +106,8 @@ class IdmHeatpump:
         try:
             decoder = BinaryPayloadDecoder.fromRegisters(
                 result.registers,
-                byteorder=Endian.Big,
-                wordorder=Endian.Little,
+                byteorder=Endian.BIG,
+                wordorder=Endian.LITTLE,
             )
 
             LOGGER.debug("got decoder %d", group.start)
