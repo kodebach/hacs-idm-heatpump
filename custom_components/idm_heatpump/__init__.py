@@ -10,13 +10,14 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config, HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
+import async_timeout
+
 from .idm_heatpump import IdmHeatpump
 from .logger import LOGGER
 
-import async_timeout
-
 from .const import (
     CONF_HOSTNAME,
+    DEFAULT_REFRESH_INTERVAL,
     DOMAIN,
     OPT_REFRESH_INTERVAL,
     PLATFORMS,
@@ -39,7 +40,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
     heatpump = IdmHeatpump(hostname=hostname)
 
-    update_interval = timedelta(seconds=entry.options.get(OPT_REFRESH_INTERVAL, 300))
+    update_interval = timedelta(seconds=entry.options.get(
+        OPT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL))
     LOGGER.debug(
         f"Setting up IDM heat pump at {hostname} with update_interval={update_interval}"
     )

@@ -1,6 +1,7 @@
 """Adds config flow for Blueprint."""
 from homeassistant import config_entries
 from homeassistant.core import callback
+from homeassistant.helpers import config_validation as cv
 import voluptuous as vol
 
 from .idm_heatpump import IdmHeatpump
@@ -8,7 +9,9 @@ from .idm_heatpump import IdmHeatpump
 from .const import (
     CONF_HOSTNAME,
     CONF_DISPLAY_NAME,
+    DEFAULT_REFRESH_INTERVAL,
     DOMAIN,
+    MIN_REFRESH_INTERVAL,
     OPT_REFRESH_INTERVAL,
 )
 
@@ -107,8 +110,11 @@ class IdmHeatpumpOptionsFlowHandler(config_entries.OptionsFlow):
                 {
                     vol.Required(
                         OPT_REFRESH_INTERVAL,
-                        default=self.options.get(OPT_REFRESH_INTERVAL, 30),
-                    ): int
+                        default=self.options.get(
+                            OPT_REFRESH_INTERVAL,
+                            DEFAULT_REFRESH_INTERVAL
+                        ),
+                    ): vol.All(cv.positive_int, vol.Clamp(min=MIN_REFRESH_INTERVAL)),
                 }
             ),
         )

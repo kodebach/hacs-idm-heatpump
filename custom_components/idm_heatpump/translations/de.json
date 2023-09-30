@@ -1,0 +1,29 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "IDM Wärmepumpe",
+                "description": "Für Hilfe mit der Konfiguration: https://github.com/kodebach/hacs-idm-heatpump",
+                "data": {
+                    "display_name": "Anzeigename",
+                    "hostname": "Hostname/IP"
+                }
+            }
+        },
+        "error": {
+            "hostname": "Wärmepumpe mit unter hostname/ip nicht gefunden."
+        },
+        "abort": {
+            "hostname_in_use": "Dieser Hostname ist bereits für eine andere IDM Wärmepumpe in Verwendung."
+        }
+    },
+    "options": {
+        "step": {
+            "user": {
+                "data": {
+                    "refresh_interval": "Aktualisierungsinterval (s)"
+                }
+            }
+        }
+    }
+}

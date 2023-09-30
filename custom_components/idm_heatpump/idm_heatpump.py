@@ -41,12 +41,13 @@ class IdmHeatpump:
 
         addresses = [s.address for s in self.sensors]
         duplicate_addresses = [
-            address
+            [s for s in self.sensors if s.address == address]
             for address, count in collections.Counter(addresses).items()
             if count > 1
         ]
         if len(duplicate_addresses) > 0:
-            raise Exception(f"duplicate address(es) detected: {duplicate_addresses}")
+            raise Exception(
+                f"duplicate address(es) detected: {duplicate_addresses}")
 
         for sensor in self.sensors:
             last_address = (
@@ -57,7 +58,8 @@ class IdmHeatpump:
             if len(self.sensor_groups) == 0 or sensor.address != last_address:
                 self.sensor_groups.append(
                     IdmHeatpump._SensorGroup(
-                        start=sensor.address, count=sensor.size, sensors=[sensor]
+                        start=sensor.address, count=sensor.size, sensors=[
+                            sensor]
                     )
                 )
             else:
