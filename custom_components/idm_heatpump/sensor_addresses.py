@@ -284,7 +284,7 @@ def heat_circuit_sensors(circuit) -> list[IdmSensorAddress]:
             max_value=3.5,
         ),
         _UCharSensorAddress(
-            address=1442 + offset * 2,
+            address=1442 + offset,
             name=f"temp_threshold_heating_circuit_{circuit}",
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
@@ -293,7 +293,7 @@ def heat_circuit_sensors(circuit) -> list[IdmSensorAddress]:
             max_value=50,
         ),
         _UCharSensorAddress(
-            address=1449 + offset * 2,
+            address=1449 + offset,
             name=f"temp_flow_target_constant_circuit_{circuit}",
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
