@@ -2,7 +2,8 @@
 
 from abc import ABC, abstractmethod, abstractproperty
 from dataclasses import dataclass
-from typing import Callable, TypeVar
+from typing import TypeVar
+from collections.abc import Callable
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntityDescription,
