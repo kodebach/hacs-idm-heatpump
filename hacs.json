@@ -4,5 +4,6 @@
     "homeassistant": "2023.7.3",
     "hide_default_branch": true,
     "render_readme": true,
+    "filename": "idm_heatpump.zip",
     "zip_release": true
 }
