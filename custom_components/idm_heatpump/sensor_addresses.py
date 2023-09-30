@@ -717,9 +717,9 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         *heat_circuit_sensors("b"),
         *heat_circuit_sensors("c"),
         *heat_circuit_sensors("d"),
-        # *heat_circuit_sensors("e"),
-        # *heat_circuit_sensors("f"),
-        # *heat_circuit_sensors("g"),
+        *heat_circuit_sensors("e"),
+        *heat_circuit_sensors("f"),
+        *heat_circuit_sensors("g"),
         _FloatSensorAddress(
             address=1392,
             name="humidity",
