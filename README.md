@@ -8,12 +8,16 @@
 
 _Component to integrate with [IDM heat pumps][idm_heatpump]._
 
+> **Note**:
+> Your heat pump needs to have the Navigator 2.0 control unit.
+> Other versions of the control unit may not work correctly.
+
 **This component will set up the following platforms.**
 
 Platform | Description
 -- | --
-`binary_sensor` | Show something `True` or `False`.
-`sensor` | Show info about the heat pump.
+`binary_sensor` | Show on/off-type info from the heat pump.
+`sensor` | Show other info from the heat pump.
 
 ## Installation
 
