@@ -7,7 +7,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util import slugify
 
 from .coordinator import IdmHeatpumpDataUpdateCoordinator
-from .const import CONF_DISPLAY_NAME, CONF_HOSTNAME, DOMAIN, MANUFACTURER, MODEL
+from .const import CONF_DISPLAY_NAME, CONF_HOSTNAME, DOMAIN, MANUFACTURER, MODEL_MAIN, MODEL_ZONE
 from .sensor_addresses import BaseSensorAddress
 
 
@@ -40,14 +40,26 @@ class IdmHeatpumpEntity(CoordinatorEntity):
     @property
     def device_info(self) -> DeviceInfo:
         """Return device info."""
+        zone = self.sensor_address.zone_id
+        if zone is not None:
+            return DeviceInfo(
+                identifiers={
+                    (DOMAIN, f"{self.config_entry.entry_id}_zone_{zone+1}")
+                },
+                name=f"{self.config_entry.data.get(CONF_DISPLAY_NAME)} Zone {zone+1}",
+                model=MODEL_ZONE,
+                manufacturer=MANUFACTURER,
+                via_device=(DOMAIN, self.config_entry.entry_id),
+            )
+
         return DeviceInfo(
             identifiers={(DOMAIN, self.config_entry.entry_id)},
             name=self.config_entry.data.get(CONF_DISPLAY_NAME),
-            model=MODEL,
+            model=MODEL_MAIN,
             manufacturer=MANUFACTURER,
         )
 
-    @property
+    @ property
     def extra_state_attributes(self):
         """Return extra attributes."""
         return {

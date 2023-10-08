@@ -3,6 +3,7 @@ from datetime import timedelta
 from typing import Any
 from homeassistant.config_entries import ConfigFlow, ConfigEntry, OptionsFlow
 from homeassistant.core import callback
+from homeassistant.config import cv
 from homeassistant.helpers.selector import selector
 import voluptuous as vol
 
@@ -15,16 +16,21 @@ from .const import (
     CONF_DISPLAY_NAME,
     DEFAULT_REFRESH_INTERVAL,
     DOMAIN,
+    MAX_ROOM_COUNT,
+    MAX_ZONE_COUNT,
     MIN_REFRESH_INTERVAL,
     OPT_HEATING_CIRCUITS,
     OPT_REFRESH_INTERVAL,
+    OPT_ZONE_COUNT,
+    OPT_ZONE_ROOM_9_RELAY,
+    OPT_ZONE_ROOM_COUNT,
 )
 
 
 class IdmHeatpumpFlowHandler(ConfigFlow, domain=DOMAIN):
     """Config flow for IDM heat pump."""
 
-    VERSION = 1
+    VERSION = 2
 
     def __init__(self):
         """Initialize."""
@@ -69,9 +75,23 @@ class IdmHeatpumpFlowHandler(ConfigFlow, domain=DOMAIN):
         )
 
     async def async_step_options(self, user_input=None):
-        """Step to configure options during setup."""
+        """Step to configure options."""
 
-        result = _async_step_options(self._options, user_input)
+        result = _async_step_base_options(self._options, user_input)
+        if result is None:
+            return await self.async_step_zones(user_input)
+
+        [schema, errors] = result
+
+        return self.async_show_form(
+            step_id="options",
+            data_schema=schema,
+            errors=errors,
+        )
+
+    async def async_step_zones(self, user_input=None):
+        """Handle a flow for zones."""
+        result = _async_step_zone_options(self._options, user_input)
         if result is None:
             return self.async_create_entry(
                 title=self._data[CONF_DISPLAY_NAME],
@@ -82,7 +102,7 @@ class IdmHeatpumpFlowHandler(ConfigFlow, domain=DOMAIN):
         [schema, errors] = result
 
         return self.async_show_form(
-            step_id="options",
+            step_id="zones",
             data_schema=schema,
             errors=errors,
         )
@@ -112,27 +132,41 @@ class IdmHeatpumpOptionsFlowHandler(OptionsFlow):
 
     async def async_step_init(self, user_input=None):
         """Manage the options."""
-        return await self.async_step_user(user_input)
+        return await self.async_step_options(user_input)
 
-    async def async_step_user(self, user_input=None):
-        """Handle a flow initialized by the user."""
-        result = _async_step_options(self.options, user_input)
+    async def async_step_options(self, user_input=None):
+        """Step to configure options."""
+        result = _async_step_base_options(self.options, user_input)
+        if result is None:
+            return await self.async_step_zones(user_input)
+
+        [schema, errors] = result
+
+        return self.async_show_form(
+            step_id="options",
+            data_schema=schema,
+            errors=errors,
+        )
+
+    async def async_step_zones(self, user_input=None):
+        """Handle a flow for zones."""
+        result = _async_step_zone_options(self.options, user_input)
         if result is None:
             return self.async_create_entry(
-                title=self.config_entry.data.get(CONF_DISPLAY_NAME),
+                title=f"{self.config_entry.data.get(CONF_DISPLAY_NAME)} - Zones",
                 data=self.options,
             )
 
         [schema, errors] = result
 
         return self.async_show_form(
-            step_id="user",
+            step_id="zones",
             data_schema=schema,
             errors=errors,
         )
 
 
-def _async_step_options(
+def _async_step_base_options(
     options: dict[str, Any],
     user_input=None,
 ) -> tuple[vol.Schema, dict[str, str]] | None:
@@ -158,6 +192,16 @@ def _async_step_options(
                 }}),
                 vol.Length(min=1, msg="Select at least one"),
             ),
+            vol.Required(
+                OPT_ZONE_COUNT,
+                default=options.get(OPT_ZONE_COUNT, 0),
+            ): vol.All(
+                selector({"number": {
+                    "min": 0,
+                    "max": MAX_ZONE_COUNT,
+                }}),
+                cv.positive_int,
+            )
         }
     )
 
@@ -168,6 +212,44 @@ def _async_step_options(
 
         if timedelta(**options[OPT_REFRESH_INTERVAL]) < timedelta(**MIN_REFRESH_INTERVAL):
             errors[OPT_REFRESH_INTERVAL] = "min_refresh_interval"
+
+        if len(errors) == 0:
+            return None
+
+    return [schema, errors]
+
+
+def _async_step_zone_options(
+    options: dict[str, Any],
+    user_input=None,
+) -> tuple[vol.Schema, dict[str, str]] | None:
+    zone_count: int = options[OPT_ZONE_COUNT]
+
+    schema = vol.Schema(
+        dict(field for zone in range(zone_count) for field in [
+            (vol.Required(
+                OPT_ZONE_ROOM_COUNT[zone],
+                default=options.get(OPT_ZONE_ROOM_COUNT[zone], 1),
+            ), vol.All(
+                selector({"number": {
+                    "min": 1,
+                    "max": MAX_ROOM_COUNT,
+                }}),
+                cv.positive_int,
+            )),
+            (vol.Required(
+                OPT_ZONE_ROOM_9_RELAY[zone],
+                default=options.get(OPT_ZONE_ROOM_9_RELAY[zone], False),
+            ), bool),
+        ])
+    )
+
+    errors = {}
+
+    if user_input is not None and all(
+        OPT_ZONE_ROOM_COUNT[zone] in user_input for zone in range(zone_count)
+    ):
+        options.update(user_input)
 
         if len(errors) == 0:
             return None

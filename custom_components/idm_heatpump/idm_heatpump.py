@@ -16,6 +16,7 @@ from .sensor_addresses import (
     SENSOR_ADDRESSES,
     HeatingCircuit,
     BaseSensorAddress,
+    ZoneModule,
     heating_circuit_sensors,
 )
 
@@ -33,7 +34,7 @@ class IdmHeatpump:
     sensors: list[BaseSensorAddress]
     sensor_groups: list[_SensorGroup] = []
 
-    def __init__(self, hostname: str, circuits: list[HeatingCircuit]) -> None:
+    def __init__(self, hostname: str, circuits: list[HeatingCircuit], zones: list[ZoneModule]) -> None:
         """Create heatpump."""
         self.client = AsyncModbusTcpClient(host=hostname)
 
@@ -41,7 +42,9 @@ class IdmHeatpump:
             [
                 *SENSOR_ADDRESSES.values(),
                 *BINARY_SENSOR_ADDRESSES.values(),
-                *[s for c in circuits for s in heating_circuit_sensors(HeatingCircuit[c])],
+                *[s for c in circuits for s in heating_circuit_sensors(c)],
+                *[s for zone in zones for s in zone.sensors()],
+                *[s for zone in zones for s in zone.binary_sensors()],
             ],
             key=lambda s: s.address,
         )
@@ -160,7 +163,7 @@ class IdmHeatpump:
     @staticmethod
     async def test_hostname(hostname: str) -> bool:
         """Check if the hostname is reachable via Modbus."""
-        heatpump = IdmHeatpump(hostname, [])
+        heatpump = IdmHeatpump(hostname, circuits=[], zones=[])
         try:
             data = await heatpump.async_get_data()
             return len(data) > 0

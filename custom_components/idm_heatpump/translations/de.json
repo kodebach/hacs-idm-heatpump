@@ -12,7 +12,32 @@
             "options": {
                 "data": {
                     "refresh_interval": "Aktualisierungsinterval",
-                    "heating_circuits": "Heizkreise"
+                    "heating_circuits": "Heizkreise",
+                    "zone_count": "Anzahl Zonenmodule"
+                }
+            },
+            "zones": {
+                "data": {
+                    "zone_0_room_count": "Zone 1: Anzahl Räume",
+                    "zone_1_room_count": "Zone 2: Anzahl Räume",
+                    "zone_2_room_count": "Zone 3: Anzahl Räume",
+                    "zone_3_room_count": "Zone 4: Anzahl Räume",
+                    "zone_4_room_count": "Zone 5: Anzahl Räume",
+                    "zone_5_room_count": "Zone 6: Anzahl Räume",
+                    "zone_6_room_count": "Zone 7: Anzahl Räume",
+                    "zone_7_room_count": "Zone 8: Anzahl Räume",
+                    "zone_8_room_count": "Zone 9: Anzahl Räume",
+                    "zone_9_room_count": "Zone 10: Anzahl Räume",
+                    "zone_0_room_9_relay": "Zone 1: Raum 9 Relais",
+                    "zone_1_room_9_relay": "Zone 2: Raum 9 Relais",
+                    "zone_2_room_9_relay": "Zone 3: Raum 9 Relais",
+                    "zone_3_room_9_relay": "Zone 4: Raum 9 Relais",
+                    "zone_4_room_9_relay": "Zone 5: Raum 9 Relais",
+                    "zone_5_room_9_relay": "Zone 6: Raum 9 Relais",
+                    "zone_6_room_9_relay": "Zone 7: Raum 9 Relais",
+                    "zone_7_room_9_relay": "Zone 8: Raum 9 Relais",
+                    "zone_8_room_9_relay": "Zone 9: Raum 9 Relais",
+                    "zone_9_room_9_relay": "Zone 10: Raum 9 Relais"
                 }
             }
         },
@@ -26,10 +51,35 @@
     },
     "options": {
         "step": {
-            "user": {
+            "options": {
                 "data": {
                     "refresh_interval": "Aktualisierungsinterval",
-                    "heating_circuits": "Heizkreise"
+                    "heating_circuits": "Heizkreise",
+                    "zone_count": "Anzahl Zonenmodule"
+                }
+            },
+            "zones": {
+                "data": {
+                    "zone_0_room_count": "Zone 1: Anzahl Räume",
+                    "zone_1_room_count": "Zone 2: Anzahl Räume",
+                    "zone_2_room_count": "Zone 3: Anzahl Räume",
+                    "zone_3_room_count": "Zone 4: Anzahl Räume",
+                    "zone_4_room_count": "Zone 5: Anzahl Räume",
+                    "zone_5_room_count": "Zone 6: Anzahl Räume",
+                    "zone_6_room_count": "Zone 7: Anzahl Räume",
+                    "zone_7_room_count": "Zone 8: Anzahl Räume",
+                    "zone_8_room_count": "Zone 9: Anzahl Räume",
+                    "zone_9_room_count": "Zone 10: Anzahl Räume",
+                    "zone_0_room_9_relay": "Zone 1: Raum 9 Relais",
+                    "zone_1_room_9_relay": "Zone 2: Raum 9 Relais",
+                    "zone_2_room_9_relay": "Zone 3: Raum 9 Relais",
+                    "zone_3_room_9_relay": "Zone 4: Raum 9 Relais",
+                    "zone_4_room_9_relay": "Zone 5: Raum 9 Relais",
+                    "zone_5_room_9_relay": "Zone 6: Raum 9 Relais",
+                    "zone_6_room_9_relay": "Zone 7: Raum 9 Relais",
+                    "zone_7_room_9_relay": "Zone 8: Raum 9 Relais",
+                    "zone_8_room_9_relay": "Zone 9: Raum 9 Relais",
+                    "zone_9_room_9_relay": "Zone 10: Raum 9 Relais"
                 }
             }
         },

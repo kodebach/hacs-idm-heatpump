@@ -12,7 +12,32 @@
             "options": {
                 "data": {
                     "refresh_interval": "Refresh Interval",
-                    "heating_circuits": "Heating Circuits"
+                    "heating_circuits": "Heating Circuits",
+                    "zone_count": "Number of zone modules"
+                }
+            },
+            "zones": {
+                "data": {
+                    "zone_0_room_count": "Zone 1: Number of rooms",
+                    "zone_1_room_count": "Zone 2: Number of rooms",
+                    "zone_2_room_count": "Zone 3: Number of rooms",
+                    "zone_3_room_count": "Zone 4: Number of rooms",
+                    "zone_4_room_count": "Zone 5: Number of rooms",
+                    "zone_5_room_count": "Zone 6: Number of rooms",
+                    "zone_6_room_count": "Zone 7: Number of rooms",
+                    "zone_7_room_count": "Zone 8: Number of rooms",
+                    "zone_8_room_count": "Zone 9: Number of rooms",
+                    "zone_9_room_count": "Zone 10: Number of rooms",
+                    "zone_0_room_9_relay": "Zone 1: Room 9 Relay",
+                    "zone_1_room_9_relay": "Zone 2: Room 9 Relay",
+                    "zone_2_room_9_relay": "Zone 3: Room 9 Relay",
+                    "zone_3_room_9_relay": "Zone 4: Room 9 Relay",
+                    "zone_4_room_9_relay": "Zone 5: Room 9 Relay",
+                    "zone_5_room_9_relay": "Zone 6: Room 9 Relay",
+                    "zone_6_room_9_relay": "Zone 7: Room 9 Relay",
+                    "zone_7_room_9_relay": "Zone 8: Room 9 Relay",
+                    "zone_8_room_9_relay": "Zone 9: Room 9 Relay",
+                    "zone_9_room_9_relay": "Zone 10: Room 9 Relay"
                 }
             }
         },
@@ -26,10 +51,35 @@
     },
     "options": {
         "step": {
-            "user": {
+            "options": {
                 "data": {
                     "refresh_interval": "Refresh Interval",
-                    "heating_circuits": "Heating Circuits"
+                    "heating_circuits": "Heating Circuits",
+                    "zone_count": "Number of zone modules"
+                }
+            },
+            "zones": {
+                "data": {
+                    "zone_0_room_count": "Zone 1: Number of rooms",
+                    "zone_1_room_count": "Zone 2: Number of rooms",
+                    "zone_2_room_count": "Zone 3: Number of rooms",
+                    "zone_3_room_count": "Zone 4: Number of rooms",
+                    "zone_4_room_count": "Zone 5: Number of rooms",
+                    "zone_5_room_count": "Zone 6: Number of rooms",
+                    "zone_6_room_count": "Zone 7: Number of rooms",
+                    "zone_7_room_count": "Zone 8: Number of rooms",
+                    "zone_8_room_count": "Zone 9: Number of rooms",
+                    "zone_9_room_count": "Zone 10: Number of rooms",
+                    "zone_0_room_9_relay": "Zone 1: Room 9 Relay",
+                    "zone_1_room_9_relay": "Zone 2: Room 9 Relay",
+                    "zone_2_room_9_relay": "Zone 3: Room 9 Relay",
+                    "zone_3_room_9_relay": "Zone 4: Room 9 Relay",
+                    "zone_4_room_9_relay": "Zone 5: Room 9 Relay",
+                    "zone_5_room_9_relay": "Zone 6: Room 9 Relay",
+                    "zone_6_room_9_relay": "Zone 7: Room 9 Relay",
+                    "zone_7_room_9_relay": "Zone 8: Room 9 Relay",
+                    "zone_8_room_9_relay": "Zone 9: Room 9 Relay",
+                    "zone_9_room_9_relay": "Zone 10: Room 9 Relay"
                 }
             }
         },
