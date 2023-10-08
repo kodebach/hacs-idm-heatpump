@@ -8,7 +8,6 @@ from datetime import timedelta
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config, HomeAssistant
 from homeassistant.components import persistent_notification
-from homeassistant.helpers import device_registry as dr
 
 from .coordinator import IdmHeatpumpDataUpdateCoordinator
 from .idm_heatpump import IdmHeatpump
@@ -19,7 +18,6 @@ from .const import (
     CONF_HOSTNAME,
     DEFAULT_REFRESH_INTERVAL,
     DOMAIN,
-    MAX_ZONE_COUNT,
     OPT_HEATING_CIRCUITS,
     OPT_REFRESH_INTERVAL,
     OPT_ZONE_COUNT,
