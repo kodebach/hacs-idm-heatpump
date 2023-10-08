@@ -1,5 +1,8 @@
 """Binary sensor platform for idm_heatpump."""
 from homeassistant.components.binary_sensor import BinarySensorEntity
+from homeassistant.core import HomeAssistant
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from custom_components.idm_heatpump.sensor_addresses import (
     BINARY_SENSOR_ADDRESSES,
@@ -12,10 +15,14 @@ from .const import (
 from .entity import IdmHeatpumpEntity
 
 
-async def async_setup_entry(hass, entry, async_add_devices):
+async def async_setup_entry(
+    hass: HomeAssistant,
+    entry: ConfigEntry,
+    async_add_entities: AddEntitiesCallback,
+):
     """Set up binary_sensor platform."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_devices(
+    async_add_entities(
         [
             IdmHeatpumpBinarySensor(
                 coordinator,
@@ -39,7 +46,9 @@ class IdmHeatpumpBinarySensor(IdmHeatpumpEntity, BinarySensorEntity):
             raise Exception(f"Binary Sensor not found: {sensor_name}")
 
         self.sensor_address = BINARY_SENSOR_ADDRESSES[sensor_name]
-        self.entity_description = self.sensor_address.entity_description(config_entry)
+        self.entity_description = self.sensor_address.entity_description(
+            config_entry
+        )
 
     @property
     def sensor_id(self):
@@ -47,6 +56,6 @@ class IdmHeatpumpBinarySensor(IdmHeatpumpEntity, BinarySensorEntity):
         return self.sensor_address.name
 
     @property
-    def native_value(self):
+    def is_on(self):
         """Return the state of the sensor."""
         return self.coordinator.data.get(self.sensor_address.name)

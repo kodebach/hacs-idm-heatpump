@@ -9,10 +9,12 @@ from pymodbus.exceptions import ConnectionException, ModbusException
 from pymodbus.payload import BinaryPayloadDecoder
 from pymodbus.constants import Endian
 from pymodbus.register_read_message import ReadInputRegistersResponse
+from custom_components.idm_heatpump.binary_sensor import IdmHeatpumpBinarySensor
 
 from custom_components.idm_heatpump.logger import LOGGER
 from custom_components.idm_heatpump.sensor import IdmHeatpumpSensor
 from custom_components.idm_heatpump.sensor_addresses import (
+    BINARY_SENSOR_ADDRESSES,
     SENSOR_ADDRESSES,
     IdmSensorAddress,
 )
@@ -28,7 +30,7 @@ class IdmHeatpump:
         sensors: list[IdmSensorAddress]
 
     client: AsyncModbusTcpClient
-    sensors: list[IdmHeatpumpSensor]
+    sensors: list[IdmSensorAddress]
     sensor_groups: list[_SensorGroup] = []
 
     def __init__(self, hostname: str) -> None:
@@ -36,10 +38,10 @@ class IdmHeatpump:
         self.client = AsyncModbusTcpClient(host=hostname)
 
         self.sensors: list[IdmSensorAddress] = sorted(
-            SENSOR_ADDRESSES.values(), key=lambda s: s.address
+            [*SENSOR_ADDRESSES.values(), *BINARY_SENSOR_ADDRESSES.values()],
+            key=lambda s: s.address,
         )
-
-        addresses = [s.address for s in self.sensors]
+        addresses = sorted([s.address for s in self.sensors])
         duplicate_addresses = [
             [s for s in self.sensors if s.address == address]
             for address, count in collections.Counter(addresses).items()
