@@ -8,6 +8,12 @@
                     "display_name": "Anzeigename",
                     "hostname": "Hostname/IP"
                 }
+            },
+            "options": {
+                "data": {
+                    "refresh_interval": "Aktualisierungsinterval",
+                    "heating_circuits": "Heizkreise"
+                }
             }
         },
         "error": {
@@ -15,19 +21,20 @@
             "min_refresh_interval": "Aktualisierungsinterval muss mindestens 1 Minute sein."
         },
         "abort": {
-            "hostname_in_use": "Dieser Hostname ist bereits für eine andere IDM Wärmepumpe in Verwendung."
+            "already_configured": "Dieser Hostname ist bereits für eine andere IDM Wärmepumpe in Verwendung."
         }
     },
     "options": {
         "step": {
             "user": {
                 "data": {
-                    "refresh_interval": "Aktualisierungsinterval"
+                    "refresh_interval": "Aktualisierungsinterval",
+                    "heating_circuits": "Heizkreise"
                 }
             }
         },
         "error": {
-            "min_refresh_interval": "Refresh interval must be at least 1 minute"
+            "min_refresh_interval": "Aktualisierungsinterval muss mindestens 1 Minute sein."
         }
     }
 }

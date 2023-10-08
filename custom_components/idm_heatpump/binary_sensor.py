@@ -4,15 +4,12 @@ from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from custom_components.idm_heatpump.sensor_addresses import (
-    BINARY_SENSOR_ADDRESSES,
-    IdmBinarySensorAddress,
-)
-
+from .coordinator import IdmHeatpumpDataUpdateCoordinator
 from .const import (
     DOMAIN,
 )
 from .entity import IdmHeatpumpEntity
+from .sensor_addresses import IdmBinarySensorAddress
 
 
 async def async_setup_entry(
@@ -21,15 +18,12 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ):
     """Set up binary_sensor platform."""
-    coordinator = hass.data[DOMAIN][entry.entry_id]
+    coordinator: IdmHeatpumpDataUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
     async_add_entities(
         [
-            IdmHeatpumpBinarySensor(
-                coordinator,
-                entry,
-                sensor_name=name,
-            )
-            for name, s in BINARY_SENSOR_ADDRESSES.items()
+            IdmHeatpumpBinarySensor(coordinator, entry, address)
+            for address in coordinator.heatpump.sensors
+            if isinstance(address, IdmBinarySensorAddress)
         ]
     )
 
@@ -37,15 +31,16 @@ async def async_setup_entry(
 class IdmHeatpumpBinarySensor(IdmHeatpumpEntity, BinarySensorEntity):
     """IDM heatpump binary sensor class."""
 
-    sensor_address: IdmBinarySensorAddress
-
-    def __init__(self, coordinator, config_entry, sensor_name: str):
+    def __init__(
+        self,
+        coordinator: IdmHeatpumpDataUpdateCoordinator,
+        config_entry: ConfigEntry,
+        sensor_address: IdmBinarySensorAddress,
+    ):
         """Create binary sensor."""
         super().__init__(coordinator, config_entry)
-        if sensor_name not in BINARY_SENSOR_ADDRESSES:
-            raise Exception(f"Binary Sensor not found: {sensor_name}")
 
-        self.sensor_address = BINARY_SENSOR_ADDRESSES[sensor_name]
+        self.sensor_address = sensor_address
         self.entity_description = self.sensor_address.entity_description(
             config_entry
         )

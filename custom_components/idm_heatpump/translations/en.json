@@ -8,20 +8,28 @@
                     "display_name": "Display Name",
                     "hostname": "Hostname/IP"
                 }
+            },
+            "options": {
+                "data": {
+                    "refresh_interval": "Refresh Interval",
+                    "heating_circuits": "Heating Circuits"
+                }
             }
         },
         "error": {
-            "hostname": "Heat pump not found at given hostname/ip."
+            "hostname": "Heat pump not found at given hostname/ip.",
+            "min_refresh_interval": "Refresh interval must be at least 1 minute"
         },
         "abort": {
-            "hostname_in_use": "This hostname is already configured for a different IDM heat pump device."
+            "already_configured": "This hostname is already configured for a different IDM heat pump device."
         }
     },
     "options": {
         "step": {
             "user": {
                 "data": {
-                    "refresh_interval": "Refresh Interval"
+                    "refresh_interval": "Refresh Interval",
+                    "heating_circuits": "Heating Circuits"
                 }
             }
         },

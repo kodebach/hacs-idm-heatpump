@@ -5,6 +5,7 @@ from homeassistant.const import Platform
 # Base component constants
 NAME = "IDM Heat Pump"
 MANUFACTURER = "IDM"
+MODEL = "Navigator 2.0"
 DOMAIN = "idm_heatpump"
 DOMAIN_DATA = f"{DOMAIN}_data"
 VERSION = "0.0.1"
@@ -22,6 +23,7 @@ CONF_HOSTNAME = "hostname"
 CONF_DISPLAY_NAME = "display_name"
 
 OPT_REFRESH_INTERVAL = "refresh_interval"
+OPT_HEATING_CIRCUITS = "heating_circuits"
 
 # Defaults
 DEFAULT_NAME = DOMAIN

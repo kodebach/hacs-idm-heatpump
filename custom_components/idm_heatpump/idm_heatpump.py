@@ -9,14 +9,14 @@ from pymodbus.exceptions import ConnectionException, ModbusException
 from pymodbus.payload import BinaryPayloadDecoder
 from pymodbus.constants import Endian
 from pymodbus.register_read_message import ReadInputRegistersResponse
-from custom_components.idm_heatpump.binary_sensor import IdmHeatpumpBinarySensor
 
-from custom_components.idm_heatpump.logger import LOGGER
-from custom_components.idm_heatpump.sensor import IdmHeatpumpSensor
-from custom_components.idm_heatpump.sensor_addresses import (
+from .logger import LOGGER
+from .sensor_addresses import (
     BINARY_SENSOR_ADDRESSES,
     SENSOR_ADDRESSES,
-    IdmSensorAddress,
+    HeatingCircuit,
+    BaseSensorAddress,
+    heating_circuit_sensors,
 )
 
 
@@ -27,18 +27,22 @@ class IdmHeatpump:
     class _SensorGroup:
         start: int
         count: int
-        sensors: list[IdmSensorAddress]
+        sensors: list[BaseSensorAddress]
 
     client: AsyncModbusTcpClient
-    sensors: list[IdmSensorAddress]
+    sensors: list[BaseSensorAddress]
     sensor_groups: list[_SensorGroup] = []
 
-    def __init__(self, hostname: str) -> None:
+    def __init__(self, hostname: str, circuits: list[HeatingCircuit]) -> None:
         """Create heatpump."""
         self.client = AsyncModbusTcpClient(host=hostname)
 
-        self.sensors: list[IdmSensorAddress] = sorted(
-            [*SENSOR_ADDRESSES.values(), *BINARY_SENSOR_ADDRESSES.values()],
+        self.sensors = sorted(
+            [
+                *SENSOR_ADDRESSES.values(),
+                *BINARY_SENSOR_ADDRESSES.values(),
+                *[s for c in circuits for s in heating_circuit_sensors(HeatingCircuit[c])],
+            ],
             key=lambda s: s.address,
         )
         addresses = sorted([s.address for s in self.sensors])
@@ -48,8 +52,9 @@ class IdmHeatpump:
             if count > 1
         ]
         if len(duplicate_addresses) > 0:
-            raise Exception(
-                f"duplicate address(es) detected: {duplicate_addresses}")
+            raise Exception(  # pylint: disable=broad-exception-raised
+                f"duplicate address(es) detected: {duplicate_addresses}"
+            )
 
         for sensor in self.sensors:
             last_address = (
@@ -155,7 +160,7 @@ class IdmHeatpump:
     @staticmethod
     async def test_hostname(hostname: str) -> bool:
         """Check if the hostname is reachable via Modbus."""
-        heatpump = IdmHeatpump(hostname)
+        heatpump = IdmHeatpump(hostname, [])
         try:
             data = await heatpump.async_get_data()
             return len(data) > 0

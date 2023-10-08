@@ -1,7 +1,8 @@
 """Sensor addresses."""
 
-from abc import ABC, abstractmethod, abstractproperty
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from enum import Enum
 from typing import TypeVar
 from collections.abc import Callable
 from homeassistant.components.sensor import (
@@ -26,15 +27,14 @@ from .const import CONF_DISPLAY_NAME
 
 
 @dataclass
-class IdmSensorAddress(ABC):
-    """Describes one of the sensors of an IDM heatpump."""
+class BaseSensorAddress(ABC):
+    """Base class for (binary) sensors of an IDM heatpump."""
 
     address: int
     name: str
-    device_class: SensorDeviceClass
-    state_class: SensorStateClass
 
-    @abstractproperty
+    @property
+    @abstractmethod
     def size(self) -> int:
         """Get number of registers this sensor's value occupies."""
 
@@ -47,11 +47,17 @@ class IdmSensorAddress(ABC):
 
 
 @dataclass
-class IdmBinarySensorAddress:
+class IdmSensorAddress(BaseSensorAddress):
+    """Describes one of the sensors of an IDM heatpump."""
+
+    device_class: SensorDeviceClass
+    state_class: SensorStateClass
+
+
+@dataclass
+class IdmBinarySensorAddress(BaseSensorAddress):
     """Describes one of the binary sensors of an IDM heatpump."""
 
-    address: int
-    name: str
     device_class: BinarySensorDeviceClass
 
     @property
@@ -214,9 +220,21 @@ class _BitFieldSensorAddress(IdmSensorAddress):
         )
 
 
-def heat_circuit_sensors(circuit) -> list[IdmSensorAddress]:
+class HeatingCircuit(Enum):
+    """Heating circuit of the IDM heatpump."""
+
+    A = 0
+    B = 1
+    C = 2
+    D = 3
+    E = 4
+    F = 5
+    G = 6
+
+
+def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
     """Get data for heat circuit sensors."""
-    offset = ord(circuit) - ord("a")
+    offset = circuit.value
     return [
         _FloatSensorAddress(
             address=1350 + offset * 2,
@@ -732,13 +750,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
         ),
-        *heat_circuit_sensors("a"),
-        *heat_circuit_sensors("b"),
-        *heat_circuit_sensors("c"),
-        *heat_circuit_sensors("d"),
-        *heat_circuit_sensors("e"),
-        *heat_circuit_sensors("f"),
-        *heat_circuit_sensors("g"),
         _FloatSensorAddress(
             address=1392,
             name="humidity",

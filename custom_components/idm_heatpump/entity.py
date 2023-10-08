@@ -1,21 +1,23 @@
 """IdmHeatpumpEntity class."""
 from abc import abstractmethod
-from homeassistant.const import (
-    ATTR_IDENTIFIERS,
-    ATTR_MANUFACTURER,
-    ATTR_MODEL,
-    ATTR_NAME,
-)
+
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util import slugify
 
-from .const import CONF_DISPLAY_NAME, CONF_HOSTNAME, DOMAIN, MANUFACTURER
+from .coordinator import IdmHeatpumpDataUpdateCoordinator
+from .const import CONF_DISPLAY_NAME, CONF_HOSTNAME, DOMAIN, MANUFACTURER, MODEL
+from .sensor_addresses import BaseSensorAddress
 
 
 class IdmHeatpumpEntity(CoordinatorEntity):
     """IdmHeatpumpEntity."""
 
-    def __init__(self, coordinator, config_entry):
+    sensor_address: BaseSensorAddress
+    coordinator: IdmHeatpumpDataUpdateCoordinator
+
+    def __init__(self, coordinator: IdmHeatpumpDataUpdateCoordinator, config_entry: ConfigEntry):
         """Create entity."""
         super().__init__(coordinator)
         self.config_entry = config_entry
@@ -26,19 +28,24 @@ class IdmHeatpumpEntity(CoordinatorEntity):
         """Return the unique ID for this sensor."""
 
     @property
+    def available(self) -> bool:
+        """Return wether this sensor is available."""
+        return self.sensor_address in self.coordinator.heatpump.sensors
+
+    @property
     def unique_id(self):
         """Return a unique ID to use for this entity."""
         return f"{slugify(self.config_entry.data.get(CONF_HOSTNAME))}_{self.sensor_id}"
 
     @property
-    def device_info(self):
+    def device_info(self) -> DeviceInfo:
         """Return device info."""
-        return {
-            ATTR_IDENTIFIERS: {(DOMAIN, self.config_entry.entry_id)},
-            ATTR_NAME: self.config_entry.data.get(CONF_DISPLAY_NAME),
-            ATTR_MODEL: "Navigator 2.0",
-            ATTR_MANUFACTURER: MANUFACTURER,
-        }
+        return DeviceInfo(
+            identifiers={(DOMAIN, self.config_entry.entry_id)},
+            name=self.config_entry.data.get(CONF_DISPLAY_NAME),
+            model=MODEL,
+            manufacturer=MANUFACTURER,
+        )
 
     @property
     def extra_state_attributes(self):

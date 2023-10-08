@@ -3,15 +3,12 @@
 For more details about this integration, please refer to
 https://github.com/custom-components/idm_heatpump
 """
-import asyncio
 from datetime import timedelta
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config, HomeAssistant
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-import async_timeout
-
+from .coordinator import IdmHeatpumpDataUpdateCoordinator
 from .idm_heatpump import IdmHeatpump
 from .logger import LOGGER
 
@@ -19,13 +16,14 @@ from .const import (
     CONF_HOSTNAME,
     DEFAULT_REFRESH_INTERVAL,
     DOMAIN,
+    OPT_HEATING_CIRCUITS,
     OPT_REFRESH_INTERVAL,
     PLATFORMS,
     STARTUP_MESSAGE,
 )
 
 
-async def async_setup(hass: HomeAssistant, config: Config):
+async def async_setup(hass: HomeAssistant, config: Config):  # pylint: disable=unused-argument
     """Set up this integration using YAML is not supported."""
     return True
 
@@ -38,13 +36,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
     hostname = entry.data.get(CONF_HOSTNAME)
 
-    heatpump = IdmHeatpump(hostname=hostname)
+    heatpump = IdmHeatpump(
+        hostname=hostname,
+        circuits=entry.options.get(OPT_HEATING_CIRCUITS, []),
+    )
 
     update_interval = timedelta(**entry.options.get(
         OPT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL))
-    LOGGER.debug(
-        f"Setting up IDM heat pump at {hostname} with update_interval={update_interval}"
-    )
+    LOGGER.debug("Setting up IDM heat pump at %s with update_interval=%s",
+                 hostname, update_interval)
     coordinator = IdmHeatpumpDataUpdateCoordinator(
         hass,
         heatpump=heatpump,
@@ -58,28 +58,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     entry.async_on_unload(entry.add_update_listener(async_reload_entry))
 
     return True
-
-
-class IdmHeatpumpDataUpdateCoordinator(DataUpdateCoordinator):
-    """Class to manage fetching data from the API."""
-
-    def __init__(
-        self, hass: HomeAssistant, heatpump: IdmHeatpump, update_interval: timedelta
-    ) -> None:
-        """Initialize."""
-        self.heatpump = heatpump
-        self.platforms = []
-
-        super().__init__(hass, LOGGER, name=DOMAIN, update_interval=update_interval)
-
-    async def _async_update_data(self):
-        """Update data via library."""
-        async with async_timeout.timeout(10):
-            try:
-                return await self.heatpump.async_get_data()
-            except Exception as exception:
-                LOGGER.exception("error")
-                raise UpdateFailed() from exception
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
