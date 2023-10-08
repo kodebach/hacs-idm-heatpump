@@ -247,10 +247,11 @@ class HeatingCircuit(Enum):
 def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
     """Get data for heat circuit sensors."""
     offset = circuit.value
+    circuit_name = circuit.name.lower()
     return [
         _FloatSensorAddress(
             address=1350 + offset * 2,
-            name=f"temp_flow_current_circuit_{circuit}",
+            name=f"temp_flow_current_circuit_{circuit_name}",
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
@@ -259,7 +260,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         ),
         _FloatSensorAddress(
             address=1364 + offset * 2,
-            name=f"temp_room_circuit_{circuit}",
+            name=f"temp_room_circuit_{circuit_name}",
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
@@ -268,7 +269,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         ),
         _FloatSensorAddress(
             address=1378 + offset * 2,
-            name=f"temp_flow_target_circuit_{circuit}",
+            name=f"temp_flow_target_circuit_{circuit_name}",
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
@@ -277,7 +278,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         ),
         _EnumSensorAddress(
             address=1393 + offset,
-            name=f"mode_circuit_{circuit}",
+            name=f"mode_circuit_{circuit_name}",
             value_labels={
                 0: "off",
                 1: "timed",
@@ -291,7 +292,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         ),
         _FloatSensorAddress(
             address=1401 + offset * 2,
-            name=f"temp_room_target_heating_normal_circuit_{circuit}",
+            name=f"temp_room_target_heating_normal_circuit_{circuit_name}",
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
@@ -300,7 +301,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         ),
         _FloatSensorAddress(
             address=1415 + offset * 2,
-            name=f"temp_room_target_heating_eco_circuit_{circuit}",
+            name=f"temp_room_target_heating_eco_circuit_{circuit_name}",
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
@@ -309,7 +310,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         ),
         _FloatSensorAddress(
             address=1429 + offset * 2,
-            name=f"curve_circuit_{circuit}",
+            name=f"curve_circuit_{circuit_name}",
             unit=None,
             device_class=None,
             state_class=None,
@@ -318,7 +319,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         ),
         _UCharSensorAddress(
             address=1442 + offset,
-            name=f"temp_threshold_heating_circuit_{circuit}",
+            name=f"temp_threshold_heating_circuit_{circuit_name}",
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
@@ -327,7 +328,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         ),
         _UCharSensorAddress(
             address=1449 + offset,
-            name=f"temp_flow_target_constant_circuit_{circuit}",
+            name=f"temp_flow_target_constant_circuit_{circuit_name}",
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
@@ -336,7 +337,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         ),
         _FloatSensorAddress(
             address=1457 + offset * 2,
-            name=f"temp_room_target_cooling_normal_circuit_{circuit}",
+            name=f"temp_room_target_cooling_normal_circuit_{circuit_name}",
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
@@ -345,7 +346,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         ),
         _FloatSensorAddress(
             address=1471 + offset * 2,
-            name=f"temp_room_target_cooling_eco_circuit_{circuit}",
+            name=f"temp_room_target_cooling_eco_circuit_{circuit_name}",
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
@@ -354,7 +355,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         ),
         _UCharSensorAddress(
             address=1484 + offset,
-            name=f"temp_threshold_cooling_circuit_{circuit}",
+            name=f"temp_threshold_cooling_circuit_{circuit_name}",
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
@@ -363,7 +364,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         ),
         _UCharSensorAddress(
             address=1491 + offset,
-            name=f"temp_flow_target_cooling_circuit_{circuit}",
+            name=f"temp_flow_target_cooling_circuit_{circuit_name}",
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
@@ -372,7 +373,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         ),
         _EnumSensorAddress(
             address=1498 + offset,
-            name=f"mode_active_circuit_{circuit}",
+            name=f"mode_active_circuit_{circuit_name}",
             value_labels={
                 0: "off",
                 1: "heating",
@@ -383,7 +384,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         ),
         _UCharSensorAddress(
             address=1505 + offset,
-            name=f"curve_offset_{circuit}",
+            name=f"curve_offset_{circuit_name}",
             unit=PERCENTAGE,
             device_class=None,
             state_class=None,
