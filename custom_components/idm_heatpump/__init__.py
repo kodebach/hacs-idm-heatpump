@@ -40,7 +40,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
     heatpump = IdmHeatpump(hostname=hostname)
 
-    update_interval = timedelta(seconds=entry.options.get(
+    update_interval = timedelta(**entry.options.get(
         OPT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL))
     LOGGER.debug(
         f"Setting up IDM heat pump at {hostname} with update_interval={update_interval}"

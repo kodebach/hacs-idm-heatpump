@@ -11,7 +11,8 @@
             }
         },
         "error": {
-            "hostname": "Wärmepumpe mit unter hostname/ip nicht gefunden."
+            "hostname": "Wärmepumpe mit unter hostname/ip nicht gefunden.",
+            "min_refresh_interval": "Aktualisierungsinterval muss mindestens 1 Minute sein."
         },
         "abort": {
             "hostname_in_use": "Dieser Hostname ist bereits für eine andere IDM Wärmepumpe in Verwendung."
@@ -21,9 +22,12 @@
         "step": {
             "user": {
                 "data": {
-                    "refresh_interval": "Aktualisierungsinterval (s)"
+                    "refresh_interval": "Aktualisierungsinterval"
                 }
             }
+        },
+        "error": {
+            "min_refresh_interval": "Refresh interval must be at least 1 minute"
         }
     }
 }

@@ -21,9 +21,12 @@
         "step": {
             "user": {
                 "data": {
-                    "refresh_interval": "Refresh Interval (s)"
+                    "refresh_interval": "Refresh Interval"
                 }
             }
+        },
+        "error": {
+            "min_refresh_interval": "Refresh interval must be at least 1 minute"
         }
     }
 }

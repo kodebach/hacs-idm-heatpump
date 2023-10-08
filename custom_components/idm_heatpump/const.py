@@ -25,10 +25,10 @@ OPT_REFRESH_INTERVAL = "refresh_interval"
 
 # Defaults
 DEFAULT_NAME = DOMAIN
-DEFAULT_REFRESH_INTERVAL = 300
+DEFAULT_REFRESH_INTERVAL = {"hours": 0, "minutes": 5, "seconds": 0}
 
 # Limits
-MIN_REFRESH_INTERVAL = 60
+MIN_REFRESH_INTERVAL = {"hours": 0, "minutes": 1, "seconds": 0}
 
 STARTUP_MESSAGE = f"""
 -------------------------------------------------------------------

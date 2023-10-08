@@ -1,7 +1,8 @@
 """Adds config flow for Blueprint."""
+from datetime import timedelta
 from homeassistant import config_entries
 from homeassistant.core import callback
-from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers.selector import selector
 import voluptuous as vol
 
 from .idm_heatpump import IdmHeatpump
@@ -94,34 +95,40 @@ class IdmHeatpumpOptionsFlowHandler(config_entries.OptionsFlow):
         self.config_entry = config_entry
         self.options = dict(config_entry.options)
 
-    async def async_step_init(self, user_input=None):  # pylint: disable=unused-argument
+    async def async_step_init(self, user_input=None):
         """Manage the options."""
-        return await self.async_step_user()
+        return await self.async_step_user(user_input)
 
     async def async_step_user(self, user_input=None):
         """Handle a flow initialized by the user."""
+        schema = vol.Schema(
+            {
+                vol.Required(
+                    OPT_REFRESH_INTERVAL,
+                    default=self.options.get(
+                        OPT_REFRESH_INTERVAL,
+                        DEFAULT_REFRESH_INTERVAL
+                    ),
+                ): vol.All(selector({"duration": {}})),
+            }
+        )
+
+        errors = {}
+
         if user_input is not None:
             self.options.update(user_input)
-            return await self._update_options()
+
+            if timedelta(**user_input[OPT_REFRESH_INTERVAL]) < timedelta(**MIN_REFRESH_INTERVAL):
+                errors[OPT_REFRESH_INTERVAL] = "min_refresh_interval"
+
+            if len(errors) == 0:
+                return self.async_create_entry(
+                    title=self.config_entry.data.get(CONF_DISPLAY_NAME),
+                    data=self.options,
+                )
 
         return self.async_show_form(
             step_id="user",
-            data_schema=vol.Schema(
-                {
-                    vol.Required(
-                        OPT_REFRESH_INTERVAL,
-                        default=self.options.get(
-                            OPT_REFRESH_INTERVAL,
-                            DEFAULT_REFRESH_INTERVAL
-                        ),
-                    ): vol.All(cv.positive_int, vol.Clamp(min=MIN_REFRESH_INTERVAL)),
-                }
-            ),
-        )
-
-    async def _update_options(self):
-        """Update config entry options."""
-        return self.async_create_entry(
-            title=self.config_entry.data.get(CONF_DISPLAY_NAME),
-            data=self.options,
+            data_schema=schema,
+            errors=errors,
         )
