@@ -59,14 +59,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         ],
     )
 
-    device_registry = dr.async_get(hass)
-
-    for zone in range(zone_count, MAX_ZONE_COUNT):
-        device = device_registry.async_get_device(
-            {(DOMAIN, f"{entry.entry_id}_zone_{zone+1}")}
-        )
-        if device is not None:
-            device_registry.async_remove_device(device.id)
+    # device_registry = dr.async_get(hass)
+    #
+    # for zone in range(zone_count, MAX_ZONE_COUNT):
+    #    device = device_registry.async_get_device(
+    #        {(DOMAIN, f"{entry.entry_id}_zone_{zone+1}")}
+    #    )
+    #    if device is not None:
+    #        device_registry.async_remove_device(device.id)
 
     update_interval = timedelta(**entry.options.get(
         OPT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL))
