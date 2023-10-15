@@ -1,6 +1,102 @@
 """Constants for idm_heatpump."""
 
+from enum import IntFlag, IntEnum
 from homeassistant.const import Platform
+
+
+class _SensorEnum(IntEnum):
+    def __str__(self) -> str:
+        return self.name.lower()
+
+
+class _SensorFlag(IntFlag):
+    def __str__(self) -> str:
+        return ", ".join([f.name.lower() for f in self])
+
+
+class HeatPumpStatus(_SensorFlag):
+    """Status flags for heat pump."""
+
+    OFF = 0
+    HEATING = 1
+    COOLING = 2
+    WATER = 4
+    DEFROSTING = 8
+
+
+class IscMode(_SensorFlag):
+    """ISC mode flags."""
+
+    NONE = 0
+    HEATING = 1
+    WATER = 4
+    SOURCE = 8
+
+
+class CircuitMode(_SensorEnum):
+    """Operating mode of heating circuit."""
+
+    OFF = 0
+    TIMED = 1
+    NORMAL = 2
+    ECO = 3
+    MANUAL_HEAT = 4
+    MANUAL_COOL = 5
+
+
+class ActiveCircuitMode(_SensorEnum):
+    """Active operation mode of heating circuit."""
+
+    OFF = 0
+    HEATING = 1
+    COOLING = 2
+
+
+class ZoneMode(_SensorEnum):
+    """Zone operation mode."""
+
+    COOLING = 0
+    HEATING = 1
+
+
+class RoomMode(_SensorEnum):
+    """Room operation mode."""
+
+    OFF = 0
+    AUTOMATIC = 1
+    ECO = 2
+    NORMAL = 3
+    COMFORT = 4
+
+
+class SystemStatus(_SensorEnum):
+    """IDM heat pump system status."""
+
+    STANDBY = 0
+    AUTOMATIC = 1
+    AWAY = 2
+    HOT_WATER_ONLY = 4
+    HEATING_COOLING_ONLY = 5
+
+
+class SmartGridStatus(_SensorEnum):
+    """Smart grid status."""
+
+    GRID_BLOCKED_SOLAR_OFF = 0
+    GRID_ALLOWED_SOLAR_OFF = 1
+    GRID_UNUSED_SOLAR_ON = 2
+    GRID_BLOCKED_SOLAR_ON = 4
+
+
+class SolarMode(_SensorEnum):
+    """Solar mode."""
+
+    AUTO = 0
+    WATER = 1
+    HEATING = 2
+    WATER_HEATING = 3
+    SOURCE_POOL = 4
+
 
 # Base component constants
 NAME = "IDM Heat Pump"

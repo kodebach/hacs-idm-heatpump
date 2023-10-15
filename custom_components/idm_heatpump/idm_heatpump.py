@@ -142,8 +142,7 @@ class IdmHeatpump:
 
         if not self.client.connected:
             await self.client.connect()
-
-        LOGGER.debug("connected")
+            LOGGER.debug("connected")
 
         groups = await asyncio.gather(
             *[self._fetch_sensors(group) for group in self.sensor_groups]

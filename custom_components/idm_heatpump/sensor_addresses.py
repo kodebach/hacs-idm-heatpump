@@ -2,8 +2,8 @@
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from enum import Enum
-from typing import TypeVar
+from enum import IntEnum, IntFlag, Enum
+from typing import Generic, TypeVar
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntityDescription,
@@ -22,11 +22,26 @@ from homeassistant.const import (
 )
 from pymodbus.payload import BinaryPayloadDecoder
 
-from .const import CONF_DISPLAY_NAME
+from .const import (
+    CONF_DISPLAY_NAME,
+    ActiveCircuitMode,
+    CircuitMode,
+    HeatPumpStatus,
+    IscMode,
+    RoomMode,
+    SmartGridStatus,
+    SolarMode,
+    SystemStatus,
+    ZoneMode,
+)
+
+_T = TypeVar("_T")
+_EnumT = TypeVar("_EnumT", bound=IntEnum)
+_FlagT = TypeVar("_FlagT", bound=IntFlag)
 
 
 @dataclass
-class BaseSensorAddress(ABC):
+class BaseSensorAddress(ABC, Generic[_T]):
     """Base class for (binary) sensors of an IDM heatpump."""
 
     address: int
@@ -38,7 +53,7 @@ class BaseSensorAddress(ABC):
         """Get number of registers this sensor's value occupies."""
 
     @abstractmethod
-    def decode(self, decoder: BinaryPayloadDecoder):
+    def decode(self, decoder: BinaryPayloadDecoder) -> _T:
         """Decode this sensor's value."""
 
     def entity_description(self, config_entry) -> SensorEntityDescription:
@@ -59,7 +74,7 @@ class BaseSensorAddress(ABC):
 
 
 @dataclass
-class IdmSensorAddress(BaseSensorAddress):
+class IdmSensorAddress(BaseSensorAddress[_T]):
     """Describes one of the sensors of an IDM heatpump."""
 
     device_class: SensorDeviceClass
@@ -67,7 +82,7 @@ class IdmSensorAddress(BaseSensorAddress):
 
 
 @dataclass
-class IdmBinarySensorAddress(BaseSensorAddress):
+class IdmBinarySensorAddress(BaseSensorAddress[bool]):
     """Describes one of the binary sensors of an IDM heatpump."""
 
     device_class: BinarySensorDeviceClass
@@ -92,7 +107,7 @@ class IdmBinarySensorAddress(BaseSensorAddress):
 
 
 @dataclass
-class _FloatSensorAddress(IdmSensorAddress):
+class _FloatSensorAddress(IdmSensorAddress[float]):
     unit: str
     decimal_digits: int = 2
     scale: float = 1
@@ -124,7 +139,7 @@ class _FloatSensorAddress(IdmSensorAddress):
 
 
 @dataclass
-class _UCharSensorAddress(IdmSensorAddress):
+class _UCharSensorAddress(IdmSensorAddress[int]):
     unit: str
     min_value: int | None = None
     max_value: int | None = 0xFFFE
@@ -153,7 +168,7 @@ class _UCharSensorAddress(IdmSensorAddress):
 
 
 @dataclass
-class _WordSensorAddress(IdmSensorAddress):
+class _WordSensorAddress(IdmSensorAddress[int]):
     unit: str
     min_value: int | None = None
     max_value: int | None = None
@@ -182,18 +197,18 @@ class _WordSensorAddress(IdmSensorAddress):
 
 
 @dataclass
-class _EnumSensorAddress(IdmSensorAddress):
-    value_labels: dict[int, str]
+class _EnumSensorAddress(IdmSensorAddress[_EnumT], Generic[_EnumT]):
+    enum: type[_EnumT]
 
     @property
     def size(self):
         return 1
 
-    def decode(self, decoder: BinaryPayloadDecoder) -> str:
+    def decode(self, decoder: BinaryPayloadDecoder) -> _EnumT:
         value = decoder.decode_16bit_uint()
         if value == 0xFFFF:
             return None
-        return self.value_labels.get(value)
+        return self.enum(value)
 
     def entity_description(self, config_entry):
         return SensorEntityDescription(
@@ -205,23 +220,18 @@ class _EnumSensorAddress(IdmSensorAddress):
 
 
 @dataclass
-class _BitFieldSensorAddress(IdmSensorAddress):
-    bit_labels: dict[int, str]
+class _BitFieldSensorAddress(IdmSensorAddress[_FlagT], Generic[_FlagT]):
+    flag: type[_FlagT]
 
     @property
     def size(self):
         return 1
 
-    def decode(self, decoder: BinaryPayloadDecoder) -> str:
+    def decode(self, decoder: BinaryPayloadDecoder) -> _FlagT:
         value = decoder.decode_16bit_uint()
         if value == 0xFFFF:
             return None
-        if value == 0:
-            return self.bit_labels.get(0)
-
-        return ", ".join(
-            [label for bit, label in self.bit_labels.items() if value & bit != 0]
-        )
+        return self.flag(value)
 
     def entity_description(self, config_entry):
         return SensorEntityDescription(
@@ -277,16 +287,9 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             max_value=100,
         ),
         _EnumSensorAddress(
+            enum=CircuitMode,
             address=1393 + offset,
             name=f"mode_circuit_{circuit_name}",
-            value_labels={
-                0: "off",
-                1: "timed",
-                2: "normal",
-                3: "eco",
-                4: "manual_heat",
-                5: "manual_cool",
-            },
             device_class=None,
             state_class=None,
         ),
@@ -372,13 +375,9 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             max_value=30,
         ),
         _EnumSensorAddress(
+            enum=ActiveCircuitMode,
             address=1498 + offset,
             name=f"mode_active_circuit_{circuit_name}",
-            value_labels={
-                0: "off",
-                1: "heating",
-                2: "cooling",
-            },
             device_class=None,
             state_class=None,
         ),
@@ -426,12 +425,9 @@ class ZoneModule:
 
         return [
             _EnumSensorAddress(
+                enum=ZoneMode,
                 address=ZONE_OFFSETS[self.index],
                 name=f"zone_{self.index+1}_mode",
-                value_labels={
-                    0: "cooling",
-                    1: "heating"
-                },
                 device_class=None,
                 state_class=None,
             ),
@@ -462,15 +458,9 @@ class ZoneModule:
                     max_value=100,
                 ),
                 _EnumSensorAddress(
+                    enum=RoomMode,
                     address=ZONE_OFFSETS[self.index]+ROOM_OFFSETS[room]+5,
                     name=f"zone_{self.index+1}_room_{room+1}_mode",
-                    value_labels={
-                        0: "off",
-                        1: "automatic",
-                        2: "eco",
-                        3: "normal",
-                        4: "comfort",
-                    },
                     device_class=None,
                     state_class=None,
                 ),
@@ -532,27 +522,16 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             state_class=None,
         ),
         _EnumSensorAddress(
+            enum=SystemStatus,
             address=1005,
             name="status_system",
-            value_labels={
-                0: "standby",
-                1: "automatic",
-                2: "away",
-                4: "hot_water_only",
-                5: "heating_cooling_only",
-            },
             device_class=None,
             state_class=None,
         ),
         _EnumSensorAddress(
+            enum=SmartGridStatus,
             address=1006,
             name="status_smart_grid",
-            value_labels={
-                0: "grid_blocked_solar_off",
-                1: "grid_allowed_solar_off",
-                2: "grid_unused_solar_on",
-                4: "grid_blocked_solar_on",
-            },
             device_class=None,
             state_class=None,
         ),
@@ -683,15 +662,9 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             state_class=SensorStateClass.MEASUREMENT,
         ),
         _BitFieldSensorAddress(
+            flag=HeatPumpStatus,
             address=1090,
             name="status_heat_pump",
-            bit_labels={
-                0: "off",
-                1: "heating",
-                2: "cooling",
-                4: "water",
-                8: "defrosting",
-            },
             device_class=None,
             state_class=None,
         ),
@@ -980,15 +953,9 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             state_class=SensorStateClass.MEASUREMENT,
         ),
         _EnumSensorAddress(
+            enum=SolarMode,
             address=1856,
             name="mode_solar",
-            value_labels={
-                0: "auto",
-                1: "water",
-                2: "heating",
-                3: "water_heating",
-                4: "source_pool",
-            },
             device_class=None,
             state_class=None,
         ),
@@ -1014,14 +981,9 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             state_class=SensorStateClass.MEASUREMENT,
         ),
         _BitFieldSensorAddress(
+            flag=IscMode,
             address=1874,
             name="mode_isc",
-            bit_labels={
-                0: "none",
-                1: "heating",
-                4: "water",
-                8: "source",
-            },
             device_class=None,
             state_class=None,
         ),

@@ -1,5 +1,6 @@
 """IdmHeatpumpEntity class."""
 from abc import abstractmethod
+from typing import Generic, TypeVar
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.device_registry import DeviceInfo
@@ -10,11 +11,13 @@ from .coordinator import IdmHeatpumpDataUpdateCoordinator
 from .const import CONF_DISPLAY_NAME, CONF_HOSTNAME, DOMAIN, MANUFACTURER, MODEL_MAIN, MODEL_ZONE
 from .sensor_addresses import BaseSensorAddress
 
+_T = TypeVar("_T")
 
-class IdmHeatpumpEntity(CoordinatorEntity):
+
+class IdmHeatpumpEntity(CoordinatorEntity, Generic[_T]):
     """IdmHeatpumpEntity."""
 
-    sensor_address: BaseSensorAddress
+    sensor_address: BaseSensorAddress[_T]
     coordinator: IdmHeatpumpDataUpdateCoordinator
 
     def __init__(self, coordinator: IdmHeatpumpDataUpdateCoordinator, config_entry: ConfigEntry):
@@ -59,7 +62,7 @@ class IdmHeatpumpEntity(CoordinatorEntity):
             manufacturer=MANUFACTURER,
         )
 
-    @ property
+    @property
     def extra_state_attributes(self):
         """Return extra attributes."""
         return {
