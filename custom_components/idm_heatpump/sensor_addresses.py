@@ -385,7 +385,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         _UCharSensorAddress(
             address=1505 + offset,
             name=f"curve_offset_{circuit_name}",
-            unit=PERCENTAGE,
+            unit=TEMP_CELSIUS,
             device_class=None,
             state_class=None,
             min_value=0,
