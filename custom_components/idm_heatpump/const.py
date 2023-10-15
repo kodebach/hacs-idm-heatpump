@@ -4,6 +4,13 @@ from enum import IntFlag, IntEnum
 from homeassistant.const import Platform
 
 
+class SensorFeatures(IntFlag):
+    """Possible features for sensors."""
+
+    NONE = 0
+    SET_POWER = 1
+
+
 class _SensorEnum(IntEnum):
     def __str__(self) -> str:
         return self.name.lower()
@@ -112,6 +119,9 @@ ISSUE_URL = "https://github.com/kodebach/hacs-idm-heatpump/issues"
 BINARY_SENSOR = Platform.BINARY_SENSOR
 SENSOR = Platform.SENSOR
 PLATFORMS = [BINARY_SENSOR, SENSOR]
+
+# Services
+SERVICE_SET_POWER = "set_power"
 
 # Limits
 MIN_REFRESH_INTERVAL = {"hours": 0, "minutes": 1, "seconds": 0}

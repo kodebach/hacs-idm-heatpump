@@ -86,5 +86,17 @@
         "error": {
             "min_refresh_interval": "Aktualisierungsinterval muss mindestens 1 Minute sein."
         }
+    },
+    "services": {
+        "set_power": {
+            "name": "Leistungswert setzen",
+            "description": "Sendet einen Wert vom Typ 'Leistung' an die Wärmepumpe.",
+            "fields": {
+                "value": {
+                    "name": "Wert",
+                    "description": "Der Wert der gesendet werden soll."
+                }
+            }
+        }
     }
 }

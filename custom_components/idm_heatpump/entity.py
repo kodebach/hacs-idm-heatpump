@@ -8,7 +8,15 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util import slugify
 
 from .coordinator import IdmHeatpumpDataUpdateCoordinator
-from .const import CONF_DISPLAY_NAME, CONF_HOSTNAME, DOMAIN, MANUFACTURER, MODEL_MAIN, MODEL_ZONE
+from .const import (
+    SensorFeatures,
+    CONF_DISPLAY_NAME,
+    CONF_HOSTNAME,
+    DOMAIN,
+    MANUFACTURER,
+    MODEL_MAIN,
+    MODEL_ZONE,
+)
 from .sensor_addresses import BaseSensorAddress
 
 _T = TypeVar("_T")
@@ -68,3 +76,12 @@ class IdmHeatpumpEntity(CoordinatorEntity, Generic[_T]):
         return {
             "integration": DOMAIN,
         }
+
+    @property
+    def supported_features(self) -> SensorFeatures:
+        """Return supported features."""
+        return self.sensor_address.supported_features
+
+    async def async_write_value(self, value: _T):
+        """Write value to heatpump."""
+        return await self.coordinator.async_write_value(self.sensor_address, value)

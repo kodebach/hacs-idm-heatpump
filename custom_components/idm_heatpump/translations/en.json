@@ -86,5 +86,17 @@
         "error": {
             "min_refresh_interval": "Refresh interval must be at least 1 minute"
         }
+    },
+    "services": {
+        "set_power": {
+            "name": "Set power value",
+            "description": "Sends a power value to the heat pump.",
+            "fields": {
+                "value": {
+                    "name": "Value",
+                    "description": "The value to send."
+                }
+            }
+        }
     }
 }

@@ -3,10 +3,12 @@
 import asyncio
 from dataclasses import dataclass
 import collections
+from typing import TypeVar
 
 from pymodbus.client import AsyncModbusTcpClient
+from pymodbus.pdu import ModbusResponse
 from pymodbus.exceptions import ConnectionException, ModbusException
-from pymodbus.payload import BinaryPayloadDecoder
+from pymodbus.payload import BinaryPayloadDecoder, BinaryPayloadBuilder
 from pymodbus.constants import Endian
 from pymodbus.register_read_message import ReadInputRegistersResponse
 
@@ -19,6 +21,8 @@ from .sensor_addresses import (
     ZoneModule,
     heating_circuit_sensors,
 )
+
+_T = TypeVar("_T")
 
 
 class IdmHeatpump:
@@ -158,6 +162,28 @@ class IdmHeatpump:
         LOGGER.debug("got data")
 
         return data
+
+    async def async_write_value(self, address: BaseSensorAddress[_T], value: _T):
+        """Write value to one of the addresses of this heat pump."""
+        if not self.client.connected:
+            await self.client.connect()
+            LOGGER.debug("connected")
+
+        builder = BinaryPayloadBuilder(
+            byteorder=Endian.BIG,
+            wordorder=Endian.LITTLE,
+        )
+
+        address.encode(builder, value)
+        registers = builder.to_registers()
+        assert len(registers) == address.size
+
+        response: ModbusResponse = await self.client.write_registers(
+            address=address.address,
+            values=registers,
+            slave=1,
+        )
+        assert not response.isError()
 
     @staticmethod
     async def test_hostname(hostname: str) -> bool:

@@ -25,6 +25,7 @@ from .const import (
     OPT_ZONE_ROOM_COUNT,
     PLATFORMS,
     STARTUP_MESSAGE,
+    SensorFeatures,  # noqa: F401
 )
 
 
