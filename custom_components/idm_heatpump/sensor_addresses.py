@@ -13,6 +13,7 @@ from homeassistant.components.binary_sensor import (
     BinarySensorDeviceClass,
     BinarySensorEntityDescription,
 )
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     CURRENCY_EURO,
     ENERGY_KILO_WATT_HOUR,
@@ -34,6 +35,7 @@ from .const import (
     SystemStatus,
     ZoneMode,
 )
+from .logger import LOGGER
 
 _T = TypeVar("_T")
 _EnumT = TypeVar("_EnumT", bound=IntEnum)
@@ -56,7 +58,8 @@ class BaseSensorAddress(ABC, Generic[_T]):
     def decode(self, decoder: BinaryPayloadDecoder) -> _T:
         """Decode this sensor's value."""
 
-    def entity_description(self, config_entry) -> SensorEntityDescription:
+    @abstractmethod
+    def entity_description(self, config_entry: ConfigEntry) -> SensorEntityDescription:
         """Get SensorEntityDescription for this sensor."""
 
     @property
@@ -97,7 +100,7 @@ class IdmBinarySensorAddress(BaseSensorAddress[bool]):
         value = decoder.decode_16bit_uint()
         return value == 1
 
-    def entity_description(self, config_entry) -> BinarySensorEntityDescription:
+    def entity_description(self, config_entry: ConfigEntry) -> BinarySensorEntityDescription:
         """SensorEntityDescription for this sensor."""
         return BinarySensorEntityDescription(
             key=self.name,
@@ -128,7 +131,7 @@ class _FloatSensorAddress(IdmSensorAddress[float]):
             else value
         )
 
-    def entity_description(self, config_entry):
+    def entity_description(self, config_entry: ConfigEntry) -> SensorEntityDescription:
         return SensorEntityDescription(
             key=self.name,
             name=f"{config_entry.data.get(CONF_DISPLAY_NAME)}: {SENSOR_NAMES.get(self.address)}",
@@ -157,7 +160,7 @@ class _UCharSensorAddress(IdmSensorAddress[int]):
             else value
         )
 
-    def entity_description(self, config_entry):
+    def entity_description(self, config_entry: ConfigEntry) -> SensorEntityDescription:
         return SensorEntityDescription(
             key=self.name,
             name=f"{config_entry.data.get(CONF_DISPLAY_NAME)}: {SENSOR_NAMES.get(self.address)}",
@@ -186,7 +189,7 @@ class _WordSensorAddress(IdmSensorAddress[int]):
             else value
         )
 
-    def entity_description(self, config_entry):
+    def entity_description(self, config_entry: ConfigEntry) -> SensorEntityDescription:
         return SensorEntityDescription(
             key=self.name,
             name=f"{config_entry.data.get(CONF_DISPLAY_NAME)}: {SENSOR_NAMES.get(self.address)}",
@@ -204,13 +207,17 @@ class _EnumSensorAddress(IdmSensorAddress[_EnumT], Generic[_EnumT]):
     def size(self):
         return 1
 
-    def decode(self, decoder: BinaryPayloadDecoder) -> _EnumT:
+    def decode(self, decoder: BinaryPayloadDecoder) -> _EnumT | None:
         value = decoder.decode_16bit_uint()
         if value == 0xFFFF:
             return None
-        return self.enum(value)
+        try:
+            return self.enum(value)
+        except ValueError as exc:
+            LOGGER.debug("Couldn't read value for %s", self.name, exc_info=exc)
+            return None
 
-    def entity_description(self, config_entry):
+    def entity_description(self, config_entry: ConfigEntry) -> SensorEntityDescription:
         return SensorEntityDescription(
             key=self.name,
             name=f"{config_entry.data.get(CONF_DISPLAY_NAME)}: {SENSOR_NAMES.get(self.address)}",
@@ -227,13 +234,17 @@ class _BitFieldSensorAddress(IdmSensorAddress[_FlagT], Generic[_FlagT]):
     def size(self):
         return 1
 
-    def decode(self, decoder: BinaryPayloadDecoder) -> _FlagT:
+    def decode(self, decoder: BinaryPayloadDecoder) -> _FlagT | None:
         value = decoder.decode_16bit_uint()
         if value == 0xFFFF:
             return None
-        return self.flag(value)
+        try:
+            return self.flag(value)
+        except ValueError as exc:
+            LOGGER.debug("Couldn't read value for %s", self.name, exc_info=exc)
+            return None
 
-    def entity_description(self, config_entry):
+    def entity_description(self, config_entry: ConfigEntry) -> SensorEntityDescription:
         return SensorEntityDescription(
             key=self.name,
             name=f"{config_entry.data.get(CONF_DISPLAY_NAME)}: {SENSOR_NAMES.get(self.address)}",
