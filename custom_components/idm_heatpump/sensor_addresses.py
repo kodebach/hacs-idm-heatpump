@@ -1036,23 +1036,23 @@ BINARY_SENSOR_ADDRESSES: dict[str, IdmBinarySensorAddress] = {
         ),
         IdmBinarySensorAddress(
             address=1100,
-            name="failure_compressor_1",
-            device_class=BinarySensorDeviceClass.PROBLEM,
+            name="state_compressor_1",
+            device_class=BinarySensorDeviceClass.RUNNING,
         ),
         IdmBinarySensorAddress(
             address=1101,
-            name="failure_compressor_2",
-            device_class=BinarySensorDeviceClass.PROBLEM,
+            name="state_compressor_2",
+            device_class=BinarySensorDeviceClass.RUNNING,
         ),
         IdmBinarySensorAddress(
             address=1102,
-            name="failure_compressor_3",
-            device_class=BinarySensorDeviceClass.PROBLEM,
+            name="state_compressor_3",
+            device_class=BinarySensorDeviceClass.RUNNING,
         ),
         IdmBinarySensorAddress(
             address=1103,
-            name="failure_compressor_4",
-            device_class=BinarySensorDeviceClass.PROBLEM,
+            name="state_compressor_4",
+            device_class=BinarySensorDeviceClass.RUNNING,
         ),
         IdmBinarySensorAddress(
             address=1710,
