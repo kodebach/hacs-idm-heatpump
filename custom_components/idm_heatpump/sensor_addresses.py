@@ -682,10 +682,10 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _WordSensorAddress(
             address=1104,
             name="load_charge_pump",
-            unit=PERCENTAGE,
+            unit=None,
             device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
-            min_value=0,
+            min_value=-1,
             max_value=100,
         ),
         _WordSensorAddress(

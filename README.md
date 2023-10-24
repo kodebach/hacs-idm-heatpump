@@ -37,7 +37,34 @@ Before Home Assistant can connect to the heat pump you need to make sure "Modbus
 
 <!---->
 
-## Contributions are welcome!
+## Additional notes for sensor data
+
+- **Status Ladepumpe (`load_charge_pump`)**:
+  This value is reported as a percentage in the IDM interface, but has a range of -1 to 100, with -1 meaning "pump is off", 0 meaning "pump running at minimum speed" and 100 meaning "pump running at maximum speed".
+  To avoid confusion about the what -1% means and how values between 0 and 100 should be interpreted, this integration reports the value without unit and leaves interpretation to the user.
+  You may want to add extra sensor to your `configuration.yaml` file to get more sensible data:
+
+  ```yaml
+  binary_sensor:
+    - platform: threshold # use a threshold sensor to check whether charge pump is active
+      name: "Ladepumpe aktiv"
+      entity_id: sensor.<heatpump>_load_charge_pump # replace with your entity id
+      upper: 0
+  ```
+
+  > **Note**:
+  > It may be that your heat pump does not have variable speed charge pumps, in which case you probably would only see the values -1 and 100.
+  > The binary sensor above will still work for that case.
+  > For the other cases it is harder, because other than -1 meaning "power off" and 0-100 "power on at some speed", IDM documentation doesn't say how values should be interpreted.
+  > However, we can make some guesses for the two common types of variable speed pumps:
+  > - _0-10 V controlled pumps_:
+  >   The 0-100 value probably maps directly to the 0-10 V signal, either `0->0,x->x/10,100->10` or `0->10,x->10-x/10,100->0`, depending on whether 10 V or 0 V is for maximum speed.
+  > - _PWM controlled pumps_:
+  >   The 0-100 value probably indicates the PWM duty cycle as a percentage.
+  >   Again, it could be 0 or 100 that mean PWM always active, depending on what the pump interprets as "run at maximum speed".
+  > These conversions could be done with a template sensor in `configuration.yaml`.
+
+## Contributions are welcome
 
 If you want to contribute to this please read the [Contribution guidelines](CONTRIBUTING.md)
 
@@ -49,6 +76,5 @@ If you want to contribute to this please read the [Contribution guidelines](CONT
 [hacs]: https://github.com/hacs/integration
 [hacsbadge]: https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=for-the-badge
 [license-shield]: https://img.shields.io/github/license/kodebach/hacs-idm-heatpump.svg?style=for-the-badge
-[maintenance-shield]: https://img.shields.io/badge/maintainer-Joakim%20Sørensen%20%40ludeeus-blue.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/kodebach/hacs-idm-heatpump.svg?style=for-the-badge
 [releases]: https://github.com/kodebach/hacs-idm-heatpump/releases
