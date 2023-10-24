@@ -39,7 +39,7 @@ Before Home Assistant can connect to the heat pump you need to make sure "Modbus
 
 ## Additional notes for sensor data
 
-- **Status Ladepumpe (`load_charge_pump`)**:
+- **Status Ladepumpe**:
   This value is reported as a percentage in the IDM interface, but has a range of -1 to 100, with -1 meaning "pump is off", 0 meaning "pump running at minimum speed" and 100 meaning "pump running at maximum speed".
   To avoid confusion about the what -1% means and how values between 0 and 100 should be interpreted, this integration reports the value without unit and leaves interpretation to the user.
   You may want to add extra sensor to your `configuration.yaml` file to get more sensible data:
@@ -48,7 +48,7 @@ Before Home Assistant can connect to the heat pump you need to make sure "Modbus
   binary_sensor:
     - platform: threshold # use a threshold sensor to check whether charge pump is active
       name: "Ladepumpe aktiv"
-      entity_id: sensor.<heatpump>_load_charge_pump # replace with your entity id
+      entity_id: sensor.heatpump_status_ladepumpe # replace with your entity id
       upper: 0
   ```
 

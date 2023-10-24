@@ -181,7 +181,7 @@ class _WordSensorAddress(IdmSensorAddress[int]):
         return 1
 
     def decode(self, decoder: BinaryPayloadDecoder) -> int:
-        value = decoder.decode_16bit_uint()
+        value = decoder.decode_16bit_int()
         return (
             None
             if (self.min_value is not None and value < self.min_value)
