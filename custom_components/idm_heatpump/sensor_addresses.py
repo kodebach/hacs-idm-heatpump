@@ -98,6 +98,7 @@ class IdmBinarySensorAddress(BaseSensorAddress[bool]):
     def decode(self, decoder: BinaryPayloadDecoder) -> bool:
         """Decode this sensor's value."""
         value = decoder.decode_16bit_uint()
+        LOGGER.debug("raw value (uint16) for %s: %d", self.name, value)
         return value == 1
 
     def entity_description(self, config_entry: ConfigEntry) -> BinarySensorEntityDescription:
@@ -122,8 +123,10 @@ class _FloatSensorAddress(IdmSensorAddress[float]):
         return 2
 
     def decode(self, decoder: BinaryPayloadDecoder) -> float:
-        value = round(decoder.decode_32bit_float() *
-                      self.scale, self.decimal_digits)
+        raw_value = decoder.decode_32bit_float()
+        LOGGER.debug("raw value (float32) for %s: %d", self.name, raw_value)
+        value = round(raw_value * self.scale, self.decimal_digits)
+        LOGGER.debug("scaled & rounded value for %s: %d", self.name, value)
         return (
             None
             if (self.min_value is not None and value < self.min_value)
@@ -153,6 +156,7 @@ class _UCharSensorAddress(IdmSensorAddress[int]):
 
     def decode(self, decoder: BinaryPayloadDecoder) -> int:
         value = decoder.decode_16bit_uint()
+        LOGGER.debug("raw value (uint16) for %s: %d", self.name, value)
         return (
             None
             if (self.min_value is not None and value < self.min_value)
@@ -182,6 +186,7 @@ class _WordSensorAddress(IdmSensorAddress[int]):
 
     def decode(self, decoder: BinaryPayloadDecoder) -> int:
         value = decoder.decode_16bit_int()
+        LOGGER.debug("raw value (int16) for %s: %d", self.name, value)
         return (
             None
             if (self.min_value is not None and value < self.min_value)
@@ -209,6 +214,7 @@ class _EnumSensorAddress(IdmSensorAddress[_EnumT], Generic[_EnumT]):
 
     def decode(self, decoder: BinaryPayloadDecoder) -> _EnumT | None:
         value = decoder.decode_16bit_uint()
+        LOGGER.debug("raw value (uint16) for %s: %d", self.name, value)
         if value == 0xFFFF:
             return None
         try:
@@ -236,6 +242,7 @@ class _BitFieldSensorAddress(IdmSensorAddress[_FlagT], Generic[_FlagT]):
 
     def decode(self, decoder: BinaryPayloadDecoder) -> _FlagT | None:
         value = decoder.decode_16bit_uint()
+        LOGGER.debug("raw value (uint16) for %s: %d", self.name, value)
         if value == 0xFFFF:
             return None
         try:
