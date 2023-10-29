@@ -13,6 +13,7 @@ from homeassistant.components.binary_sensor import (
     BinarySensorDeviceClass,
     BinarySensorEntityDescription,
 )
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     CURRENCY_EURO,
     ENERGY_KILO_WATT_HOUR,
@@ -35,6 +36,7 @@ from .const import (
     SystemStatus,
     ZoneMode,
 )
+from .logger import LOGGER
 
 _T = TypeVar("_T")
 _EnumT = TypeVar("_EnumT", bound=IntEnum)
@@ -62,7 +64,8 @@ class BaseSensorAddress(ABC, Generic[_T]):
     def encode(self, builder: BinaryPayloadBuilder, value: _T) -> None:
         """Encode this sensor's value."""
 
-    def entity_description(self, config_entry) -> SensorEntityDescription:
+    @abstractmethod
+    def entity_description(self, config_entry: ConfigEntry) -> SensorEntityDescription:
         """Get SensorEntityDescription for this sensor."""
 
     @property
@@ -101,13 +104,14 @@ class IdmBinarySensorAddress(BaseSensorAddress[bool]):
     def decode(self, decoder: BinaryPayloadDecoder) -> bool:
         """Decode this sensor's value."""
         value = decoder.decode_16bit_uint()
+        LOGGER.debug("raw value (uint16) for %s: %d", self.name, value)
         return value == 1
 
     def encode(self, builder: BinaryPayloadBuilder, value: bool):
         """Encode this sensor's value."""
         builder.add_16bit_uint(1 if value else 0)
 
-    def entity_description(self, config_entry) -> BinarySensorEntityDescription:
+    def entity_description(self, config_entry: ConfigEntry) -> BinarySensorEntityDescription:
         """SensorEntityDescription for this sensor."""
         return BinarySensorEntityDescription(
             key=self.name,
@@ -129,8 +133,10 @@ class _FloatSensorAddress(IdmSensorAddress[float]):
         return 2
 
     def decode(self, decoder: BinaryPayloadDecoder) -> float:
-        value = round(decoder.decode_32bit_float() *
-                      self.scale, self.decimal_digits)
+        raw_value = decoder.decode_32bit_float()
+        LOGGER.debug("raw value (float32) for %s: %d", self.name, raw_value)
+        value = round(raw_value * self.scale, self.decimal_digits)
+        LOGGER.debug("scaled & rounded value for %s: %d", self.name, value)
         return (
             None
             if (self.min_value is not None and value < self.min_value)
@@ -142,7 +148,7 @@ class _FloatSensorAddress(IdmSensorAddress[float]):
         assert value >= self.min_value and value <= self.max_value
         builder.add_32bit_float(value)
 
-    def entity_description(self, config_entry):
+    def entity_description(self, config_entry: ConfigEntry) -> SensorEntityDescription:
         return SensorEntityDescription(
             key=self.name,
             name=f"{config_entry.data.get(CONF_DISPLAY_NAME)}: {SENSOR_NAMES.get(self.address)}",
@@ -164,6 +170,7 @@ class _UCharSensorAddress(IdmSensorAddress[int]):
 
     def decode(self, decoder: BinaryPayloadDecoder) -> int:
         value = decoder.decode_16bit_uint()
+        LOGGER.debug("raw value (uint16) for %s: %d", self.name, value)
         return (
             None
             if (self.min_value is not None and value < self.min_value)
@@ -175,7 +182,7 @@ class _UCharSensorAddress(IdmSensorAddress[int]):
         assert self.min_value <= value <= self.max_value
         builder.add_16bit_uint(value)
 
-    def entity_description(self, config_entry):
+    def entity_description(self, config_entry: ConfigEntry) -> SensorEntityDescription:
         return SensorEntityDescription(
             key=self.name,
             name=f"{config_entry.data.get(CONF_DISPLAY_NAME)}: {SENSOR_NAMES.get(self.address)}",
@@ -196,7 +203,8 @@ class _WordSensorAddress(IdmSensorAddress[int]):
         return 1
 
     def decode(self, decoder: BinaryPayloadDecoder) -> int:
-        value = decoder.decode_16bit_uint()
+        value = decoder.decode_16bit_int()
+        LOGGER.debug("raw value (int16) for %s: %d", self.name, value)
         return (
             None
             if (self.min_value is not None and value < self.min_value)
@@ -208,7 +216,7 @@ class _WordSensorAddress(IdmSensorAddress[int]):
         assert self.min_value <= value <= self.max_value
         builder.add_16bit_uint(value)
 
-    def entity_description(self, config_entry):
+    def entity_description(self, config_entry: ConfigEntry) -> SensorEntityDescription:
         return SensorEntityDescription(
             key=self.name,
             name=f"{config_entry.data.get(CONF_DISPLAY_NAME)}: {SENSOR_NAMES.get(self.address)}",
@@ -226,16 +234,21 @@ class _EnumSensorAddress(IdmSensorAddress[_EnumT], Generic[_EnumT]):
     def size(self):
         return 1
 
-    def decode(self, decoder: BinaryPayloadDecoder) -> _EnumT:
+    def decode(self, decoder: BinaryPayloadDecoder) -> _EnumT | None:
         value = decoder.decode_16bit_uint()
+        LOGGER.debug("raw value (uint16) for %s: %d", self.name, value)
         if value == 0xFFFF:
             return None
-        return self.enum(value)
+        try:
+            return self.enum(value)
+        except ValueError as exc:
+            LOGGER.debug("Couldn't read value for %s", self.name, exc_info=exc)
+            return None
 
     def encode(self, builder: BinaryPayloadBuilder, value: _EnumT):
         builder.add_16bit_uint(value.value)
 
-    def entity_description(self, config_entry):
+    def entity_description(self, config_entry: ConfigEntry) -> SensorEntityDescription:
         return SensorEntityDescription(
             key=self.name,
             name=f"{config_entry.data.get(CONF_DISPLAY_NAME)}: {SENSOR_NAMES.get(self.address)}",
@@ -252,16 +265,21 @@ class _BitFieldSensorAddress(IdmSensorAddress[_FlagT], Generic[_FlagT]):
     def size(self):
         return 1
 
-    def decode(self, decoder: BinaryPayloadDecoder) -> _FlagT:
+    def decode(self, decoder: BinaryPayloadDecoder) -> _FlagT | None:
         value = decoder.decode_16bit_uint()
+        LOGGER.debug("raw value (uint16) for %s: %d", self.name, value)
         if value == 0xFFFF:
             return None
-        return self.flag(value)
+        try:
+            return self.flag(value)
+        except ValueError as exc:
+            LOGGER.debug("Couldn't read value for %s", self.name, exc_info=exc)
+            return None
 
     def encode(self, builder: BinaryPayloadBuilder, value: _FlagT):
         builder.add_16bit_uint(value)
 
-    def entity_description(self, config_entry):
+    def entity_description(self, config_entry: ConfigEntry) -> SensorEntityDescription:
         return SensorEntityDescription(
             key=self.name,
             name=f"{config_entry.data.get(CONF_DISPLAY_NAME)}: {SENSOR_NAMES.get(self.address)}",
@@ -744,11 +762,11 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         ),
         _WordSensorAddress(
             address=1104,
-            name="load_charge_pump",
-            unit=PERCENTAGE,
+            name="state_charge_pump",
+            unit=None,
             device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
-            min_value=0,
+            min_value=-1,
             max_value=100,
             supported_features=SensorFeatures.NONE,
         ),
@@ -1141,26 +1159,26 @@ BINARY_SENSOR_ADDRESSES: dict[str, IdmBinarySensorAddress] = {
         ),
         IdmBinarySensorAddress(
             address=1100,
-            name="failure_compressor_1",
-            device_class=BinarySensorDeviceClass.PROBLEM,
+            name="state_compressor_1",
+            device_class=BinarySensorDeviceClass.RUNNING,
             supported_features=SensorFeatures.NONE,
         ),
         IdmBinarySensorAddress(
             address=1101,
-            name="failure_compressor_2",
-            device_class=BinarySensorDeviceClass.PROBLEM,
+            name="state_compressor_2",
+            device_class=BinarySensorDeviceClass.RUNNING,
             supported_features=SensorFeatures.NONE,
         ),
         IdmBinarySensorAddress(
             address=1102,
-            name="failure_compressor_3",
-            device_class=BinarySensorDeviceClass.PROBLEM,
+            name="state_compressor_3",
+            device_class=BinarySensorDeviceClass.RUNNING,
             supported_features=SensorFeatures.NONE,
         ),
         IdmBinarySensorAddress(
             address=1103,
-            name="failure_compressor_4",
-            device_class=BinarySensorDeviceClass.PROBLEM,
+            name="state_compressor_4",
+            device_class=BinarySensorDeviceClass.RUNNING,
             supported_features=SensorFeatures.NONE,
         ),
         IdmBinarySensorAddress(
