@@ -145,7 +145,8 @@ class _FloatSensorAddress(IdmSensorAddress[float]):
         )
 
     def encode(self, builder: BinaryPayloadBuilder, value: float):
-        assert value >= self.min_value and value <= self.max_value
+        assert (self.min_value is None or value >= self.min_value) and (
+            self.max_value is None or value <= self.max_value)
         builder.add_32bit_float(value)
 
     def entity_description(self, config_entry: ConfigEntry) -> SensorEntityDescription:
@@ -179,7 +180,8 @@ class _UCharSensorAddress(IdmSensorAddress[int]):
         )
 
     def encode(self, builder: BinaryPayloadBuilder, value: int):
-        assert self.min_value <= value <= self.max_value
+        assert (self.min_value is None or value >= self.min_value) and (
+            self.max_value is None or value <= self.max_value)
         builder.add_16bit_uint(value)
 
     def entity_description(self, config_entry: ConfigEntry) -> SensorEntityDescription:
@@ -213,7 +215,8 @@ class _WordSensorAddress(IdmSensorAddress[int]):
         )
 
     def encode(self, builder: BinaryPayloadBuilder, value: float):
-        assert self.min_value <= value <= self.max_value
+        assert (self.min_value is None or value >= self.min_value) and (
+            self.max_value is None or value <= self.max_value)
         builder.add_16bit_uint(value)
 
     def entity_description(self, config_entry: ConfigEntry) -> SensorEntityDescription:
