@@ -10,6 +10,7 @@ from .coordinator import IdmHeatpumpDataUpdateCoordinator
 from .sensor_addresses import IdmSensorAddress
 from .const import DOMAIN, SERVICE_SET_POWER, SensorFeatures
 from .entity import IdmHeatpumpEntity
+from .logger import LOGGER
 
 
 async def async_setup_entry(
@@ -33,7 +34,8 @@ async def async_setup_entry(
         target = call.data.get("target")
         entity = platform.entities[target]
 
-        if SensorFeatures.SET_POWER not in entity.supported_features or not isinstance(entity, IdmHeatpumpEntity):
+        if (not isinstance(entity, IdmHeatpumpEntity)
+                or SensorFeatures.SET_POWER not in entity.supported_features):
             raise HomeAssistantError(
                 f"Entity {entity.entity_id} does not support this service."
             )
@@ -41,6 +43,8 @@ async def async_setup_entry(
         entity: IdmHeatpumpEntity[float]
 
         value: float = call.data.get("value")
+        LOGGER.debug("Calling set_power with value %s on %s",
+                     value, entity.entity_id)
         await entity.async_write_value(value)
 
     hass.services.async_register(
