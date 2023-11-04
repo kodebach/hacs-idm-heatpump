@@ -1,13 +1,16 @@
 """Sensor platform for idm_heatpump."""
 from homeassistant.components.sensor import SensorEntity
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, ServiceCall, HomeAssistantError
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.helpers import entity_platform
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+
 
 from .coordinator import IdmHeatpumpDataUpdateCoordinator
 from .sensor_addresses import IdmSensorAddress
-from .const import DOMAIN
+from .const import DOMAIN, SERVICE_SET_POWER, SensorFeatures
 from .entity import IdmHeatpumpEntity
+from .logger import LOGGER
 
 
 async def async_setup_entry(
@@ -23,6 +26,31 @@ async def async_setup_entry(
             for address in coordinator.heatpump.sensors
             if isinstance(address, IdmSensorAddress)
         ],
+    )
+
+    platform = entity_platform.async_get_current_platform()
+
+    async def handle_set_power(call: ServiceCall):
+        target = call.data.get("target")
+        entity = platform.entities[target]
+
+        if (not isinstance(entity, IdmHeatpumpEntity)
+                or SensorFeatures.SET_POWER not in entity.supported_features):
+            raise HomeAssistantError(
+                f"Entity {entity.entity_id} does not support this service."
+            )
+
+        entity: IdmHeatpumpEntity[float]
+
+        value: float = call.data.get("value")
+        LOGGER.debug("Calling set_power with value %s on %s",
+                     value, entity.entity_id)
+        await entity.async_write_value(value)
+
+    hass.services.async_register(
+        domain=DOMAIN,
+        service=SERVICE_SET_POWER,
+        service_func=handle_set_power,
     )
 
 
