@@ -1394,7 +1394,7 @@ SENSOR_NAMES: dict[int, str] = {
     1874: "ISC Modus",
     1999: "Störmeldungen quittieren",
     74: "Aktueller PV-Überschuss",
-    78: "Aktueller PV Produktion",
+    78: "Aktuelle PV Produktion",
     4122: "Aktuelle Leistungsaufnahme Wärmepumpe",
     **dict(
         zn for zone in range(10) for zn in [
