@@ -29,7 +29,7 @@ from .const import (
     SensorFeatures,  # noqa: F401
 )
 
-CONFIG_SCHEMA = cv.config_entry_only_config_schema
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
 
 async def async_setup(hass: HomeAssistant, config: Config):  # pylint: disable=unused-argument
