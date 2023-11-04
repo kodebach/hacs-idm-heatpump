@@ -8,6 +8,7 @@ from datetime import timedelta
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config, HomeAssistant
 from homeassistant.components import persistent_notification
+from homeassistant.helpers import config_validation as cv
 
 from .coordinator import IdmHeatpumpDataUpdateCoordinator
 from .idm_heatpump import IdmHeatpump
@@ -27,6 +28,8 @@ from .const import (
     STARTUP_MESSAGE,
     SensorFeatures,  # noqa: F401
 )
+
+CONFIG_SCHEMA = cv.config_entry_only_config_schema
 
 
 async def async_setup(hass: HomeAssistant, config: Config):  # pylint: disable=unused-argument

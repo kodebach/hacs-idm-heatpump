@@ -92,6 +92,10 @@
             "name": "Set power value",
             "description": "Sends a power value to the heat pump.",
             "fields": {
+                "target": {
+                    "name": "Target",
+                    "description": "The sensor for which to set the value."
+                },
                 "value": {
                     "name": "Value",
                     "description": "The value to send."
