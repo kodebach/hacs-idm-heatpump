@@ -43,7 +43,7 @@ class IdmHeatpumpEntity(CoordinatorEntity, Generic[_T]):
     @property
     def available(self) -> bool:
         """Return wether this sensor is available."""
-        return self.sensor_address in self.coordinator.heatpump.sensors
+        return self.sensor_address.name in self.coordinator.data
 
     @property
     def unique_id(self):
