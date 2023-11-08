@@ -2,7 +2,6 @@
 
 from enum import IntFlag, IntEnum
 from typing import Any
-from homeassistant.const import Platform
 
 
 class SensorFeatures(IntFlag):
@@ -32,8 +31,8 @@ class HeatPumpStatus(_SensorFlag):
     DEFROSTING = 8
 
     @classmethod
-    def _missing_(cls, _: object) -> Any:
-        return cls.OFF
+    def _missing_(cls, value) -> Any:
+        return cls.OFF if value is None else None
 
 
 class IscMode(_SensorFlag):
@@ -45,8 +44,8 @@ class IscMode(_SensorFlag):
     SOURCE = 8
 
     @classmethod
-    def _missing_(cls, _: object) -> Any:
-        return cls.NONE
+    def _missing_(cls, value) -> Any:
+        return cls.NONE if value is None else None
 
 
 class CircuitMode(_SensorEnum):
@@ -60,8 +59,8 @@ class CircuitMode(_SensorEnum):
     MANUAL_COOL = 5
 
     @classmethod
-    def _missing_(cls, _: object) -> Any:
-        return cls.OFF
+    def _missing_(cls, value) -> Any:
+        return cls.OFF if value is None else None
 
 
 class ActiveCircuitMode(_SensorEnum):
@@ -72,8 +71,8 @@ class ActiveCircuitMode(_SensorEnum):
     COOLING = 2
 
     @classmethod
-    def _missing_(cls, _: object) -> Any:
-        return cls.OFF
+    def _missing_(cls, value) -> Any:
+        return cls.OFF if value is None else None
 
 
 class ZoneMode(_SensorEnum):
@@ -83,8 +82,8 @@ class ZoneMode(_SensorEnum):
     HEATING = 1
 
     @classmethod
-    def _missing_(cls, _: object) -> Any:
-        return cls.HEATING
+    def _missing_(cls, value) -> Any:
+        return cls.HEATING if value is None else None
 
 
 class RoomMode(_SensorEnum):
@@ -97,8 +96,8 @@ class RoomMode(_SensorEnum):
     COMFORT = 4
 
     @classmethod
-    def _missing_(cls, _: object) -> Any:
-        return cls.OFF
+    def _missing_(cls, value) -> Any:
+        return cls.OFF if value is None else None
 
 
 class SystemStatus(_SensorEnum):
@@ -111,8 +110,8 @@ class SystemStatus(_SensorEnum):
     HEATING_COOLING_ONLY = 5
 
     @classmethod
-    def _missing_(cls, _: object) -> Any:
-        return cls.STANDBY
+    def _missing_(cls, value) -> Any:
+        return cls.STANDBY if value is None else None
 
 
 class SmartGridStatus(_SensorEnum):
@@ -124,8 +123,8 @@ class SmartGridStatus(_SensorEnum):
     GRID_BLOCKED_SOLAR_ON = 4
 
     @classmethod
-    def _missing_(cls, _: object) -> Any:
-        return cls.GRID_BLOCKED_SOLAR_OFF
+    def _missing_(cls, value) -> Any:
+        return cls.GRID_BLOCKED_SOLAR_OFF if value is None else None
 
 
 class SolarMode(_SensorEnum):
@@ -138,8 +137,8 @@ class SolarMode(_SensorEnum):
     SOURCE_POOL = 4
 
     @classmethod
-    def _missing_(cls, _: object) -> Any:
-        return cls.AUTO
+    def _missing_(cls, value) -> Any:
+        return cls.AUTO if value is None else None
 
 
 # Base component constants
@@ -150,11 +149,6 @@ MODEL_ZONE = "Navigator Pro Einzelraumregelung"
 DOMAIN = "idm_heatpump"
 DOMAIN_DATA = f"{DOMAIN}_data"
 ISSUE_URL = "https://github.com/kodebach/hacs-idm-heatpump/issues"
-
-# Platforms
-BINARY_SENSOR = Platform.BINARY_SENSOR
-SENSOR = Platform.SENSOR
-PLATFORMS = [BINARY_SENSOR, SENSOR]
 
 # Services
 SERVICE_SET_POWER = "set_power"

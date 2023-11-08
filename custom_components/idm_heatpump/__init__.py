@@ -5,11 +5,12 @@ https://github.com/custom-components/idm_heatpump
 """
 from datetime import timedelta
 
-from homeassistant.loader import async_get_integration
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config, HomeAssistant
 from homeassistant.components import persistent_notification
+from homeassistant.const import Platform
 from homeassistant.helpers import config_validation as cv
+from homeassistant.loader import async_get_integration
 
 from .coordinator import IdmHeatpumpDataUpdateCoordinator
 from .idm_heatpump import IdmHeatpump
@@ -27,9 +28,13 @@ from .const import (
     OPT_ZONE_COUNT,
     OPT_ZONE_ROOM_9_RELAY,
     OPT_ZONE_ROOM_COUNT,
-    PLATFORMS,
     STARTUP_MESSAGE_TEMPLATE,
 )
+
+PLATFORMS = [
+    Platform.BINARY_SENSOR,
+    Platform.SENSOR,
+]
 
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
