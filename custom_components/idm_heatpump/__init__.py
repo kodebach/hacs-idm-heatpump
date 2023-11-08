@@ -5,6 +5,7 @@ https://github.com/custom-components/idm_heatpump
 """
 from datetime import timedelta
 
+from homeassistant.loader import async_get_integration
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config, HomeAssistant
 from homeassistant.components import persistent_notification
@@ -19,14 +20,15 @@ from .const import (
     CONF_HOSTNAME,
     DEFAULT_REFRESH_INTERVAL,
     DOMAIN,
+    ISSUE_URL,
+    NAME,
     OPT_HEATING_CIRCUITS,
     OPT_REFRESH_INTERVAL,
     OPT_ZONE_COUNT,
     OPT_ZONE_ROOM_9_RELAY,
     OPT_ZONE_ROOM_COUNT,
     PLATFORMS,
-    STARTUP_MESSAGE,
-    SensorFeatures,  # noqa: F401
+    STARTUP_MESSAGE_TEMPLATE,
 )
 
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
@@ -39,41 +41,44 @@ async def async_setup(hass: HomeAssistant, config: Config):  # pylint: disable=u
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     """Set up this integration using UI."""
+    integration = await async_get_integration(hass, DOMAIN)
+
     if hass.data.get(DOMAIN) is None:
         hass.data.setdefault(DOMAIN, {})
-        LOGGER.info(STARTUP_MESSAGE)
+
+    LOGGER.info(
+        STARTUP_MESSAGE_TEMPLATE,
+        NAME,
+        integration.manifest["version"],
+        ISSUE_URL,
+    )
 
     hostname = entry.data.get(CONF_HOSTNAME)
     zone_count = entry.options.get(OPT_ZONE_COUNT, 0)
 
     heatpump = IdmHeatpump(
         hostname=hostname,
-        circuits=[HeatingCircuit[c]
-                  for c in entry.options.get(OPT_HEATING_CIRCUITS, [])],
+        circuits=[
+            HeatingCircuit[c] for c in entry.options.get(OPT_HEATING_CIRCUITS, [])
+        ],
         zones=[
             ZoneModule(
                 index=i,
                 room_count=entry.options.get(OPT_ZONE_ROOM_COUNT[i], 1),
-                room_9_relay=entry.options.get(
-                    OPT_ZONE_ROOM_9_RELAY[i], False),
+                room_9_relay=entry.options.get(OPT_ZONE_ROOM_9_RELAY[i], False),
             )
             for i in range(zone_count)
         ],
     )
 
-    # device_registry = dr.async_get(hass)
-    #
-    # for zone in range(zone_count, MAX_ZONE_COUNT):
-    #    device = device_registry.async_get_device(
-    #        {(DOMAIN, f"{entry.entry_id}_zone_{zone+1}")}
-    #    )
-    #    if device is not None:
-    #        device_registry.async_remove_device(device.id)
-
-    update_interval = timedelta(**entry.options.get(
-        OPT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL))
-    LOGGER.debug("Setting up IDM heat pump at %s with update_interval=%s",
-                 hostname, update_interval)
+    update_interval = timedelta(
+        **entry.options.get(OPT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL)
+    )
+    LOGGER.debug(
+        "Setting up IDM heat pump at %s with update_interval=%s",
+        hostname,
+        update_interval,
+    )
     coordinator = IdmHeatpumpDataUpdateCoordinator(
         hass,
         heatpump=heatpump,
@@ -93,7 +98,9 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Handle removal of an entry."""
     unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     if unload_ok:
-        coordinator: IdmHeatpumpDataUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
+        coordinator: IdmHeatpumpDataUpdateCoordinator = hass.data[DOMAIN][
+            entry.entry_id
+        ]
 
         # Ensure disconnected and cleanup stop sub
         coordinator.heatpump.client.close()
