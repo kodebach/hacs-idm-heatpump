@@ -34,8 +34,10 @@ async def async_setup_entry(
         target = call.data.get("target")
         entity = platform.entities[target]
 
-        if (not isinstance(entity, IdmHeatpumpEntity)
-                or SensorFeatures.SET_POWER not in entity.supported_features):
+        if (
+            not isinstance(entity, IdmHeatpumpEntity)
+            or SensorFeatures.SET_POWER not in entity.supported_features
+        ):
             raise HomeAssistantError(
                 f"Entity {entity.entity_id} does not support this service."
             )
@@ -43,8 +45,7 @@ async def async_setup_entry(
         entity: IdmHeatpumpEntity[float]
 
         value: float = call.data.get("value")
-        LOGGER.debug("Calling set_power with value %s on %s",
-                     value, entity.entity_id)
+        LOGGER.debug("Calling set_power with value %s on %s", value, entity.entity_id)
         await entity.async_write_value(value)
 
     hass.services.async_register(
@@ -61,14 +62,12 @@ class IdmHeatpumpSensor(IdmHeatpumpEntity, SensorEntity):
         self,
         coordinator: IdmHeatpumpDataUpdateCoordinator,
         config_entry: ConfigEntry,
-        sensor_address: IdmSensorAddress
+        sensor_address: IdmSensorAddress,
     ):
         """Create sensor."""
         super().__init__(coordinator, config_entry)
         self.sensor_address = sensor_address
-        self.entity_description = self.sensor_address.entity_description(
-            config_entry
-        )
+        self.entity_description = self.sensor_address.entity_description(config_entry)
 
     @property
     def sensor_id(self):

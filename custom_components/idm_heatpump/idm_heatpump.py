@@ -106,7 +106,7 @@ class IdmHeatpump:
                 await self.client.connect()
             return await self._fetch_registers(group)
 
-    async def _fetch_sensors(self, group: _SensorGroup) -> dict | None:
+    async def _fetch_sensors(self, group: _SensorGroup) -> dict[str, any] | None:
         LOGGER.debug("fetching registers %d", group.start)
 
         try:
@@ -138,12 +138,20 @@ class IdmHeatpump:
 
             LOGGER.debug("got decoder %d", group.start)
 
-            data = {}
+            data: dict[str, any] = {}
             for sensor in group.sensors:
-                value = sensor.decode(decoder)
+                try:
+                    available, value = sensor.decode(decoder)
+                    if available:
+                        data[sensor.name] = value
+                except ValueError as error:
+                    # if decoding fails refetch single register and try again
+                    LOGGER.debug(
+                        "decode failed for %s, retrying with single fetch",
+                        sensor.name,
+                        exc_info=error,
+                    )
 
-                # if decoding fails refetch single register and try again
-                if value is not None and isinstance(value, ValueError):
                     single_result = await self._fetch_retry(
                         IdmHeatpump._SensorGroup(
                             start=sensor.address,
@@ -151,19 +159,25 @@ class IdmHeatpump:
                             sensors=[sensor],
                         )
                     )
-                    value = sensor.decode(
-                        BinaryPayloadDecoder.fromRegisters(
-                            single_result.registers,
-                            byteorder=Endian.BIG,
-                            wordorder=Endian.LITTLE,
+
+                    try:
+                        available, value = sensor.decode(
+                            BinaryPayloadDecoder.fromRegisters(
+                                single_result.registers,
+                                byteorder=Endian.BIG,
+                                wordorder=Endian.LITTLE,
+                            )
                         )
-                    )
-
-                # if decoding fails again set to None
-                if value is not None and isinstance(value, ValueError):
-                    value = None
-
-                data[sensor.name] = value
+                        if available:
+                            data[sensor.name] = value
+                    except ValueError as single_error:
+                        # if decoding fails again set to None (unknown)
+                        LOGGER.debug(
+                            "decode failed for %s after single fetch",
+                            sensor.name,
+                            exc_info=single_error,
+                        )
+                        data[sensor.name] = None
 
         except ModbusException as exception:
             LOGGER.error(
@@ -190,7 +204,7 @@ class IdmHeatpump:
 
         LOGGER.debug("got groups")
 
-        data = {}
+        data: dict[str, any] = {}
         for group in groups:
             if group is not None:
                 data.update(group)

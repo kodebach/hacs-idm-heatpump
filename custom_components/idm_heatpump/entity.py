@@ -28,7 +28,9 @@ class IdmHeatpumpEntity(CoordinatorEntity, Generic[_T]):
     sensor_address: BaseSensorAddress[_T]
     coordinator: IdmHeatpumpDataUpdateCoordinator
 
-    def __init__(self, coordinator: IdmHeatpumpDataUpdateCoordinator, config_entry: ConfigEntry):
+    def __init__(
+        self, coordinator: IdmHeatpumpDataUpdateCoordinator, config_entry: ConfigEntry
+    ):
         """Create entity."""
         super().__init__(coordinator)
         self.config_entry = config_entry
@@ -54,9 +56,7 @@ class IdmHeatpumpEntity(CoordinatorEntity, Generic[_T]):
         zone = self.sensor_address.zone_id
         if zone is not None:
             return DeviceInfo(
-                identifiers={
-                    (DOMAIN, f"{self.config_entry.entry_id}_zone_{zone+1}")
-                },
+                identifiers={(DOMAIN, f"{self.config_entry.entry_id}_zone_{zone+1}")},
                 name=f"{self.config_entry.data.get(CONF_DISPLAY_NAME)} Zone {zone+1}",
                 model=MODEL_ZONE,
                 manufacturer=MANUFACTURER,

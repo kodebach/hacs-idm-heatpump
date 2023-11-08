@@ -1,6 +1,7 @@
 """Constants for idm_heatpump."""
 
 from enum import IntFlag, IntEnum
+from typing import Any
 from homeassistant.const import Platform
 
 
@@ -30,6 +31,10 @@ class HeatPumpStatus(_SensorFlag):
     WATER = 4
     DEFROSTING = 8
 
+    @classmethod
+    def _missing_(cls, _: object) -> Any:
+        return cls.OFF
+
 
 class IscMode(_SensorFlag):
     """ISC mode flags."""
@@ -38,6 +43,10 @@ class IscMode(_SensorFlag):
     HEATING = 1
     WATER = 4
     SOURCE = 8
+
+    @classmethod
+    def _missing_(cls, _: object) -> Any:
+        return cls.NONE
 
 
 class CircuitMode(_SensorEnum):
@@ -50,6 +59,10 @@ class CircuitMode(_SensorEnum):
     MANUAL_HEAT = 4
     MANUAL_COOL = 5
 
+    @classmethod
+    def _missing_(cls, _: object) -> Any:
+        return cls.OFF
+
 
 class ActiveCircuitMode(_SensorEnum):
     """Active operation mode of heating circuit."""
@@ -58,12 +71,20 @@ class ActiveCircuitMode(_SensorEnum):
     HEATING = 1
     COOLING = 2
 
+    @classmethod
+    def _missing_(cls, _: object) -> Any:
+        return cls.OFF
+
 
 class ZoneMode(_SensorEnum):
     """Zone operation mode."""
 
     COOLING = 0
     HEATING = 1
+
+    @classmethod
+    def _missing_(cls, _: object) -> Any:
+        return cls.HEATING
 
 
 class RoomMode(_SensorEnum):
@@ -75,6 +96,10 @@ class RoomMode(_SensorEnum):
     NORMAL = 3
     COMFORT = 4
 
+    @classmethod
+    def _missing_(cls, _: object) -> Any:
+        return cls.OFF
+
 
 class SystemStatus(_SensorEnum):
     """IDM heat pump system status."""
@@ -85,6 +110,10 @@ class SystemStatus(_SensorEnum):
     HOT_WATER_ONLY = 4
     HEATING_COOLING_ONLY = 5
 
+    @classmethod
+    def _missing_(cls, _: object) -> Any:
+        return cls.STANDBY
+
 
 class SmartGridStatus(_SensorEnum):
     """Smart grid status."""
@@ -93,6 +122,10 @@ class SmartGridStatus(_SensorEnum):
     GRID_ALLOWED_SOLAR_OFF = 1
     GRID_UNUSED_SOLAR_ON = 2
     GRID_BLOCKED_SOLAR_ON = 4
+
+    @classmethod
+    def _missing_(cls, _: object) -> Any:
+        return cls.GRID_BLOCKED_SOLAR_OFF
 
 
 class SolarMode(_SensorEnum):
@@ -103,6 +136,10 @@ class SolarMode(_SensorEnum):
     HEATING = 2
     WATER_HEATING = 3
     SOURCE_POOL = 4
+
+    @classmethod
+    def _missing_(cls, _: object) -> Any:
+        return cls.AUTO
 
 
 # Base component constants

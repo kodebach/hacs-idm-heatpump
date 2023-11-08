@@ -13,7 +13,7 @@ from .sensor_addresses import BaseSensorAddress
 _T = TypeVar("_T")
 
 
-class IdmHeatpumpDataUpdateCoordinator(DataUpdateCoordinator):
+class IdmHeatpumpDataUpdateCoordinator(DataUpdateCoordinator[dict[str, any]]):
     """Class to manage fetching data from the API."""
 
     heatpump: IdmHeatpump

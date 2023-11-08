@@ -57,7 +57,7 @@ class BaseSensorAddress(ABC, Generic[_T]):
         """Get number of registers this sensor's value occupies."""
 
     @abstractmethod
-    def decode(self, decoder: BinaryPayloadDecoder) -> _T | None:
+    def decode(self, decoder: BinaryPayloadDecoder) -> tuple[bool, _T]:
         """Decode this sensor's value."""
 
     @abstractmethod
@@ -101,11 +101,11 @@ class IdmBinarySensorAddress(BaseSensorAddress[bool]):
         """Number of registers this sensor's value occupies."""
         return 1
 
-    def decode(self, decoder: BinaryPayloadDecoder) -> bool:
+    def decode(self, decoder: BinaryPayloadDecoder) -> tuple[bool, bool]:
         """Decode this sensor's value."""
         value = decoder.decode_16bit_uint()
         LOGGER.debug("raw value (uint16) for %s: %d", self.name, value)
-        return value == 1
+        return (True, value == 1)
 
     def encode(self, builder: BinaryPayloadBuilder, value: bool):
         """Encode this sensor's value."""
@@ -128,23 +128,30 @@ class _FloatSensorAddress(IdmSensorAddress[float]):
     decimal_digits: int = 2
     scale: float = 1
     min_value: float | None = None
-    max_value: float | None = 0xFFFE
+    max_value: float | None = None
 
     @property
     def size(self):
         return 2
 
-    def decode(self, decoder: BinaryPayloadDecoder) -> float | None:
+    def decode(self, decoder: BinaryPayloadDecoder) -> tuple[bool, float]:
         raw_value = decoder.decode_32bit_float()
         LOGGER.debug("raw value (float32) for %s: %d", self.name, raw_value)
         value = round(raw_value * self.scale, self.decimal_digits)
         LOGGER.debug("scaled & rounded value for %s: %d", self.name, value)
-        return (
-            None
-            if (self.min_value is not None and value < self.min_value)
-            or (self.max_value is not None and value > self.max_value)
-            else value
-        )
+
+        if self.min_value == 0.0 and value == -1:
+            # special case: unavailable
+            return (False, 0.0)
+
+        if (self.min_value is not None and value < self.min_value) or (
+            self.max_value is not None and value > self.max_value
+        ):
+            raise ValueError(
+                f"{value} out of range ({self.min_value} - {self.max_value})"
+            )
+
+        return (True, value)
 
     def encode(self, builder: BinaryPayloadBuilder, value: float):
         assert (self.min_value is None or value >= self.min_value) and (
@@ -172,15 +179,22 @@ class _UCharSensorAddress(IdmSensorAddress[int]):
     def size(self):
         return 1
 
-    def decode(self, decoder: BinaryPayloadDecoder) -> int | None:
+    def decode(self, decoder: BinaryPayloadDecoder) -> tuple[bool, int]:
         value = decoder.decode_16bit_uint()
         LOGGER.debug("raw value (uint16) for %s: %d", self.name, value)
-        return (
-            None
-            if (self.min_value is not None and value < self.min_value)
-            or (self.max_value is not None and value > self.max_value)
-            else value
-        )
+
+        if self.max_value == 0xFFFE and value == 0xFFFF:
+            # special case: unavailable
+            return (False, 0)
+
+        if (self.min_value is not None and value < self.min_value) or (
+            self.max_value is not None and value > self.max_value
+        ):
+            raise ValueError(
+                f"{value} out of range ({self.min_value} - {self.max_value})"
+            )
+
+        return (True, value)
 
     def encode(self, builder: BinaryPayloadBuilder, value: int):
         assert (self.min_value is None or value >= self.min_value) and (
@@ -208,15 +222,22 @@ class _WordSensorAddress(IdmSensorAddress[int]):
     def size(self):
         return 1
 
-    def decode(self, decoder: BinaryPayloadDecoder) -> int | None:
+    def decode(self, decoder: BinaryPayloadDecoder) -> tuple[bool, int]:
         value = decoder.decode_16bit_int()
+
+        if self.min_value == 0 and value == -1:
+            # special case: unavailable
+            return (False, 0)
+
         LOGGER.debug("raw value (int16) for %s: %d", self.name, value)
-        return (
-            None
-            if (self.min_value is not None and value < self.min_value)
-            or (self.max_value is not None and value > self.max_value)
-            else value
-        )
+        if (self.min_value is not None and value < self.min_value) or (
+            self.max_value is not None and value > self.max_value
+        ):
+            raise ValueError(
+                f"{value} out of range ({self.min_value} - {self.max_value})"
+            )
+
+        return (True, value)
 
     def encode(self, builder: BinaryPayloadBuilder, value: float):
         assert (self.min_value is None or value >= self.min_value) and (
@@ -242,16 +263,17 @@ class _EnumSensorAddress(IdmSensorAddress[_EnumT], Generic[_EnumT]):
     def size(self):
         return 1
 
-    def decode(self, decoder: BinaryPayloadDecoder) -> _EnumT | None:
+    def decode(self, decoder: BinaryPayloadDecoder) -> tuple[bool, _EnumT]:
         value = decoder.decode_16bit_uint()
         LOGGER.debug("raw value (uint16) for %s: %d", self.name, value)
         if value == 0xFFFF:
-            return None
+            # special case: unavailable
+            return (False, self.enum(None))
+
         try:
-            return self.enum(value)
-        except ValueError as exc:
-            LOGGER.debug("Couldn't read value for %s", self.name, exc_info=exc)
-            return None
+            return (True, self.enum(value))
+        except ValueError as error:
+            raise ValueError(f"decode failed for {value}") from error
 
     def encode(self, builder: BinaryPayloadBuilder, value: _EnumT):
         builder.add_16bit_uint(value.value)
@@ -273,16 +295,17 @@ class _BitFieldSensorAddress(IdmSensorAddress[_FlagT], Generic[_FlagT]):
     def size(self):
         return 1
 
-    def decode(self, decoder: BinaryPayloadDecoder) -> _FlagT | None:
+    def decode(self, decoder: BinaryPayloadDecoder) -> tuple[bool, _FlagT]:
         value = decoder.decode_16bit_uint()
         LOGGER.debug("raw value (uint16) for %s: %d", self.name, value)
         if value == 0xFFFF:
-            return None
+            # special case: unavailable
+            return (False, self.flag(None))
+
         try:
-            return self.flag(value)
-        except ValueError as exc:
-            LOGGER.debug("Couldn't read value for %s", self.name, exc_info=exc)
-            return None
+            return (True, self.flag(value))
+        except ValueError as error:
+            raise ValueError(f"decode failed for {value}") from error
 
     def encode(self, builder: BinaryPayloadBuilder, value: _FlagT):
         builder.add_16bit_uint(value)
