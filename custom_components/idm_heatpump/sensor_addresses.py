@@ -50,6 +50,7 @@ class BaseSensorAddress(ABC, Generic[_T]):
     address: int
     name: str
     supported_features: SensorFeatures = SensorFeatures.NONE
+    force_group_start: bool = False
 
     @property
     @abstractmethod
@@ -531,6 +532,7 @@ class ZoneModule:
                         enum=RoomMode,
                         address=ZONE_OFFSETS[self.index] + ROOM_OFFSETS[room] + 5,
                         name=f"zone_{self.index+1}_room_{room+1}_mode",
+                        force_group_start=True,
                     ),
                 ]
             ],

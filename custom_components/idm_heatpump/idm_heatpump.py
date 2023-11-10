@@ -71,7 +71,11 @@ class IdmHeatpump:
                 if len(self.sensor_groups) == 0
                 else self.sensor_groups[-1].start + self.sensor_groups[-1].count
             )
-            if len(self.sensor_groups) == 0 or sensor.address != last_address:
+            if (
+                len(self.sensor_groups) == 0
+                or sensor.force_group_start
+                or sensor.address != last_address
+            ):
                 self.sensor_groups.append(
                     IdmHeatpump._SensorGroup(
                         start=sensor.address,
