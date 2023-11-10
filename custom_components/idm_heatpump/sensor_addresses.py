@@ -43,13 +43,13 @@ _EnumT = TypeVar("_EnumT", bound=IntEnum)
 _FlagT = TypeVar("_FlagT", bound=IntFlag)
 
 
-@dataclass
+@dataclass(kw_only=True)
 class BaseSensorAddress(ABC, Generic[_T]):
     """Base class for (binary) sensors of an IDM heatpump."""
 
     address: int
     name: str
-    supported_features: SensorFeatures
+    supported_features: SensorFeatures = SensorFeatures.NONE
 
     @property
     @abstractmethod
@@ -82,19 +82,19 @@ class BaseSensorAddress(ABC, Generic[_T]):
         return len(ZONE_OFFSETS)
 
 
-@dataclass
+@dataclass(kw_only=True)
 class IdmSensorAddress(BaseSensorAddress[_T]):
     """Describes one of the sensors of an IDM heatpump."""
 
-    device_class: SensorDeviceClass
-    state_class: SensorStateClass
+    device_class: SensorDeviceClass | None = None
+    state_class: SensorStateClass | None = None
 
 
-@dataclass
+@dataclass(kw_only=True)
 class IdmBinarySensorAddress(BaseSensorAddress[bool]):
     """Describes one of the binary sensors of an IDM heatpump."""
 
-    device_class: BinarySensorDeviceClass
+    device_class: BinarySensorDeviceClass | None = None
 
     @property
     def size(self) -> int:
@@ -122,7 +122,7 @@ class IdmBinarySensorAddress(BaseSensorAddress[bool]):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class _FloatSensorAddress(IdmSensorAddress[float]):
     unit: str
     decimal_digits: int = 2
@@ -169,7 +169,7 @@ class _FloatSensorAddress(IdmSensorAddress[float]):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class _UCharSensorAddress(IdmSensorAddress[int]):
     unit: str
     min_value: int | None = None
@@ -212,7 +212,7 @@ class _UCharSensorAddress(IdmSensorAddress[int]):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class _WordSensorAddress(IdmSensorAddress[int]):
     unit: str
     min_value: int | None = None
@@ -255,7 +255,7 @@ class _WordSensorAddress(IdmSensorAddress[int]):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class _EnumSensorAddress(IdmSensorAddress[_EnumT], Generic[_EnumT]):
     enum: type[_EnumT]
 
@@ -287,7 +287,7 @@ class _EnumSensorAddress(IdmSensorAddress[_EnumT], Generic[_EnumT]):
         )
 
 
-@dataclass
+@dataclass(kw_only=True)
 class _BitFieldSensorAddress(IdmSensorAddress[_FlagT], Generic[_FlagT]):
     flag: type[_FlagT]
 
@@ -344,7 +344,6 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,
             max_value=100,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1364 + offset * 2,
@@ -354,7 +353,6 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,
             max_value=100,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1378 + offset * 2,
@@ -364,15 +362,11 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,
             max_value=100,
-            supported_features=SensorFeatures.NONE,
         ),
         _EnumSensorAddress(
             enum=CircuitMode,
             address=1393 + offset,
             name=f"mode_circuit_{circuit_name}",
-            device_class=None,
-            state_class=None,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1401 + offset * 2,
@@ -382,7 +376,6 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             state_class=SensorStateClass.MEASUREMENT,
             min_value=15,
             max_value=30,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1415 + offset * 2,
@@ -392,17 +385,13 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             state_class=SensorStateClass.MEASUREMENT,
             min_value=10,
             max_value=25,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1429 + offset * 2,
             name=f"curve_circuit_{circuit_name}",
             unit=None,
-            device_class=None,
-            state_class=None,
             min_value=0.1,
             max_value=3.5,
-            supported_features=SensorFeatures.NONE,
         ),
         _UCharSensorAddress(
             address=1442 + offset,
@@ -412,7 +401,6 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,
             max_value=50,
-            supported_features=SensorFeatures.NONE,
         ),
         _UCharSensorAddress(
             address=1449 + offset,
@@ -422,7 +410,6 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             state_class=SensorStateClass.MEASUREMENT,
             min_value=20,
             max_value=90,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1457 + offset * 2,
@@ -432,7 +419,6 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             state_class=SensorStateClass.MEASUREMENT,
             min_value=15,
             max_value=30,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1471 + offset * 2,
@@ -442,7 +428,6 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             state_class=SensorStateClass.MEASUREMENT,
             min_value=15,
             max_value=30,
-            supported_features=SensorFeatures.NONE,
         ),
         _UCharSensorAddress(
             address=1484 + offset,
@@ -452,7 +437,6 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,
             max_value=36,
-            supported_features=SensorFeatures.NONE,
         ),
         _UCharSensorAddress(
             address=1491 + offset,
@@ -462,25 +446,18 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             state_class=SensorStateClass.MEASUREMENT,
             min_value=8,
             max_value=30,
-            supported_features=SensorFeatures.NONE,
         ),
         _EnumSensorAddress(
             enum=ActiveCircuitMode,
             address=1498 + offset,
             name=f"mode_active_circuit_{circuit_name}",
-            device_class=None,
-            state_class=None,
-            supported_features=SensorFeatures.NONE,
         ),
         _UCharSensorAddress(
             address=1505 + offset,
             name=f"curve_offset_{circuit_name}",
             unit=TEMP_CELSIUS,
-            device_class=None,
-            state_class=None,
             min_value=0,
             max_value=30,
-            supported_features=SensorFeatures.NONE,
         ),
     ]
 
@@ -520,9 +497,6 @@ class ZoneModule:
                 enum=ZoneMode,
                 address=ZONE_OFFSETS[self.index],
                 name=f"zone_{self.index+1}_mode",
-                device_class=None,
-                state_class=None,
-                supported_features=SensorFeatures.NONE,
             ),
             *[
                 s
@@ -536,7 +510,6 @@ class ZoneModule:
                         state_class=SensorStateClass.MEASUREMENT,
                         min_value=15,
                         max_value=30,
-                        supported_features=SensorFeatures.NONE,
                     ),
                     _FloatSensorAddress(
                         address=ZONE_OFFSETS[self.index] + ROOM_OFFSETS[room] + 2,
@@ -544,7 +517,6 @@ class ZoneModule:
                         unit=TEMP_CELSIUS,
                         device_class=SensorDeviceClass.TEMPERATURE,
                         state_class=SensorStateClass.MEASUREMENT,
-                        supported_features=SensorFeatures.NONE,
                     ),
                     _UCharSensorAddress(
                         address=ZONE_OFFSETS[self.index] + ROOM_OFFSETS[room] + 4,
@@ -554,15 +526,11 @@ class ZoneModule:
                         state_class=SensorStateClass.MEASUREMENT,
                         min_value=0,
                         max_value=100,
-                        supported_features=SensorFeatures.NONE,
                     ),
                     _EnumSensorAddress(
                         enum=RoomMode,
                         address=ZONE_OFFSETS[self.index] + ROOM_OFFSETS[room] + 5,
                         name=f"zone_{self.index+1}_room_{room+1}_mode",
-                        device_class=None,
-                        state_class=None,
-                        supported_features=SensorFeatures.NONE,
                     ),
                 ]
             ],
@@ -575,15 +543,11 @@ class ZoneModule:
             IdmBinarySensorAddress(
                 address=ZONE_OFFSETS[self.index] + 1,
                 name=f"zone_{self.index+1}_dehumidifier",
-                device_class=None,
-                supported_features=SensorFeatures.NONE,
             ),
             *[
                 IdmBinarySensorAddress(
                     address=ZONE_OFFSETS[self.index] + ROOM_OFFSETS[room] + 6,
                     name=f"zone_{self.index+1}_room_{room+1}_relay",
-                    device_class=None,
-                    supported_features=SensorFeatures.NONE,
                 )
                 for room in range(self.room_count)
             ],
@@ -594,8 +558,6 @@ class ZoneModule:
                 IdmBinarySensorAddress(
                     address=ZONE_OFFSETS[self.index] + 64,
                     name=f"zone_{self.index+1}_room_9_relay",
-                    device_class=None,
-                    supported_features=SensorFeatures.NONE,
                 )
             )
 
@@ -611,7 +573,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1002,
@@ -619,31 +580,21 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _UCharSensorAddress(
             address=1004,
             name="failure_id",
             unit="",
-            device_class=None,
-            state_class=None,
-            supported_features=SensorFeatures.NONE,
         ),
         _EnumSensorAddress(
             enum=SystemStatus,
             address=1005,
             name="status_system",
-            device_class=None,
-            state_class=None,
-            supported_features=SensorFeatures.NONE,
         ),
         _EnumSensorAddress(
             enum=SmartGridStatus,
             address=1006,
             name="status_smart_grid",
-            device_class=None,
-            state_class=None,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1008,
@@ -651,7 +602,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1010,
@@ -659,7 +609,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1012,
@@ -667,7 +616,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1014,
@@ -675,7 +623,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1030,
@@ -683,7 +630,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _UCharSensorAddress(
             address=1032,
@@ -693,7 +639,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             state_class=SensorStateClass.MEASUREMENT,
             min_value=35,
             max_value=95,
-            supported_features=SensorFeatures.NONE,
         ),
         _UCharSensorAddress(
             address=1033,
@@ -703,7 +648,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             state_class=SensorStateClass.MEASUREMENT,
             min_value=30,
             max_value=50,
-            supported_features=SensorFeatures.NONE,
         ),
         _UCharSensorAddress(
             address=1034,
@@ -713,7 +657,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             state_class=SensorStateClass.MEASUREMENT,
             min_value=46,
             max_value=53,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1048,
@@ -721,8 +664,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=CURRENCY_EURO,
             scale=0.001,
             device_class=SensorDeviceClass.MONETARY,
-            state_class=None,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1050,
@@ -730,7 +671,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1052,
@@ -738,7 +678,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1054,
@@ -746,7 +685,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1056,
@@ -754,7 +692,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1058,
@@ -762,7 +699,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1060,
@@ -770,7 +706,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1062,
@@ -778,7 +713,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1064,
@@ -786,135 +720,107 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _BitFieldSensorAddress(
             flag=HeatPumpStatus,
             address=1090,
             name="status_heat_pump",
-            device_class=None,
-            state_class=None,
-            supported_features=SensorFeatures.NONE,
         ),
         _WordSensorAddress(
             address=1104,
             name="state_charge_pump",
             unit=None,
-            device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=-1,
             max_value=100,
-            supported_features=SensorFeatures.NONE,
         ),
         _WordSensorAddress(
             address=1105,
             name="load_brine_pump",
             unit=PERCENTAGE,
-            device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,
             max_value=100,
-            supported_features=SensorFeatures.NONE,
         ),
         _WordSensorAddress(
             address=1106,
             name="load_ground_water_pump",
             unit=PERCENTAGE,
-            device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,
             max_value=100,
-            supported_features=SensorFeatures.NONE,
         ),
         _WordSensorAddress(
             address=1108,
             name="load_isc_cold_storage_pump",
             unit=PERCENTAGE,
-            device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,
             max_value=100,
-            supported_features=SensorFeatures.NONE,
         ),
         _WordSensorAddress(
             address=1109,
             name="load_isc_recooling_pump",
             unit=PERCENTAGE,
-            device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,
             max_value=100,
-            supported_features=SensorFeatures.NONE,
         ),
         _WordSensorAddress(
             address=1110,
             name="valve_state_circuit_heating_cooling",
             unit=PERCENTAGE,
-            device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,
             max_value=100,
-            supported_features=SensorFeatures.NONE,
         ),
         _WordSensorAddress(
             address=1111,
             name="valve_state_storage_heating_cooling",
             unit=PERCENTAGE,
-            device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,
             max_value=100,
-            supported_features=SensorFeatures.NONE,
         ),
         _WordSensorAddress(
             address=1112,
             name="valve_state_main_heating_water",
             unit=PERCENTAGE,
-            device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,
             max_value=100,
-            supported_features=SensorFeatures.NONE,
         ),
         _WordSensorAddress(
             address=1113,
             name="valve_state_source_heating_cooling",
             unit=PERCENTAGE,
-            device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,
             max_value=100,
-            supported_features=SensorFeatures.NONE,
         ),
         _WordSensorAddress(
             address=1114,
             name="valve_state_solar_heating_water",
             unit=PERCENTAGE,
-            device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,
             max_value=100,
-            supported_features=SensorFeatures.NONE,
         ),
         _WordSensorAddress(
             address=1115,
             name="valve_state_solar_storage_source",
             unit=PERCENTAGE,
-            device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,
             max_value=100,
-            supported_features=SensorFeatures.NONE,
         ),
         _WordSensorAddress(
             address=1116,
             name="valve_state_isc_heating_cooling",
             unit=PERCENTAGE,
-            device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,
             max_value=100,
-            supported_features=SensorFeatures.NONE,
         ),
         _WordSensorAddress(
             address=1120,
@@ -924,7 +830,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             state_class=SensorStateClass.MEASUREMENT,
             min_value=-30,
             max_value=40,
-            supported_features=SensorFeatures.NONE,
         ),
         _WordSensorAddress(
             address=1121,
@@ -934,7 +839,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             state_class=SensorStateClass.MEASUREMENT,
             min_value=-30,
             max_value=40,
-            supported_features=SensorFeatures.NONE,
         ),
         _WordSensorAddress(
             address=1122,
@@ -944,7 +848,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             state_class=SensorStateClass.MEASUREMENT,
             min_value=-30,
             max_value=40,
-            supported_features=SensorFeatures.NONE,
         ),
         _WordSensorAddress(
             address=1123,
@@ -954,31 +857,24 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             state_class=SensorStateClass.MEASUREMENT,
             min_value=-30,
             max_value=40,
-            supported_features=SensorFeatures.NONE,
         ),
         _UCharSensorAddress(
             address=1150,
             name="count_running_compressor_stages_heating",
             unit=None,
-            device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _UCharSensorAddress(
             address=1151,
             name="count_running_compressor_stages_cooling",
             unit=None,
-            device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _UCharSensorAddress(
             address=1152,
             name="count_running_compressor_stages_water",
             unit=None,
-            device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1392,
@@ -988,7 +884,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,
             max_value=100,
-            supported_features=SensorFeatures.NONE,
         ),
         _UCharSensorAddress(
             address=1694,
@@ -998,7 +893,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             state_class=SensorStateClass.MEASUREMENT,
             min_value=20,
             max_value=65,
-            supported_features=SensorFeatures.NONE,
         ),
         _UCharSensorAddress(
             address=1695,
@@ -1008,7 +902,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             state_class=SensorStateClass.MEASUREMENT,
             min_value=10,
             max_value=25,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1750,
@@ -1017,7 +910,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             device_class=SensorDeviceClass.ENERGY,
             state_class=SensorStateClass.TOTAL_INCREASING,
             min_value=0,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1752,
@@ -1026,7 +918,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             device_class=SensorDeviceClass.ENERGY,
             state_class=SensorStateClass.TOTAL_INCREASING,
             min_value=0,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1754,
@@ -1035,7 +926,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             device_class=SensorDeviceClass.ENERGY,
             state_class=SensorStateClass.TOTAL_INCREASING,
             min_value=0,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1756,
@@ -1044,7 +934,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             device_class=SensorDeviceClass.ENERGY,
             state_class=SensorStateClass.TOTAL_INCREASING,
             min_value=0,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1758,
@@ -1053,7 +942,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             device_class=SensorDeviceClass.ENERGY,
             state_class=SensorStateClass.TOTAL_INCREASING,
             min_value=0,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1760,
@@ -1062,7 +950,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             device_class=SensorDeviceClass.ENERGY,
             state_class=SensorStateClass.TOTAL_INCREASING,
             min_value=0,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1762,
@@ -1071,7 +958,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             device_class=SensorDeviceClass.ENERGY,
             state_class=SensorStateClass.TOTAL_INCREASING,
             min_value=0,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1790,
@@ -1079,7 +965,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=POWER_KILO_WATT,
             device_class=SensorDeviceClass.POWER,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1792,
@@ -1088,7 +973,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             device_class=SensorDeviceClass.POWER,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1850,
@@ -1096,7 +980,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1852,
@@ -1104,7 +987,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1854,
@@ -1112,15 +994,11 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _EnumSensorAddress(
             enum=SolarMode,
             address=1856,
             name="mode_solar",
-            device_class=None,
-            state_class=None,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1857,
@@ -1128,7 +1006,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1870,
@@ -1136,7 +1013,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=1872,
@@ -1144,15 +1020,11 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.NONE,
         ),
         _BitFieldSensorAddress(
             flag=IscMode,
             address=1874,
             name="mode_isc",
-            device_class=None,
-            state_class=None,
-            supported_features=SensorFeatures.NONE,
         ),
         _FloatSensorAddress(
             address=74,
@@ -1178,7 +1050,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             device_class=SensorDeviceClass.POWER,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,
-            supported_features=SensorFeatures.NONE,
         ),
     ]
 }
@@ -1191,49 +1062,38 @@ BINARY_SENSOR_ADDRESSES: dict[str, IdmBinarySensorAddress] = {
             address=1099,
             name="failure_heat_pump",
             device_class=BinarySensorDeviceClass.PROBLEM,
-            supported_features=SensorFeatures.NONE,
         ),
         IdmBinarySensorAddress(
             address=1100,
             name="state_compressor_1",
             device_class=BinarySensorDeviceClass.RUNNING,
-            supported_features=SensorFeatures.NONE,
         ),
         IdmBinarySensorAddress(
             address=1101,
             name="state_compressor_2",
             device_class=BinarySensorDeviceClass.RUNNING,
-            supported_features=SensorFeatures.NONE,
         ),
         IdmBinarySensorAddress(
             address=1102,
             name="state_compressor_3",
             device_class=BinarySensorDeviceClass.RUNNING,
-            supported_features=SensorFeatures.NONE,
         ),
         IdmBinarySensorAddress(
             address=1103,
             name="state_compressor_4",
             device_class=BinarySensorDeviceClass.RUNNING,
-            supported_features=SensorFeatures.NONE,
         ),
         IdmBinarySensorAddress(
             address=1710,
             name="request_heating",
-            device_class=None,
-            supported_features=SensorFeatures.NONE,
         ),
         IdmBinarySensorAddress(
             address=1711,
             name="request_cooling",
-            device_class=None,
-            supported_features=SensorFeatures.NONE,
         ),
         IdmBinarySensorAddress(
             address=1712,
             name="request_water",
-            device_class=None,
-            supported_features=SensorFeatures.NONE,
         ),
     ]
 }
