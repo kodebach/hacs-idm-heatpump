@@ -125,7 +125,7 @@ class IdmBinarySensorAddress(BaseSensorAddress[bool]):
 
 @dataclass(kw_only=True)
 class _FloatSensorAddress(IdmSensorAddress[float]):
-    unit: str
+    unit: str | None
     decimal_digits: int = 2
     scale: float = 1
     min_value: float | None = None
@@ -172,7 +172,7 @@ class _FloatSensorAddress(IdmSensorAddress[float]):
 
 @dataclass(kw_only=True)
 class _UCharSensorAddress(IdmSensorAddress[int]):
-    unit: str
+    unit: str | None
     min_value: int | None = None
     max_value: int | None = 0xFFFE
 
@@ -215,7 +215,7 @@ class _UCharSensorAddress(IdmSensorAddress[int]):
 
 @dataclass(kw_only=True)
 class _WordSensorAddress(IdmSensorAddress[int]):
-    unit: str
+    unit: str | None
     min_value: int | None = None
     max_value: int | None = None
 
@@ -343,8 +343,6 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            min_value=0,
-            max_value=100,
         ),
         _FloatSensorAddress(
             address=1364 + offset * 2,
@@ -352,8 +350,6 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            min_value=0,
-            max_value=100,
         ),
         _FloatSensorAddress(
             address=1378 + offset * 2,
@@ -361,8 +357,6 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             unit=TEMP_CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
-            min_value=0,
-            max_value=100,
         ),
         _EnumSensorAddress(
             enum=CircuitMode,
@@ -586,7 +580,7 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _UCharSensorAddress(
             address=1004,
             name="failure_id",
-            unit="",
+            unit=None,
         ),
         _EnumSensorAddress(
             enum=SystemStatus,
