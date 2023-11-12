@@ -34,6 +34,11 @@ from .const import (
     SmartGridStatus,
     SolarMode,
     SystemStatus,
+    ValveStateHeatSourceColdStorage,
+    ValveStateHeatingCooling,
+    ValveStateHeatingWater,
+    ValveStateStorageBypass,
+    ValveStateStorageHeatSource,
     ZoneMode,
 )
 from .logger import LOGGER
@@ -744,12 +749,16 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             name="state_brine_pump",
             unit=None,
             state_class=SensorStateClass.MEASUREMENT,
+            min_value=-1,
+            max_value=100,
         ),
         _WordSensorAddress(
             address=1106,
             name="state_ground_water_pump",
             unit=None,
             state_class=SensorStateClass.MEASUREMENT,
+            min_value=-1,
+            max_value=100,
         ),
         _WordSensorAddress(
             address=1108,
@@ -767,47 +776,45 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             min_value=0,
             max_value=100,
         ),
-        _WordSensorAddress(
+        _EnumSensorAddress(
             address=1110,
             name="valve_state_circuit_heating_cooling",
-            state_class=SensorStateClass.MEASUREMENT,
-            unit=None,
+            enum=ValveStateHeatingCooling,
         ),
-        _WordSensorAddress(
+        _EnumSensorAddress(
             address=1111,
             name="valve_state_storage_heating_cooling",
-            state_class=SensorStateClass.MEASUREMENT,
-            unit=None,
+            enum=ValveStateHeatingCooling,
         ),
-        _WordSensorAddress(
+        _EnumSensorAddress(
             address=1112,
             name="valve_state_main_heating_water",
-            state_class=SensorStateClass.MEASUREMENT,
-            unit=None,
+            enum=ValveStateHeatingWater,
         ),
-        _WordSensorAddress(
+        _EnumSensorAddress(
             address=1113,
             name="valve_state_source_heating_cooling",
-            state_class=SensorStateClass.MEASUREMENT,
-            unit=None,
+            enum=ValveStateHeatingCooling,
         ),
-        _WordSensorAddress(
+        _EnumSensorAddress(
             address=1114,
             name="valve_state_solar_heating_water",
-            state_class=SensorStateClass.MEASUREMENT,
-            unit=None,
+            enum=ValveStateHeatingWater,
         ),
-        _WordSensorAddress(
+        _EnumSensorAddress(
             address=1115,
             name="valve_state_solar_storage_source",
-            state_class=SensorStateClass.MEASUREMENT,
-            unit=None,
+            enum=ValveStateStorageHeatSource,
         ),
-        _WordSensorAddress(
+        _EnumSensorAddress(
             address=1116,
             name="valve_state_isc_heating_cooling",
-            state_class=SensorStateClass.MEASUREMENT,
-            unit=None,
+            enum=ValveStateHeatSourceColdStorage,
+        ),
+        _EnumSensorAddress(
+            address=1117,
+            name="valve_state_isc_bypass",
+            enum=ValveStateStorageBypass,
         ),
         _WordSensorAddress(
             address=1120,

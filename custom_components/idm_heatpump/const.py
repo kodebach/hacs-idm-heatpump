@@ -141,6 +141,61 @@ class SolarMode(_SensorEnum):
         return cls.AUTO if value is None else None
 
 
+class ValveStateHeatingCooling(_SensorEnum):
+    """Valve state switching between heating and cooling."""
+
+    HEATING = 0
+    COOLING = 1
+
+    @classmethod
+    def _missing_(cls, value) -> Any:
+        return cls.HEATING if value is None else None
+
+
+class ValveStateHeatingWater(_SensorEnum):
+    """Valve state switching between heating and hot water."""
+
+    HEATING = 0
+    HOT_WATER = 1
+
+    @classmethod
+    def _missing_(cls, value) -> Any:
+        return cls.HEATING if value is None else None
+
+
+class ValveStateStorageHeatSource(_SensorEnum):
+    """Valve state switching between storage and heat source."""
+
+    STORAGE = 0
+    HEAT_SOURCE = 1
+
+    @classmethod
+    def _missing_(cls, value) -> Any:
+        return cls.STORAGE if value is None else None
+
+
+class ValveStateHeatSourceColdStorage(_SensorEnum):
+    """Valve state switching between heat source and cold storage."""
+
+    HEAT_SOURCE = 0
+    COLD_STORAGE = 1
+
+    @classmethod
+    def _missing_(cls, value) -> Any:
+        return cls.HEAT_SOURCE if value is None else None
+
+
+class ValveStateStorageBypass(_SensorEnum):
+    """Valve state switching between storage and bypass."""
+
+    STORAGE = 0
+    BYPASS = 1
+
+    @classmethod
+    def _missing_(cls, value) -> Any:
+        return cls.STORAGE if value is None else None
+
+
 # Base component constants
 NAME = "IDM Heat Pump"
 MANUFACTURER = "IDM"
