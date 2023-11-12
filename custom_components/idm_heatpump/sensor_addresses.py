@@ -870,22 +870,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             min_value=0,
             max_value=100,
         ),
-        _FloatSensorAddress(
-            address=1690,
-            name="temp_outside_external",
-            unit=TEMP_CELSIUS,
-            device_class=SensorDeviceClass.TEMPERATURE,
-            state_class=SensorStateClass.MEASUREMENT,
-        ),
-        _FloatSensorAddress(
-            address=1692,
-            name="humidity_external",
-            unit=PERCENTAGE,
-            device_class=SensorDeviceClass.HUMIDITY,
-            state_class=SensorStateClass.MEASUREMENT,
-            min_value=0,
-            max_value=100,
-        ),
         _UCharSensorAddress(
             address=1694,
             name="temp_external_request_heating",
