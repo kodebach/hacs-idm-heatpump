@@ -459,15 +459,6 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             min_value=0,
             max_value=30,
         ),
-        _FloatSensorAddress(
-            address=1650 + offset * 2,
-            name=f"temp_room_external_{circuit_name}",
-            unit=TEMP_CELSIUS,
-            device_class=SensorDeviceClass.TEMPERATURE,
-            state_class=SensorStateClass.MEASUREMENT,
-            min_value=15,
-            max_value=30,
-        ),
     ]
 
 
