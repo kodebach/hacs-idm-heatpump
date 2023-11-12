@@ -13,7 +13,8 @@
                 "data": {
                     "refresh_interval": "Aktualisierungsinterval",
                     "heating_circuits": "Heizkreise",
-                    "zone_count": "Anzahl Zonenmodule"
+                    "zone_count": "Anzahl Zonenmodule",
+                    "read_without_groups": "Sensoren einzeln laden"
                 }
             },
             "zones": {
@@ -55,7 +56,8 @@
                 "data": {
                     "refresh_interval": "Aktualisierungsinterval",
                     "heating_circuits": "Heizkreise",
-                    "zone_count": "Anzahl Zonenmodule"
+                    "zone_count": "Anzahl Zonenmodule",
+                    "read_without_groups": "Sensoren einzeln laden"
                 }
             },
             "zones": {

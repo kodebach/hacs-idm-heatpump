@@ -29,6 +29,7 @@ from .const import (
     OPT_ZONE_ROOM_9_RELAY,
     OPT_ZONE_ROOM_COUNT,
     STARTUP_MESSAGE_TEMPLATE,
+    OPT_READ_WITHOUT_GROUPS,
 )
 
 PLATFORMS = [
@@ -74,6 +75,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
             )
             for i in range(zone_count)
         ],
+        no_groups=entry.options.get(OPT_READ_WITHOUT_GROUPS, False),
     )
 
     update_interval = timedelta(

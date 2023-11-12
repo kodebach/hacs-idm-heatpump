@@ -13,7 +13,8 @@
                 "data": {
                     "refresh_interval": "Refresh Interval",
                     "heating_circuits": "Heating Circuits",
-                    "zone_count": "Number of zone modules"
+                    "zone_count": "Number of zone modules",
+                    "read_without_groups": "Read sensors individually"
                 }
             },
             "zones": {
@@ -55,7 +56,8 @@
                 "data": {
                     "refresh_interval": "Refresh Interval",
                     "heating_circuits": "Heating Circuits",
-                    "zone_count": "Number of zone modules"
+                    "zone_count": "Number of zone modules",
+                    "read_without_groups": "Read sensors individually"
                 }
             },
             "zones": {

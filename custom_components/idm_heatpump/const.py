@@ -168,6 +168,7 @@ OPT_HEATING_CIRCUITS = "heating_circuits"
 OPT_ZONE_COUNT = "zone_count"
 OPT_ZONE_ROOM_COUNT = [f"zone_{i}_room_count" for i in range(MAX_ZONE_COUNT)]
 OPT_ZONE_ROOM_9_RELAY = [f"zone_{i}_room_9_relay" for i in range(MAX_ZONE_COUNT)]
+OPT_READ_WITHOUT_GROUPS = "read_without_groups"
 
 # Defaults
 DEFAULT_NAME = DOMAIN

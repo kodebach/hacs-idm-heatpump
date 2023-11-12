@@ -24,6 +24,7 @@ from .const import (
     OPT_ZONE_COUNT,
     OPT_ZONE_ROOM_9_RELAY,
     OPT_ZONE_ROOM_COUNT,
+    OPT_READ_WITHOUT_GROUPS,
 )
 
 
@@ -174,34 +175,40 @@ def _async_step_base_options(
         {
             vol.Required(
                 OPT_REFRESH_INTERVAL,
-                default=options.get(
-                    OPT_REFRESH_INTERVAL,
-                    DEFAULT_REFRESH_INTERVAL
-                ),
+                default=options.get(OPT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL),
             ): vol.All(selector({"duration": {}})),
             vol.Required(
                 OPT_HEATING_CIRCUITS,
-                default=options.get(
-                    OPT_HEATING_CIRCUITS,
-                    []
-                ),
+                default=options.get(OPT_HEATING_CIRCUITS, []),
             ): vol.All(
-                selector({"select": {
-                    "options": [c.name for c in HeatingCircuit],
-                    "multiple": True,
-                }}),
+                selector(
+                    {
+                        "select": {
+                            "options": [c.name for c in HeatingCircuit],
+                            "multiple": True,
+                        }
+                    }
+                ),
                 vol.Length(min=1, msg="Select at least one"),
             ),
             vol.Required(
                 OPT_ZONE_COUNT,
                 default=options.get(OPT_ZONE_COUNT, 0),
             ): vol.All(
-                selector({"number": {
-                    "min": 0,
-                    "max": MAX_ZONE_COUNT,
-                }}),
+                selector(
+                    {
+                        "number": {
+                            "min": 0,
+                            "max": MAX_ZONE_COUNT,
+                        }
+                    }
+                ),
                 cv.positive_int,
-            )
+            ),
+            vol.Required(
+                OPT_READ_WITHOUT_GROUPS,
+                default=options.get(OPT_READ_WITHOUT_GROUPS, False),
+            ): bool,
         }
     )
 
@@ -210,7 +217,9 @@ def _async_step_base_options(
     if user_input is not None:
         options.update(user_input)
 
-        if timedelta(**options[OPT_REFRESH_INTERVAL]) < timedelta(**MIN_REFRESH_INTERVAL):
+        if timedelta(**options[OPT_REFRESH_INTERVAL]) < timedelta(
+            **MIN_REFRESH_INTERVAL
+        ):
             errors[OPT_REFRESH_INTERVAL] = "min_refresh_interval"
 
         if len(errors) == 0:
@@ -226,22 +235,36 @@ def _async_step_zone_options(
     zone_count: int = options[OPT_ZONE_COUNT]
 
     schema = vol.Schema(
-        dict(field for zone in range(zone_count) for field in [
-            (vol.Required(
-                OPT_ZONE_ROOM_COUNT[zone],
-                default=options.get(OPT_ZONE_ROOM_COUNT[zone], 1),
-            ), vol.All(
-                selector({"number": {
-                    "min": 1,
-                    "max": MAX_ROOM_COUNT,
-                }}),
-                cv.positive_int,
-            )),
-            (vol.Required(
-                OPT_ZONE_ROOM_9_RELAY[zone],
-                default=options.get(OPT_ZONE_ROOM_9_RELAY[zone], False),
-            ), bool),
-        ])
+        dict(
+            field
+            for zone in range(zone_count)
+            for field in [
+                (
+                    vol.Required(
+                        OPT_ZONE_ROOM_COUNT[zone],
+                        default=options.get(OPT_ZONE_ROOM_COUNT[zone], 1),
+                    ),
+                    vol.All(
+                        selector(
+                            {
+                                "number": {
+                                    "min": 1,
+                                    "max": MAX_ROOM_COUNT,
+                                }
+                            }
+                        ),
+                        cv.positive_int,
+                    ),
+                ),
+                (
+                    vol.Required(
+                        OPT_ZONE_ROOM_9_RELAY[zone],
+                        default=options.get(OPT_ZONE_ROOM_9_RELAY[zone], False),
+                    ),
+                    bool,
+                ),
+            ]
+        )
     )
 
     errors = {}
