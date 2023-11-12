@@ -63,6 +63,13 @@ Before Home Assistant can connect to the heat pump you need to make sure "Modbus
   >   The 0-100 value probably indicates the PWM duty cycle as a percentage.
   >   Again, it could be 0 or 100 that mean PWM always active, depending on what the pump interprets as "run at maximum speed".
   > These conversions could be done with a template sensor in `configuration.yaml`.
+- **Status Sole/Zwischenkreispumpe** and **Status Wärmequellen/Grundwasserpumpe**:
+  I assume these two work the same as "Status Ladepumpe".
+  However, the documentation from IDM doesn't really say, and my setup doesn't use these, so I cannot verify it myself.
+- **Umschaltventil ... X/Y**:
+  All the "Umschaltventil ... X/Y" sensors are implemented such that the value `0` from the heat pump is interpreted as X and `1` is interpreted as Y.
+  The special value `0xFFFF`/`-1` is interpreted as "not available", any other value (e.g. `-1`) is interpreted as "unknown".
+  This is a bit of a guess, since the documentation from IDM does not give any information for these sensors (other than that they exist), but this interpretation works correctly for my setup.
 
 ## Contributions are welcome
 
