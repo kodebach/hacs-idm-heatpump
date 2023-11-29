@@ -57,7 +57,11 @@
                     "refresh_interval": "Aktualisierungsinterval",
                     "heating_circuits": "Heizkreise",
                     "zone_count": "Anzahl Zonenmodule",
-                    "read_without_groups": "Sensoren einzeln laden"
+                    "read_without_groups": "Sensoren einzeln laden",
+                    "max_power_usage": "Maximale Leistungsaufnahme"
+                },
+                "data_description": {
+                    "max_power_usage": "Der Sensor 'Aktuelle Leistungsaufnahme Wärmepumpe' wird auf 'Unbekannt' gesetzt, falls die Wärmepumpe einen Wert höher als das Maximum sendet. Dadurch entstehen im Verlauf Lücken anstelle von unmöglich hohen Werten, welche die Achsenskalierung verzerren würden. Falls kein Wert oder 0 gesetzt ist, werden alle Werte der Wärmepumpe direkt verwendet."
                 }
             },
             "zones": {

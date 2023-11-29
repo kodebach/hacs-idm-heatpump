@@ -40,6 +40,7 @@ from .const import (
     ValveStateStorageBypass,
     ValveStateStorageHeatSource,
     ZoneMode,
+    NAME_POWER_USAGE,
 )
 from .logger import LOGGER
 
@@ -1030,7 +1031,7 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         ),
         _FloatSensorAddress(
             address=4122,
-            name="power_current_draw",
+            name=NAME_POWER_USAGE,
             unit=POWER_KILO_WATT,
             device_class=SensorDeviceClass.POWER,
             state_class=SensorStateClass.MEASUREMENT,

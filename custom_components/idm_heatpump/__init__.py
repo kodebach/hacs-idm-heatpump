@@ -30,6 +30,7 @@ from .const import (
     OPT_ZONE_ROOM_COUNT,
     STARTUP_MESSAGE_TEMPLATE,
     OPT_READ_WITHOUT_GROUPS,
+    OPT_MAX_POWER_USAGE,
 )
 
 PLATFORMS = [
@@ -61,6 +62,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
     hostname = entry.data.get(CONF_HOSTNAME)
     zone_count = entry.options.get(OPT_ZONE_COUNT, 0)
+    max_power_usage = entry.options.get(OPT_MAX_POWER_USAGE, 0.0)
 
     heatpump = IdmHeatpump(
         hostname=hostname,
@@ -76,6 +78,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
             for i in range(zone_count)
         ],
         no_groups=entry.options.get(OPT_READ_WITHOUT_GROUPS, False),
+        max_power_usage=max_power_usage if max_power_usage != 0.0 else None,
     )
 
     update_interval = timedelta(

@@ -4,9 +4,9 @@ from typing import Any
 from homeassistant.config_entries import ConfigFlow, ConfigEntry, OptionsFlow
 from homeassistant.core import callback
 from homeassistant.config import cv
+from homeassistant.const import POWER_KILO_WATT
 from homeassistant.helpers.selector import selector
 import voluptuous as vol
-
 
 from .idm_heatpump import IdmHeatpump
 from .sensor_addresses import HeatingCircuit
@@ -25,6 +25,7 @@ from .const import (
     OPT_ZONE_ROOM_9_RELAY,
     OPT_ZONE_ROOM_COUNT,
     OPT_READ_WITHOUT_GROUPS,
+    OPT_MAX_POWER_USAGE,
 )
 
 
@@ -209,6 +210,19 @@ def _async_step_base_options(
                 OPT_READ_WITHOUT_GROUPS,
                 default=options.get(OPT_READ_WITHOUT_GROUPS, False),
             ): bool,
+            vol.Optional(
+                OPT_MAX_POWER_USAGE,
+                default=options.get(OPT_MAX_POWER_USAGE, 0.0),
+            ): selector(
+                {
+                    "number": {
+                        # "min": 0,
+                        "step": "any",
+                        "mode": "box",
+                        "unit_of_measurement": POWER_KILO_WATT,
+                    }
+                }
+            ),
         }
     )
 

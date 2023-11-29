@@ -12,6 +12,7 @@ from pymodbus.payload import BinaryPayloadDecoder, BinaryPayloadBuilder
 from pymodbus.constants import Endian
 from pymodbus.register_read_message import ReadInputRegistersResponse
 
+from .const import NAME_POWER_USAGE
 from .logger import LOGGER
 from .sensor_addresses import (
     BINARY_SENSOR_ADDRESSES,
@@ -37,6 +38,7 @@ class IdmHeatpump:
     client: AsyncModbusTcpClient
     sensors: list[BaseSensorAddress]
     sensor_groups: list[_SensorGroup] = []
+    max_power_usage: float | None
 
     def __init__(
         self,
@@ -44,9 +46,12 @@ class IdmHeatpump:
         circuits: list[HeatingCircuit],
         zones: list[ZoneModule],
         no_groups: bool,
+        max_power_usage: float | None,
     ) -> None:
         """Create heatpump."""
         self.client = AsyncModbusTcpClient(host=hostname)
+
+        self.max_power_usage = max_power_usage
 
         self.sensors = sorted(
             [
@@ -228,6 +233,20 @@ class IdmHeatpump:
 
         LOGGER.debug("decoded registers %d", group.start)
 
+        if NAME_POWER_USAGE in data and self.max_power_usage is not None:
+            reported_power_usage = data[NAME_POWER_USAGE]
+            limited_power_usage = (
+                reported_power_usage
+                if reported_power_usage <= self.max_power_usage
+                else None
+            )
+            data[NAME_POWER_USAGE] = limited_power_usage
+            LOGGER.info(
+                "power usage value limited from %.2f to %.2f",
+                reported_power_usage,
+                limited_power_usage,
+            )
+
         return data
 
     async def async_get_data(self):
@@ -278,7 +297,13 @@ class IdmHeatpump:
     @staticmethod
     async def test_hostname(hostname: str) -> bool:
         """Check if the hostname is reachable via Modbus."""
-        heatpump = IdmHeatpump(hostname, circuits=[], zones=[], no_groups=True)
+        heatpump = IdmHeatpump(
+            hostname,
+            circuits=[],
+            zones=[],
+            no_groups=True,
+            max_power_usage=None,
+        )
         try:
             data = await heatpump.async_get_data()
             return len(data) > 0
