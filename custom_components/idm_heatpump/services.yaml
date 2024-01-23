@@ -13,3 +13,21 @@ set_power:
         number:
           mode: box
           unit_of_measurement: kW
+
+set_battery:
+  fields:
+    target:
+      required: true
+      selector:
+        entity:
+          integration: idm_heatpump
+          domain: sensor
+          device_class: battery
+    value:
+      required: true
+      selector:
+        number:
+          mode: slider
+          min: 0
+          max: 100
+          unit_of_measurement: "%"

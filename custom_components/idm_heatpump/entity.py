@@ -7,16 +7,16 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util import slugify
 
-from .coordinator import IdmHeatpumpDataUpdateCoordinator
 from .const import (
-    SensorFeatures,
     CONF_DISPLAY_NAME,
     CONF_HOSTNAME,
     DOMAIN,
     MANUFACTURER,
     MODEL_MAIN,
     MODEL_ZONE,
+    SensorFeatures,
 )
+from .coordinator import IdmHeatpumpDataUpdateCoordinator
 from .sensor_addresses import BaseSensorAddress
 
 _T = TypeVar("_T")

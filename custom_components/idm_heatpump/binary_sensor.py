@@ -1,13 +1,13 @@
 """Binary sensor platform for idm_heatpump."""
 from homeassistant.components.binary_sensor import BinarySensorEntity
-from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .coordinator import IdmHeatpumpDataUpdateCoordinator
 from .const import (
     DOMAIN,
 )
+from .coordinator import IdmHeatpumpDataUpdateCoordinator
 from .entity import IdmHeatpumpEntity
 from .sensor_addresses import IdmBinarySensorAddress
 
@@ -41,9 +41,7 @@ class IdmHeatpumpBinarySensor(IdmHeatpumpEntity, BinarySensorEntity):
         super().__init__(coordinator, config_entry)
 
         self.sensor_address = sensor_address
-        self.entity_description = self.sensor_address.entity_description(
-            config_entry
-        )
+        self.entity_description = self.sensor_address.entity_description(config_entry)
 
     @property
     def sensor_id(self):

@@ -107,6 +107,20 @@
                     "description": "Der Wert der gesendet werden soll."
                 }
             }
+        },
+        "set_battery": {
+            "name": "Batteriefüllstand setzen",
+            "description": "Sendet einen Wert vom Typ 'Batteriefüllstand' an die Wärmepumpe.",
+            "fields": {
+                "target": {
+                    "name": "Ziel",
+                    "description": "Der Sensor für welchen der Wert gesendet werden soll."
+                },
+                "value": {
+                    "name": "Wert",
+                    "description": "Der Wert der gesendet werden soll."
+                }
+            }
         }
     }
 }
