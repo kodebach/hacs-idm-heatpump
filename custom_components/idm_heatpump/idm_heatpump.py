@@ -161,6 +161,8 @@ class IdmHeatpump:
 
         LOGGER.debug("got registers %d", group.start)
 
+        data: dict[str, any] = {}
+
         def decode_single(
             sensor: BaseSensorAddress,
             result: ReadInputRegistersResponse,
@@ -192,8 +194,6 @@ class IdmHeatpump:
             )
 
             LOGGER.debug("got decoder %d", group.start)
-
-            data: dict[str, any] = {}
 
             if len(group.sensors) == 1:
                 # single sensor -> don't do refetch on error
@@ -235,17 +235,41 @@ class IdmHeatpump:
 
         if NAME_POWER_USAGE in data and self.max_power_usage is not None:
             reported_power_usage = data[NAME_POWER_USAGE]
-            limited_power_usage = (
-                reported_power_usage
-                if reported_power_usage <= self.max_power_usage
-                else None
-            )
-            data[NAME_POWER_USAGE] = limited_power_usage
-            LOGGER.info(
-                "power usage value limited from %.2f to %.2f",
-                reported_power_usage,
-                limited_power_usage,
-            )
+
+            if reported_power_usage > self.max_power_usage:
+                LOGGER.info(
+                    "power usage %.2f above limit %.2f, fetching again",
+                    reported_power_usage,
+                    self.max_power_usage,
+                )
+
+                sensor = SENSOR_ADDRESSES[NAME_POWER_USAGE]
+                try:
+                    single_result = await self._fetch_retry(
+                        IdmHeatpump._SensorGroup(
+                            start=sensor.address,
+                            count=sensor.size,
+                            sensors=[sensor],
+                        )
+                    )
+
+                    decode_single(sensor, single_result)
+                except ModbusException as exception:
+                    LOGGER.error(
+                        "Failed to fetch registers for sensor %d: %s",
+                        sensor.address,
+                        exception,
+                    )
+                    return data
+
+                second_power_usage = data[NAME_POWER_USAGE]
+                if second_power_usage > self.max_power_usage:
+                    LOGGER.info(
+                        "power usage still %.2f above limit %.2f after second fetch, reporting unknown",
+                        second_power_usage,
+                        self.max_power_usage,
+                    )
+                    data[NAME_POWER_USAGE] = None
 
         return data
 
