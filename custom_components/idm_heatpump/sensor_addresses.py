@@ -2,29 +2,31 @@
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from enum import IntEnum, IntFlag, Enum
+from enum import Enum, IntEnum, IntFlag
 from typing import Generic, TypeVar
+
+from homeassistant.components.binary_sensor import (
+    BinarySensorDeviceClass,
+    BinarySensorEntityDescription,
+)
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntityDescription,
     SensorStateClass,
 )
-from homeassistant.components.binary_sensor import (
-    BinarySensorDeviceClass,
-    BinarySensorEntityDescription,
-)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     CURRENCY_EURO,
-    ENERGY_KILO_WATT_HOUR,
     PERCENTAGE,
-    POWER_KILO_WATT,
-    TEMP_CELSIUS,
+    UnitOfEnergy,
+    UnitOfPower,
+    UnitOfTemperature,
 )
-from pymodbus.payload import BinaryPayloadDecoder, BinaryPayloadBuilder
+from pymodbus.payload import BinaryPayloadBuilder, BinaryPayloadDecoder
 
 from .const import (
     CONF_DISPLAY_NAME,
+    NAME_POWER_USAGE,
     ActiveCircuitMode,
     CircuitMode,
     HeatPumpStatus,
@@ -34,13 +36,12 @@ from .const import (
     SmartGridStatus,
     SolarMode,
     SystemStatus,
-    ValveStateHeatSourceColdStorage,
     ValveStateHeatingCooling,
     ValveStateHeatingWater,
+    ValveStateHeatSourceColdStorage,
     ValveStateStorageBypass,
     ValveStateStorageHeatSource,
     ZoneMode,
-    NAME_POWER_USAGE,
 )
 from .logger import LOGGER
 
@@ -346,21 +347,21 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         _FloatSensorAddress(
             address=1350 + offset * 2,
             name=f"temp_flow_current_circuit_{circuit_name}",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
         _FloatSensorAddress(
             address=1364 + offset * 2,
             name=f"temp_room_circuit_{circuit_name}",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
         _FloatSensorAddress(
             address=1378 + offset * 2,
             name=f"temp_flow_target_circuit_{circuit_name}",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
@@ -372,7 +373,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         _FloatSensorAddress(
             address=1401 + offset * 2,
             name=f"temp_room_target_heating_normal_circuit_{circuit_name}",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=15,
@@ -381,7 +382,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         _FloatSensorAddress(
             address=1415 + offset * 2,
             name=f"temp_room_target_heating_eco_circuit_{circuit_name}",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=10,
@@ -397,7 +398,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         _UCharSensorAddress(
             address=1442 + offset,
             name=f"temp_threshold_heating_circuit_{circuit_name}",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,
@@ -406,7 +407,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         _UCharSensorAddress(
             address=1449 + offset,
             name=f"temp_flow_target_constant_circuit_{circuit_name}",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=20,
@@ -415,7 +416,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         _FloatSensorAddress(
             address=1457 + offset * 2,
             name=f"temp_room_target_cooling_normal_circuit_{circuit_name}",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=15,
@@ -424,7 +425,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         _FloatSensorAddress(
             address=1471 + offset * 2,
             name=f"temp_room_target_cooling_eco_circuit_{circuit_name}",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=15,
@@ -433,7 +434,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         _UCharSensorAddress(
             address=1484 + offset,
             name=f"temp_threshold_cooling_circuit_{circuit_name}",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,
@@ -442,7 +443,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         _UCharSensorAddress(
             address=1491 + offset,
             name=f"temp_flow_target_cooling_circuit_{circuit_name}",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=8,
@@ -456,7 +457,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
         _UCharSensorAddress(
             address=1505 + offset,
             name=f"curve_offset_{circuit_name}",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             min_value=0,
             max_value=30,
         ),
@@ -506,7 +507,7 @@ class ZoneModule:
                     _FloatSensorAddress(
                         address=ZONE_OFFSETS[self.index] + ROOM_OFFSETS[room],
                         name=f"zone_{self.index+1}_room_{room+1}_temp_current",
-                        unit=TEMP_CELSIUS,
+                        unit=UnitOfTemperature.CELSIUS,
                         device_class=SensorDeviceClass.TEMPERATURE,
                         state_class=SensorStateClass.MEASUREMENT,
                         min_value=15,
@@ -515,7 +516,7 @@ class ZoneModule:
                     _FloatSensorAddress(
                         address=ZONE_OFFSETS[self.index] + ROOM_OFFSETS[room] + 2,
                         name=f"zone_{self.index+1}_room_{room+1}_temp_target",
-                        unit=TEMP_CELSIUS,
+                        unit=UnitOfTemperature.CELSIUS,
                         device_class=SensorDeviceClass.TEMPERATURE,
                         state_class=SensorStateClass.MEASUREMENT,
                     ),
@@ -572,14 +573,14 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _FloatSensorAddress(
             address=1000,
             name="temp_outside",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
         _FloatSensorAddress(
             address=1002,
             name="temp_outside_avg",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
@@ -601,42 +602,42 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _FloatSensorAddress(
             address=1008,
             name="temp_heat_storage",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
         _FloatSensorAddress(
             address=1010,
             name="temp_cold_storage",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
         _FloatSensorAddress(
             address=1012,
             name="temp_water_heater_top",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
         _FloatSensorAddress(
             address=1014,
             name="temp_water_heater_bottom",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
         _FloatSensorAddress(
             address=1030,
             name="temp_water_heater_tap",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
         _UCharSensorAddress(
             address=1032,
             name="temp_water_target",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=35,
@@ -645,7 +646,7 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _UCharSensorAddress(
             address=1033,
             name="temp_water_switch_on",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=30,
@@ -654,7 +655,7 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _UCharSensorAddress(
             address=1034,
             name="temp_water_switch_off",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=46,
@@ -670,56 +671,56 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _FloatSensorAddress(
             address=1050,
             name="temp_heat_pump_flow",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
         _FloatSensorAddress(
             address=1052,
             name="temp_heat_pump_return",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
         _FloatSensorAddress(
             address=1054,
             name="temp_hgl_flow",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
         _FloatSensorAddress(
             address=1056,
             name="temp_heat_source_input",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
         _FloatSensorAddress(
             address=1058,
             name="temp_heat_source_output",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
         _FloatSensorAddress(
             address=1060,
             name="temp_air_input",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
         _FloatSensorAddress(
             address=1062,
             name="temp_air_heat_exchanger",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
         _FloatSensorAddress(
             address=1064,
             name="temp_air_input_2",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
@@ -811,7 +812,7 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _WordSensorAddress(
             address=1120,
             name="temp_second_source_bivalence_1",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=-30,
@@ -820,7 +821,7 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _WordSensorAddress(
             address=1121,
             name="temp_second_source_bivalence_2",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=-30,
@@ -829,7 +830,7 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _WordSensorAddress(
             address=1122,
             name="temp_third_source_bivalence_1",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=-30,
@@ -838,7 +839,7 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _WordSensorAddress(
             address=1123,
             name="temp_third_source_bivalence_2",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=-30,
@@ -874,7 +875,7 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _UCharSensorAddress(
             address=1694,
             name="temp_external_request_heating",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=20,
@@ -883,7 +884,7 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _UCharSensorAddress(
             address=1695,
             name="temp_external_request_cooling",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=10,
@@ -892,7 +893,7 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _FloatSensorAddress(
             address=1750,
             name="energy_heat_total",
-            unit=ENERGY_KILO_WATT_HOUR,
+            unit=UnitOfEnergy.KILO_WATT_HOUR,
             device_class=SensorDeviceClass.ENERGY,
             state_class=SensorStateClass.TOTAL_INCREASING,
             min_value=0,
@@ -900,7 +901,7 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _FloatSensorAddress(
             address=1752,
             name="energy_heat_total_cooling",
-            unit=ENERGY_KILO_WATT_HOUR,
+            unit=UnitOfEnergy.KILO_WATT_HOUR,
             device_class=SensorDeviceClass.ENERGY,
             state_class=SensorStateClass.TOTAL_INCREASING,
             min_value=0,
@@ -908,7 +909,7 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _FloatSensorAddress(
             address=1754,
             name="energy_heat_total_water",
-            unit=ENERGY_KILO_WATT_HOUR,
+            unit=UnitOfEnergy.KILO_WATT_HOUR,
             device_class=SensorDeviceClass.ENERGY,
             state_class=SensorStateClass.TOTAL_INCREASING,
             min_value=0,
@@ -916,7 +917,7 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _FloatSensorAddress(
             address=1756,
             name="energy_heat_total_defrost",
-            unit=ENERGY_KILO_WATT_HOUR,
+            unit=UnitOfEnergy.KILO_WATT_HOUR,
             device_class=SensorDeviceClass.ENERGY,
             state_class=SensorStateClass.TOTAL_INCREASING,
             min_value=0,
@@ -924,7 +925,7 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _FloatSensorAddress(
             address=1758,
             name="energy_heat_total_passive_cooling",
-            unit=ENERGY_KILO_WATT_HOUR,
+            unit=UnitOfEnergy.KILO_WATT_HOUR,
             device_class=SensorDeviceClass.ENERGY,
             state_class=SensorStateClass.TOTAL_INCREASING,
             min_value=0,
@@ -932,7 +933,7 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _FloatSensorAddress(
             address=1760,
             name="energy_heat_total_solar",
-            unit=ENERGY_KILO_WATT_HOUR,
+            unit=UnitOfEnergy.KILO_WATT_HOUR,
             device_class=SensorDeviceClass.ENERGY,
             state_class=SensorStateClass.TOTAL_INCREASING,
             min_value=0,
@@ -940,7 +941,7 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _FloatSensorAddress(
             address=1762,
             name="energy_heat_total_electric",
-            unit=ENERGY_KILO_WATT_HOUR,
+            unit=UnitOfEnergy.KILO_WATT_HOUR,
             device_class=SensorDeviceClass.ENERGY,
             state_class=SensorStateClass.TOTAL_INCREASING,
             min_value=0,
@@ -948,14 +949,14 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _FloatSensorAddress(
             address=1790,
             name="power_current",
-            unit=POWER_KILO_WATT,
+            unit=UnitOfPower.KILO_WATT,
             device_class=SensorDeviceClass.POWER,
             state_class=SensorStateClass.MEASUREMENT,
         ),
         _FloatSensorAddress(
             address=1792,
             name="power_current_solar",
-            unit=POWER_KILO_WATT,
+            unit=UnitOfPower.KILO_WATT,
             device_class=SensorDeviceClass.POWER,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,
@@ -963,21 +964,21 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _FloatSensorAddress(
             address=1850,
             name="temp_solar_collector",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
         _FloatSensorAddress(
             address=1852,
             name="temp_solar_collector_return",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
         _FloatSensorAddress(
             address=1854,
             name="temp_solar_charge",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
@@ -989,21 +990,21 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _FloatSensorAddress(
             address=1857,
             name="temp_solar_reference",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
         _FloatSensorAddress(
             address=1870,
             name="temp_isc_charge_cooling",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
         _FloatSensorAddress(
             address=1872,
             name="temp_isc_recooling",
-            unit=TEMP_CELSIUS,
+            unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
         ),
@@ -1015,7 +1016,7 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _FloatSensorAddress(
             address=74,
             name="power_solar_surplus",
-            unit=POWER_KILO_WATT,
+            unit=UnitOfPower.KILO_WATT,
             device_class=SensorDeviceClass.POWER,
             state_class=SensorStateClass.MEASUREMENT,
             supported_features=SensorFeatures.SET_POWER,
@@ -1023,7 +1024,7 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _FloatSensorAddress(
             address=78,
             name="power_solar_production",
-            unit=POWER_KILO_WATT,
+            unit=UnitOfPower.KILO_WATT,
             device_class=SensorDeviceClass.POWER,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,
@@ -1032,7 +1033,7 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
         _FloatSensorAddress(
             address=4122,
             name=NAME_POWER_USAGE,
-            unit=POWER_KILO_WATT,
+            unit=UnitOfPower.KILO_WATT,
             device_class=SensorDeviceClass.POWER,
             state_class=SensorStateClass.MEASUREMENT,
             min_value=0,

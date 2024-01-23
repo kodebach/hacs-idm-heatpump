@@ -1,15 +1,15 @@
 """Abstraction over the modbus interface of IDM heatpumps."""
 
 import asyncio
-from dataclasses import dataclass
 import collections
+from dataclasses import dataclass
 from typing import TypeVar
 
 from pymodbus.client import AsyncModbusTcpClient
-from pymodbus.pdu import ModbusResponse
-from pymodbus.exceptions import ConnectionException, ModbusException
-from pymodbus.payload import BinaryPayloadDecoder, BinaryPayloadBuilder
 from pymodbus.constants import Endian
+from pymodbus.exceptions import ConnectionException, ModbusException
+from pymodbus.payload import BinaryPayloadBuilder, BinaryPayloadDecoder
+from pymodbus.pdu import ModbusResponse
 from pymodbus.register_read_message import ReadInputRegistersResponse
 
 from .const import NAME_POWER_USAGE
@@ -17,8 +17,8 @@ from .logger import LOGGER
 from .sensor_addresses import (
     BINARY_SENSOR_ADDRESSES,
     SENSOR_ADDRESSES,
-    HeatingCircuit,
     BaseSensorAddress,
+    HeatingCircuit,
     ZoneModule,
     heating_circuit_sensors,
 )

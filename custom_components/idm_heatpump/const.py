@@ -1,6 +1,6 @@
 """Constants for idm_heatpump."""
 
-from enum import IntFlag, IntEnum
+from enum import IntEnum, IntFlag
 from typing import Any
 
 

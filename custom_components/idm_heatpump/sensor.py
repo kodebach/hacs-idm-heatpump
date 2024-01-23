@@ -1,16 +1,15 @@
 """Sensor platform for idm_heatpump."""
 from homeassistant.components.sensor import SensorEntity
-from homeassistant.core import HomeAssistant, ServiceCall, HomeAssistantError
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant, HomeAssistantError, ServiceCall
 from homeassistant.helpers import entity_platform
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-
-from .coordinator import IdmHeatpumpDataUpdateCoordinator
-from .sensor_addresses import IdmSensorAddress
 from .const import DOMAIN, SERVICE_SET_POWER, SensorFeatures
+from .coordinator import IdmHeatpumpDataUpdateCoordinator
 from .entity import IdmHeatpumpEntity
 from .logger import LOGGER
+from .sensor_addresses import IdmSensorAddress
 
 
 async def async_setup_entry(
