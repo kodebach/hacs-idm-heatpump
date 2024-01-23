@@ -9,6 +9,7 @@ class SensorFeatures(IntFlag):
 
     NONE = 0
     SET_POWER = 1
+    SET_BATTERY = 2
 
 
 class _SensorEnum(IntEnum):
@@ -207,6 +208,7 @@ ISSUE_URL = "https://github.com/kodebach/hacs-idm-heatpump/issues"
 
 # Services
 SERVICE_SET_POWER = "set_power"
+SERVICE_SET_BATTERY = "set_battery"
 
 # Limits
 MIN_REFRESH_INTERVAL = {"hours": 0, "minutes": 1, "seconds": 0}

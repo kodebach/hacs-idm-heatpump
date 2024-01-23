@@ -567,6 +567,58 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
     s.name: s
     for s in [
         _FloatSensorAddress(
+            address=74,
+            name="power_solar_surplus",
+            unit=UnitOfPower.KILO_WATT,
+            device_class=SensorDeviceClass.POWER,
+            state_class=SensorStateClass.MEASUREMENT,
+            supported_features=SensorFeatures.SET_POWER,
+        ),
+        _FloatSensorAddress(
+            address=76,
+            name="power_resistive_heater",
+            unit=UnitOfPower.KILO_WATT,
+            device_class=SensorDeviceClass.POWER,
+            state_class=SensorStateClass.MEASUREMENT,
+        ),
+        _FloatSensorAddress(
+            address=78,
+            name="power_solar_production",
+            unit=UnitOfPower.KILO_WATT,
+            device_class=SensorDeviceClass.POWER,
+            state_class=SensorStateClass.MEASUREMENT,
+            min_value=0,
+            supported_features=SensorFeatures.SET_POWER,
+        ),
+        _FloatSensorAddress(
+            address=82,
+            name="power_use_house",
+            unit=UnitOfPower.KILO_WATT,
+            device_class=SensorDeviceClass.POWER,
+            state_class=SensorStateClass.MEASUREMENT,
+            min_value=0,
+            supported_features=SensorFeatures.SET_POWER,
+        ),
+        _FloatSensorAddress(
+            address=84,
+            name="power_drain_battery",
+            unit=UnitOfPower.KILO_WATT,
+            device_class=SensorDeviceClass.POWER,
+            state_class=SensorStateClass.MEASUREMENT,
+            min_value=0,
+            supported_features=SensorFeatures.SET_POWER,
+        ),
+        _WordSensorAddress(
+            address=86,
+            name="charge_state_battery",
+            unit=PERCENTAGE,
+            device_class=SensorDeviceClass.BATTERY,
+            state_class=SensorStateClass.MEASUREMENT,
+            min_value=0,
+            max_value=100,
+            supported_features=SensorFeatures.SET_BATTERY,
+        ),
+        _FloatSensorAddress(
             address=1000,
             name="temp_outside",
             unit=UnitOfTemperature.CELSIUS,
@@ -1011,23 +1063,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             name="mode_isc",
         ),
         _FloatSensorAddress(
-            address=74,
-            name="power_solar_surplus",
-            unit=UnitOfPower.KILO_WATT,
-            device_class=SensorDeviceClass.POWER,
-            state_class=SensorStateClass.MEASUREMENT,
-            supported_features=SensorFeatures.SET_POWER,
-        ),
-        _FloatSensorAddress(
-            address=78,
-            name="power_solar_production",
-            unit=UnitOfPower.KILO_WATT,
-            device_class=SensorDeviceClass.POWER,
-            state_class=SensorStateClass.MEASUREMENT,
-            min_value=0,
-            supported_features=SensorFeatures.SET_POWER,
-        ),
-        _FloatSensorAddress(
             address=4122,
             name=NAME_POWER_USAGE,
             unit=UnitOfPower.KILO_WATT,
@@ -1084,6 +1119,12 @@ BINARY_SENSOR_ADDRESSES: dict[str, IdmBinarySensorAddress] = {
 
 
 SENSOR_NAMES: dict[int, str] = {
+    74: "Aktueller PV-Überschuss",
+    76: "Leistung E-Heizstab",
+    78: "Aktuelle PV Produktion",
+    82: "Hausverbrauch",
+    84: "Batterieentladung",
+    86: "Batterie Füllstand",
     1000: "Außentemperatur",
     1002: "Gemittelte Außentemperatur",
     1004: "Aktuelle Störungsnummer",
@@ -1107,6 +1148,10 @@ SENSOR_NAMES: dict[int, str] = {
     1062: "Luftwärmetauschertemperatur",
     1064: "Luftansaugtemperatur 2",
     1090: "Betriebsart Wärmepumpe",
+    1091: "Heizanforderung",  # TODO
+    1092: "Kühlanforderung",  # TODO
+    1093: "Vorranganforderung",  # TODO
+    1098: "EW/WVU Sperrkontakt",  # TODO
     1099: "Summenstörung Wärmepumpe",
     1100: "Status Verdichter 1",
     1101: "Status Verdichter 2",
@@ -1125,10 +1170,12 @@ SENSOR_NAMES: dict[int, str] = {
     1115: "Umschaltventil Solar Speicher/Wärmequelle",
     1116: "Umschaltventil ISC Wärmequelle/Kältespeicher",
     1117: "Umschaltventil ISC Speicher/Bypass",
+    1118: "Zirkulationspumpe",  # TODO
     1120: "2. Wärmeerzeuger - Bivalenzpunkt 1",
     1121: "2. Wärmeerzeuger - Bivalenzpunkt 2",
     1122: "3. Wärmeerzeuger - Bivalenzpunkt 1",
     1123: "3. Wärmeerzeuger - Bivalenzpunkt 2",
+    1124: "2./3. Wärmeerzeuger",  # TODO
     1150: "Anzahl laufende Verdichterstufen Heizen",
     1151: "Anzahl laufende Verdichterstufen Kühlen",
     1152: "Anzahl laufende Verdichterstufen Warmwasser",
@@ -1249,9 +1296,19 @@ SENSOR_NAMES: dict[int, str] = {
     1692: "Externe Feuchte",
     1694: "Externe Anforderungstemperatur Heizen",
     1695: "Externe Anforderungstemperatur Kühlen",
+    1696: "GLT Temperaturanforderung Heizen",
+    1698: "GLT Temperaturanfoderung Kühlen",
     1710: "Anforderung Heizen",
     1711: "Anforderung Kühlen",
     1712: "Anforderung Warmwasserladung",
+    1713: "Externe Ansteuerung einmalige Warmwasserladung",  # TODO
+    1714: "Externe Anforderung Sole-/Zwischenkreispumpe",  # TODO
+    1715: "Externe Anforderung Grundwasserpumpe",  # TODO
+    1716: "GLT Wärmespeichertemperatur",
+    1718: "GLT Kältespeichertemperatur",
+    1720: "GLT TWW-Erwärmertemperatur unten",
+    1722: "GLT TWW-Erwärmertemperatur oben",
+    1748: "Wärmemenge Heizen",
     1750: "Wärmemenge Heizen",
     1752: "Wärmemenge Kühlen",
     1754: "Wärmemenge Warmwasser",
@@ -1270,9 +1327,13 @@ SENSOR_NAMES: dict[int, str] = {
     1872: "ISC Rückkühltemperatur",
     1874: "ISC Modus",
     1999: "Störmeldungen quittieren",
-    74: "Aktueller PV-Überschuss",
-    78: "Aktuelle PV Produktion",
+    4108: "Leistungsbegrenzung Wärmepumpe",  # TODO
+    4112: "Leistungsbegrenzung Kaskade",  # TODO
+    4116: "Firmware Version IDM",  # TODO
     4122: "Aktuelle Leistungsaufnahme Wärmepumpe",
+    4124: "elektrische Gesamtleistung",  # TODO
+    4126: "thermische Leistung (basierend auf Durchflusssensor)",  # TODO
+    4128: "Wärmemenge gesamt",  # TODO
     **dict(
         zn
         for zone in range(10)
