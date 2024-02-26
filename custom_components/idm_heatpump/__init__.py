@@ -15,6 +15,7 @@ from homeassistant.loader import async_get_integration
 from .const import (
     CONF_HOSTNAME,
     DEFAULT_REFRESH_INTERVAL,
+    DEFAULT_REQUEST_TIMEOUT,
     DOMAIN,
     ISSUE_URL,
     NAME,
@@ -22,6 +23,7 @@ from .const import (
     OPT_MAX_POWER_USAGE,
     OPT_READ_WITHOUT_GROUPS,
     OPT_REFRESH_INTERVAL,
+    OPT_REQUEST_TIMEOUT,
     OPT_ZONE_COUNT,
     OPT_ZONE_ROOM_9_RELAY,
     OPT_ZONE_ROOM_COUNT,
@@ -78,6 +80,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     update_interval = timedelta(
         **entry.options.get(OPT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL)
     )
+    timeout_delta = timedelta(
+        **entry.options.get(OPT_REQUEST_TIMEOUT, DEFAULT_REQUEST_TIMEOUT)
+    )
     LOGGER.debug(
         "Setting up IDM heat pump at %s with update_interval=%s",
         hostname,
@@ -87,6 +92,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         hass,
         heatpump=heatpump,
         update_interval=update_interval,
+        timeout_delta=timeout_delta,
     )
     hass.data[DOMAIN][entry.entry_id] = coordinator
 

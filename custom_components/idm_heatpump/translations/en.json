@@ -12,6 +12,7 @@
             "options": {
                 "data": {
                     "refresh_interval": "Refresh Interval",
+                    "request_timeout": "Communication Timeout",
                     "heating_circuits": "Heating Circuits",
                     "zone_count": "Number of zone modules",
                     "read_without_groups": "Read sensors individually"
@@ -44,7 +45,8 @@
         },
         "error": {
             "hostname": "Heat pump not found at given hostname/ip.",
-            "min_refresh_interval": "Refresh interval must be at least 1 minute"
+            "min_refresh_interval": "Refresh interval must be at least 1 minute",
+            "request_refresh_interval": "Communication timeout must be less than refresh interval"
         },
         "abort": {
             "already_configured": "This hostname is already configured for a different IDM heat pump device."
@@ -55,6 +57,7 @@
             "options": {
                 "data": {
                     "refresh_interval": "Refresh Interval",
+                    "request_timeout": "Communication Timeout",
                     "heating_circuits": "Heating Circuits",
                     "zone_count": "Number of zone modules",
                     "read_without_groups": "Read sensors individually",
@@ -90,7 +93,8 @@
             }
         },
         "error": {
-            "min_refresh_interval": "Refresh interval must be at least 1 minute"
+            "min_refresh_interval": "Refresh interval must be at least 1 minute",
+            "request_refresh_interval": "Communication timeout must be less than refresh interval"
         }
     },
     "services": {

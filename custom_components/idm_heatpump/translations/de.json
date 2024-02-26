@@ -12,6 +12,7 @@
             "options": {
                 "data": {
                     "refresh_interval": "Aktualisierungsinterval",
+                    "request_timeout": "Kommunikationstimeout",
                     "heating_circuits": "Heizkreise",
                     "zone_count": "Anzahl Zonenmodule",
                     "read_without_groups": "Sensoren einzeln laden"
@@ -44,7 +45,8 @@
         },
         "error": {
             "hostname": "Wärmepumpe mit unter hostname/ip nicht gefunden.",
-            "min_refresh_interval": "Aktualisierungsinterval muss mindestens 1 Minute sein."
+            "min_refresh_interval": "Aktualisierungsinterval muss mindestens 1 Minute sein.",
+            "request_refresh_interval": "Kommunikationstimeout muss kleiner als Aktualisierungsinterval sein."
         },
         "abort": {
             "already_configured": "Dieser Hostname ist bereits für eine andere IDM Wärmepumpe in Verwendung."
@@ -55,6 +57,7 @@
             "options": {
                 "data": {
                     "refresh_interval": "Aktualisierungsinterval",
+                    "request_timeout": "Kommunikationstimeout",
                     "heating_circuits": "Heizkreise",
                     "zone_count": "Anzahl Zonenmodule",
                     "read_without_groups": "Sensoren einzeln laden",
@@ -90,7 +93,8 @@
             }
         },
         "error": {
-            "min_refresh_interval": "Aktualisierungsinterval muss mindestens 1 Minute sein."
+            "min_refresh_interval": "Aktualisierungsinterval muss mindestens 1 Minute sein.",
+            "request_refresh_interval": "Kommunikationstimeout muss kleiner als Aktualisierungsinterval sein."
         }
     },
     "services": {

@@ -13,6 +13,7 @@ from .const import (
     CONF_DISPLAY_NAME,
     CONF_HOSTNAME,
     DEFAULT_REFRESH_INTERVAL,
+    DEFAULT_REQUEST_TIMEOUT,
     DOMAIN,
     MAX_ROOM_COUNT,
     MAX_ZONE_COUNT,
@@ -21,6 +22,7 @@ from .const import (
     OPT_MAX_POWER_USAGE,
     OPT_READ_WITHOUT_GROUPS,
     OPT_REFRESH_INTERVAL,
+    OPT_REQUEST_TIMEOUT,
     OPT_ZONE_COUNT,
     OPT_ZONE_ROOM_9_RELAY,
     OPT_ZONE_ROOM_COUNT,
@@ -179,6 +181,10 @@ def _async_step_base_options(
                 default=options.get(OPT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL),
             ): vol.All(selector({"duration": {}})),
             vol.Required(
+                OPT_REQUEST_TIMEOUT,
+                default=options.get(OPT_REQUEST_TIMEOUT, DEFAULT_REQUEST_TIMEOUT),
+            ): vol.All(selector({"duration": {}})),
+            vol.Required(
                 OPT_HEATING_CIRCUITS,
                 default=options.get(OPT_HEATING_CIRCUITS, []),
             ): vol.All(
@@ -235,6 +241,11 @@ def _async_step_base_options(
             **MIN_REFRESH_INTERVAL
         ):
             errors[OPT_REFRESH_INTERVAL] = "min_refresh_interval"
+
+        if timedelta(**options[OPT_REFRESH_INTERVAL]) < timedelta(
+            **options[OPT_REQUEST_TIMEOUT]
+        ):
+            errors[OPT_REQUEST_TIMEOUT] = "request_refresh_interval"
 
         if len(errors) == 0:
             return None

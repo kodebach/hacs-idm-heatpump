@@ -26,6 +26,10 @@ from .sensor_addresses import (
 _T = TypeVar("_T")
 
 
+class _FetchError(Exception):
+    pass
+
+
 class IdmHeatpump:
     """Abstraction over the modbus interface of IDM heatpumps."""
 
@@ -136,28 +140,28 @@ class IdmHeatpump:
                 await self.client.connect()
             return await self._fetch_registers(group)
 
-    async def _fetch_sensors(self, group: _SensorGroup) -> dict[str, any] | None:
+    async def _fetch_sensors(self, group: _SensorGroup) -> dict[str, any]:
         LOGGER.debug("fetching registers from %d (count=%d)", group.start, group.count)
 
         try:
             result = await self._fetch_retry(group)
         except ModbusException as exception:
-            LOGGER.error(
+            LOGGER.warn(
                 "Failed to fetch registers for group %d (count=%d): %s",
                 group.start,
                 group.count,
                 exception,
             )
-            return None
+            raise _FetchError() from exception
 
         if result.isError():
-            LOGGER.error(
+            LOGGER.warn(
                 "Failed to fetch registers for group %d (count=%d): %s",
                 group.start,
                 group.count,
                 result,
             )
-            return None
+            raise _FetchError()
 
         LOGGER.debug("got registers %d", group.start)
 
@@ -223,13 +227,13 @@ class IdmHeatpump:
                         decode_single(sensor, single_result)
 
         except ModbusException as exception:
-            LOGGER.error(
+            LOGGER.warn(
                 "Failed to fetch registers for group %d (count=%d): %s",
                 group.start,
                 group.count,
                 exception,
             )
-            return None
+            raise _FetchError() from exception
 
         LOGGER.debug("decoded registers %d", group.start)
 
@@ -255,7 +259,7 @@ class IdmHeatpump:
 
                     decode_single(sensor, single_result)
                 except ModbusException as exception:
-                    LOGGER.error(
+                    LOGGER.warn(
                         "Failed to fetch registers for sensor %d: %s",
                         sensor.address,
                         exception,
@@ -273,7 +277,7 @@ class IdmHeatpump:
 
         return data
 
-    async def async_get_data(self):
+    async def async_get_data(self) -> (bool, dict[str, any]):
         """Get data from the heatpump."""
 
         if not self.client.connected:
@@ -288,13 +292,21 @@ class IdmHeatpump:
         LOGGER.debug("got groups")
 
         data: dict[str, any] = {}
+        has_error = False
         for group in groups:
-            if group is not None and isinstance(group, dict):
+            if isinstance(group, dict):
                 data.update(group)
+            else:
+                has_error = True
+
+        if len(data) == 0:
+            raise next(e for e in groups if isinstance(e, Exception)) or Exception(
+                "update failed"
+            )
 
         LOGGER.debug("got data")
 
-        return data
+        return has_error, data
 
     async def async_write_value(self, address: BaseSensorAddress[_T], value: _T):
         """Write value to one of the addresses of this heat pump."""
