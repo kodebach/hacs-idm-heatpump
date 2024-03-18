@@ -1,6 +1,6 @@
 colorlog==6.8.2
 homeassistant>=2024.1.5
 pip>=21.3.1
-ruff==0.2.2
+ruff==0.3.3
 pymodbus==3.6.4
 async-timeout==4.0.3
