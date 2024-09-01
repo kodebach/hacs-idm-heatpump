@@ -110,6 +110,10 @@
                     "name": "Value",
                     "description": "The value to send."
                 }
+            },
+            "acknowledge": {
+                "name": "Confirmation",
+                "description": "I accept the risks"
             }
         },
         "set_battery": {
@@ -123,6 +127,10 @@
                 "value": {
                     "name": "Value",
                     "description": "The value to send."
+                },
+                "acknowledge_risk": {
+                    "name": "Confirmation",
+                    "description": "I accept the risks"
                 }
             }
         },
@@ -137,6 +145,10 @@
                 "value": {
                     "name": "Value",
                     "description": "The value to send."
+                },
+                "acknowledge_risk": {
+                    "name": "Confirmation",
+                    "description": "I accept the risks"
                 }
             }
         },
@@ -151,8 +163,21 @@
                 "value": {
                     "name": "Value",
                     "description": "The value to send."
+                },
+                "acknowledge_risk": {
+                    "name": "Confirmation",
+                    "description": "I accept the risks"
                 }
             }
         }
+    },
+    "selector": {
+        "acknowledge_set_value": {
+            "value": "I have read IDM's documentation, I know what effect setting this value has and I accept the risks in case of misuse."
+        }
+    },
+    "exceptions": {
+        "entity_not_supported": "Entity {entity_id} does not support this service.",
+        "risk_not_acknowledged": "You must enable 'Confirmation' (i.e. set acknowledge_risk=true) to call this service."
     }
 }

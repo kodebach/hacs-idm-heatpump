@@ -110,6 +110,10 @@
                     "name": "Wert",
                     "description": "Der Wert der gesendet werden soll."
                 }
+            },
+            "acknowledge_risk": {
+                "name": "Bestätigung",
+                "description": "Ich akzeptiere das Risiko"
             }
         },
         "set_battery": {
@@ -124,6 +128,10 @@
                     "name": "Wert",
                     "description": "Der Wert der gesendet werden soll."
                 }
+            },
+            "acknowledge_risk": {
+                "name": "Bestätigung",
+                "description": "Ich akzeptiere das Risiko"
             }
         },
         "set_temperature": {
@@ -138,6 +146,10 @@
                     "name": "Wert",
                     "description": "Der Wert der gesendet werden soll."
                 }
+            },
+            "acknowledge_risk": {
+                "name": "Bestätigung",
+                "description": "Ich akzeptiere das Risiko"
             }
         },
         "set_humidity": {
@@ -151,8 +163,21 @@
                 "value": {
                     "name": "Wert",
                     "description": "Der Wert der gesendet werden soll."
+                },
+                "acknowledge_risk": {
+                    "name": "Bestätigung",
+                    "description": "Ich akzeptiere das Risiko"
                 }
             }
         }
+    },
+    "selector": {
+        "acknowledge_set_value": {
+            "value": "Ich habe die Dokumentation von IDM gelesen, weiß was das setzen dieses Wertes bewirkt und akzeptiere das Risiko bei falscher Verwendung."
+        }
+    },
+    "exceptions": {
+        "entity_not_supported": "Entität {entity_id} unterstützt diesen Service nicht.",
+        "risk_not_acknowledged": "'Bestätigung' muss aktiviert sein (d.h. acknowledge_risk=true gesetzt) um diesen Service auszuführen."
     }
 }

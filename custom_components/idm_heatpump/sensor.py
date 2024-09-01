@@ -46,10 +46,23 @@ async def async_setup_entry(
             or SensorFeatures.SET_POWER not in entity.supported_features
         ):
             raise HomeAssistantError(
-                f"Entity {entity.entity_id} does not support this service."
+                f"Entity {entity.entity_id} does not support this service.",
+                translation_domain=DOMAIN,
+                translation_key="entity_not_supported",
+                translation_placeholders={
+                    "entity_id": entity.entity_id,
+                },
             )
 
         entity: IdmHeatpumpEntity[float]
+
+        acknowledge = call.data.get("acknowledge_risk")
+        if acknowledge is not True:
+            raise HomeAssistantError(
+                "Must acknowledge risk to call set_power",
+                translation_domain=DOMAIN,
+                translation_key="risk_not_acknowledged",
+            )
 
         value: float = call.data.get("value")
         LOGGER.debug("Calling set_power with value %s on %s", value, entity.entity_id)
@@ -70,10 +83,23 @@ async def async_setup_entry(
             or SensorFeatures.SET_BATTERY not in entity.supported_features
         ):
             raise HomeAssistantError(
-                f"Entity {entity.entity_id} does not support this service."
+                f"Entity {entity.entity_id} does not support this service.",
+                translation_domain=DOMAIN,
+                translation_key="entity_not_supported",
+                translation_placeholders={
+                    "entity_id": entity.entity_id,
+                },
             )
 
         entity: IdmHeatpumpEntity[int]
+
+        acknowledge = call.data.get("acknowledge_risk")
+        if acknowledge is not True:
+            raise HomeAssistantError(
+                "Must acknowledge risk to call set_battery",
+                translation_domain=DOMAIN,
+                translation_key="risk_not_acknowledged",
+            )
 
         value: int = call.data.get("value")
         LOGGER.debug("Calling set_battery with value %s on %s", value, entity.entity_id)
@@ -94,10 +120,23 @@ async def async_setup_entry(
             or SensorFeatures.SET_TEMPERATURE not in entity.supported_features
         ):
             raise HomeAssistantError(
-                f"Entity {entity.entity_id} does not support this service."
+                f"Entity {entity.entity_id} does not support this service.",
+                translation_domain=DOMAIN,
+                translation_key="entity_not_supported",
+                translation_placeholders={
+                    "entity_id": entity.entity_id,
+                },
             )
 
         entity: IdmHeatpumpEntity[int]
+
+        acknowledge = call.data.get("acknowledge_risk")
+        if acknowledge is not True:
+            raise HomeAssistantError(
+                "Must acknowledge risk to call set_temperature",
+                translation_domain=DOMAIN,
+                translation_key="risk_not_acknowledged",
+            )
 
         value: int = call.data.get("value")
         LOGGER.debug(
@@ -120,10 +159,23 @@ async def async_setup_entry(
             or SensorFeatures.SET_HUMIDITY not in entity.supported_features
         ):
             raise HomeAssistantError(
-                f"Entity {entity.entity_id} does not support this service."
+                f"Entity {entity.entity_id} does not support this service.",
+                translation_domain=DOMAIN,
+                translation_key="entity_not_supported",
+                translation_placeholders={
+                    "entity_id": entity.entity_id,
+                },
             )
 
         entity: IdmHeatpumpEntity[int]
+
+        acknowledge = call.data.get("acknowledge_risk")
+        if acknowledge is not True:
+            raise HomeAssistantError(
+                "Must acknowledge risk to call set_humidity",
+                translation_domain=DOMAIN,
+                translation_key="risk_not_acknowledged",
+            )
 
         value: int = call.data.get("value")
         LOGGER.debug(
