@@ -999,7 +999,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=UnitOfPower.KILO_WATT,
             device_class=SensorDeviceClass.POWER,
             state_class=SensorStateClass.MEASUREMENT,
-            min_value=0,
         ),
         _FloatSensorAddress(
             address=1792,
@@ -1007,7 +1006,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=UnitOfPower.KILO_WATT,
             device_class=SensorDeviceClass.POWER,
             state_class=SensorStateClass.MEASUREMENT,
-            min_value=0,
         ),
         _FloatSensorAddress(
             address=1850,
