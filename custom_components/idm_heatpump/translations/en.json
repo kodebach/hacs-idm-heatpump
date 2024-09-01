@@ -109,11 +109,11 @@
                 "value": {
                     "name": "Value",
                     "description": "The value to send."
+                },
+                "acknowledge_risk": {
+                    "name": "Bestätigung",
+                    "description": "Ich akzeptiere das Risiko"
                 }
-            },
-            "acknowledge_risk": {
-                "name": "Confirmation",
-                "description": "I accept the risks"
             }
         },
         "set_battery": {
@@ -204,7 +204,11 @@
         }
     },
     "exceptions": {
-        "entity_not_supported": "Entity {entity_id} does not support this service.",
-        "risk_not_acknowledged": "You must enable 'Confirmation' (i.e. set acknowledge_risk=true) to call this service."
+        "entity_not_supported": {
+            "message": "Entity {entity_id} does not support this service."
+        },
+        "risk_not_acknowledged": {
+            "message": "You must enable 'Confirmation' (i.e. set acknowledge_risk=true) to call this service."
+        }
     }
 }

@@ -109,11 +109,11 @@
                 "value": {
                     "name": "Wert",
                     "description": "Der Wert der gesendet werden soll."
+                },
+                "acknowledge_risk": {
+                    "name": "Bestätigung",
+                    "description": "Ich akzeptiere das Risiko"
                 }
-            },
-            "acknowledge_risk": {
-                "name": "Bestätigung",
-                "description": "Ich akzeptiere das Risiko"
             }
         },
         "set_battery": {
@@ -127,11 +127,11 @@
                 "value": {
                     "name": "Wert",
                     "description": "Der Wert der gesendet werden soll."
+                },
+                "acknowledge_risk": {
+                    "name": "Bestätigung",
+                    "description": "Ich akzeptiere das Risiko"
                 }
-            },
-            "acknowledge_risk": {
-                "name": "Bestätigung",
-                "description": "Ich akzeptiere das Risiko"
             }
         },
         "set_temperature": {
@@ -145,11 +145,11 @@
                 "value": {
                     "name": "Wert",
                     "description": "Der Wert der gesendet werden soll."
+                },
+                "acknowledge_risk": {
+                    "name": "Bestätigung",
+                    "description": "Ich akzeptiere das Risiko"
                 }
-            },
-            "acknowledge_risk": {
-                "name": "Bestätigung",
-                "description": "Ich akzeptiere das Risiko"
             }
         },
         "set_humidity": {
