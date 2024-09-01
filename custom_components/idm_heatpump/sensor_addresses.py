@@ -113,7 +113,7 @@ class IdmBinarySensorAddress(BaseSensorAddress[bool]):
         """Decode this sensor's value."""
         value = decoder.decode_16bit_uint()
         LOGGER.debug("raw value (uint16) for %s: %d", self.name, value)
-        return (True, value == 1)
+        return (True, value > 0)
 
     def encode(self, builder: BinaryPayloadBuilder, value: bool):
         """Encode this sensor's value."""
