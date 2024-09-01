@@ -1,11 +1,19 @@
 """Sensor platform for idm_heatpump."""
+
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, HomeAssistantError, ServiceCall
 from homeassistant.helpers import entity_platform
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import DOMAIN, SERVICE_SET_BATTERY, SERVICE_SET_POWER, SensorFeatures
+from .const import (
+    DOMAIN,
+    SERVICE_SET_BATTERY,
+    SERVICE_SET_HUMIDITY,
+    SERVICE_SET_POWER,
+    SERVICE_SET_TEMPERATURE,
+    SensorFeatures,
+)
 from .coordinator import IdmHeatpumpDataUpdateCoordinator
 from .entity import IdmHeatpumpEntity
 from .logger import LOGGER
@@ -75,6 +83,58 @@ async def async_setup_entry(
         domain=DOMAIN,
         service=SERVICE_SET_BATTERY,
         service_func=handle_set_battery,
+    )
+
+    async def handle_set_temperature(call: ServiceCall):
+        target = call.data.get("target")
+        entity = platform.entities[target]
+
+        if (
+            not isinstance(entity, IdmHeatpumpEntity)
+            or SensorFeatures.SET_TEMPERATURE not in entity.supported_features
+        ):
+            raise HomeAssistantError(
+                f"Entity {entity.entity_id} does not support this service."
+            )
+
+        entity: IdmHeatpumpEntity[int]
+
+        value: int = call.data.get("value")
+        LOGGER.debug(
+            "Calling set_temperature with value %s on %s", value, entity.entity_id
+        )
+        await entity.async_write_value(value)
+
+    hass.services.async_register(
+        domain=DOMAIN,
+        service=SERVICE_SET_TEMPERATURE,
+        service_func=handle_set_temperature,
+    )
+
+    async def handle_set_humidity(call: ServiceCall):
+        target = call.data.get("target")
+        entity = platform.entities[target]
+
+        if (
+            not isinstance(entity, IdmHeatpumpEntity)
+            or SensorFeatures.SET_HUMIDITY not in entity.supported_features
+        ):
+            raise HomeAssistantError(
+                f"Entity {entity.entity_id} does not support this service."
+            )
+
+        entity: IdmHeatpumpEntity[int]
+
+        value: int = call.data.get("value")
+        LOGGER.debug(
+            "Calling set_humidity with value %s on %s", value, entity.entity_id
+        )
+        await entity.async_write_value(value)
+
+    hass.services.async_register(
+        domain=DOMAIN,
+        service=SERVICE_SET_HUMIDITY,
+        service_func=handle_set_humidity,
     )
 
 

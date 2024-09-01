@@ -125,6 +125,34 @@
                     "description": "Der Wert der gesendet werden soll."
                 }
             }
+        },
+        "set_temperature": {
+            "name": "Temperaturwert setzen",
+            "description": "Sendet einen Wert vom Typ 'Temperatur' an die Wärmepumpe.",
+            "fields": {
+                "target": {
+                    "name": "Ziel",
+                    "description": "Der Sensor für welchen der Wert gesendet werden soll."
+                },
+                "value": {
+                    "name": "Wert",
+                    "description": "Der Wert der gesendet werden soll."
+                }
+            }
+        },
+        "set_humidity": {
+            "name": "Luftfeuchtigkeitswert setzen",
+            "description": "Sendet einen Wert vom Typ 'Luftfeuchtigkeit' an die Wärmepumpe.",
+            "fields": {
+                "target": {
+                    "name": "Ziel",
+                    "description": "Der Sensor für welchen der Wert gesendet werden soll."
+                },
+                "value": {
+                    "name": "Wert",
+                    "description": "Der Wert der gesendet werden soll."
+                }
+            }
         }
     }
 }
