@@ -17,7 +17,6 @@ set_power:
       selector:
         constant:
           value: true
-          label: Acknowledge risks
           translation_key: acknowledge_set_value
 
 set_battery:
@@ -41,7 +40,6 @@ set_battery:
       selector:
         constant:
           value: true
-          label: Acknowledge risks
           translation_key: acknowledge_set_value
 
 set_temperature:
@@ -63,7 +61,6 @@ set_temperature:
       selector:
         constant:
           value: true
-          label: Acknowledge risks
           translation_key: acknowledge_set_value
 
 set_humidity:
@@ -87,7 +84,6 @@ set_humidity:
       selector:
         constant:
           value: true
-          label: Acknowledge risks
           translation_key: acknowledge_set_value
 
 set_room_mode:
@@ -114,5 +110,4 @@ set_room_mode:
       selector:
         constant:
           value: true
-          label: Acknowledge risks
           translation_key: acknowledge_set_value
