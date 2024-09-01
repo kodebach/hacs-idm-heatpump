@@ -514,6 +514,7 @@ class ZoneModule:
                         unit=UnitOfTemperature.CELSIUS,
                         device_class=SensorDeviceClass.TEMPERATURE,
                         state_class=SensorStateClass.MEASUREMENT,
+                        supported_features=SensorFeatures.SET_TEMPERATURE,
                         min_value=-30,
                         max_value=80,
                     ),
@@ -523,6 +524,7 @@ class ZoneModule:
                         unit=UnitOfTemperature.CELSIUS,
                         device_class=SensorDeviceClass.TEMPERATURE,
                         state_class=SensorStateClass.MEASUREMENT,
+                        supported_features=SensorFeatures.SET_TEMPERATURE,
                     ),
                     _UCharSensorAddress(
                         address=ZONE_OFFSETS[self.index] + ROOM_OFFSETS[room] + 4,
@@ -530,6 +532,7 @@ class ZoneModule:
                         unit=PERCENTAGE,
                         device_class=SensorDeviceClass.HUMIDITY,
                         state_class=SensorStateClass.MEASUREMENT,
+                        supported_features=SensorFeatures.SET_HUMIDITY,
                         min_value=0,
                         max_value=100,
                     ),

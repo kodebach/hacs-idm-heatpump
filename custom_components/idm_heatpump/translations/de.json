@@ -174,6 +174,15 @@
     "selector": {
         "acknowledge_set_value": {
             "value": "Ich habe die Dokumentation von IDM gelesen, weiß was das setzen dieses Wertes bewirkt und akzeptiere das Risiko bei falscher Verwendung."
+        },
+        "room_mode_options": {
+            "options": {
+                "off": "Off",
+                "auto": "Automatic",
+                "eco": "Eco",
+                "normal": "Normal",
+                "comfort": "Comfort"
+            }
         }
     },
     "exceptions": {

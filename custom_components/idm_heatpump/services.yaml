@@ -89,3 +89,30 @@ set_humidity:
           value: true
           label: Acknowledge risks
           translation_key: acknowledge_set_value
+
+set_room_mode:
+  fields:
+    target:
+      required: true
+      selector:
+        entity:
+          integration: idm_heatpump
+          domain: sensor
+          device_class: enum
+    value:
+      required: true
+      selector:
+        select:
+          options:
+            - "off"
+            - auto
+            - eco
+            - normal
+            - comfort
+          translation_key: room_mode_options
+    acknowledge_risk:
+      selector:
+        constant:
+          value: true
+          label: Acknowledge risks
+          translation_key: acknowledge_set_value

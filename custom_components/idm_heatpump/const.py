@@ -12,6 +12,7 @@ class SensorFeatures(IntFlag):
     SET_BATTERY = 2
     SET_TEMPERATURE = 4
     SET_HUMIDITY = 8
+    SET_ROOM_MODE = 16
 
 
 class _SensorEnum(IntEnum):
@@ -213,6 +214,7 @@ SERVICE_SET_POWER = "set_power"
 SERVICE_SET_BATTERY = "set_battery"
 SERVICE_SET_TEMPERATURE = "set_temperature"
 SERVICE_SET_HUMIDITY = "set_humidity"
+SERVICE_SET_ROOM_MODE = "set_room_mode"
 
 # Limits
 MIN_REFRESH_INTERVAL = {"hours": 0, "minutes": 1, "seconds": 0}

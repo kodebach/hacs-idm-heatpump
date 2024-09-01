@@ -174,6 +174,15 @@
     "selector": {
         "acknowledge_set_value": {
             "value": "I have read IDM's documentation, I know what effect setting this value has and I accept the risks in case of misuse."
+        },
+        "room_mode_options": {
+            "options": {
+                "off": "Aus",
+                "auto": "Automatik",
+                "eco": "Eco",
+                "normal": "Normal",
+                "comfort": "Komfort"
+            }
         }
     },
     "exceptions": {

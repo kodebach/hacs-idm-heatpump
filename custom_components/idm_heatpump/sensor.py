@@ -11,7 +11,9 @@ from .const import (
     SERVICE_SET_BATTERY,
     SERVICE_SET_HUMIDITY,
     SERVICE_SET_POWER,
+    SERVICE_SET_ROOM_MODE,
     SERVICE_SET_TEMPERATURE,
+    RoomMode,
     SensorFeatures,
 )
 from .coordinator import IdmHeatpumpDataUpdateCoordinator
@@ -59,13 +61,15 @@ async def async_setup_entry(
         acknowledge = call.data.get("acknowledge_risk")
         if acknowledge is not True:
             raise HomeAssistantError(
-                "Must acknowledge risk to call set_power",
+                f"Must acknowledge risk to call {SERVICE_SET_POWER}",
                 translation_domain=DOMAIN,
                 translation_key="risk_not_acknowledged",
             )
 
         value: float = call.data.get("value")
-        LOGGER.debug("Calling set_power with value %s on %s", value, entity.entity_id)
+        LOGGER.debug(
+            "Calling %s with value %s on %s", SERVICE_SET_POWER, value, entity.entity_id
+        )
         await entity.async_write_value(value)
 
     hass.services.async_register(
@@ -96,13 +100,18 @@ async def async_setup_entry(
         acknowledge = call.data.get("acknowledge_risk")
         if acknowledge is not True:
             raise HomeAssistantError(
-                "Must acknowledge risk to call set_battery",
+                f"Must acknowledge risk to call {SERVICE_SET_BATTERY}",
                 translation_domain=DOMAIN,
                 translation_key="risk_not_acknowledged",
             )
 
         value: int = call.data.get("value")
-        LOGGER.debug("Calling set_battery with value %s on %s", value, entity.entity_id)
+        LOGGER.debug(
+            "Calling %s with value %s on %s",
+            SERVICE_SET_BATTERY,
+            value,
+            entity.entity_id,
+        )
         await entity.async_write_value(value)
 
     hass.services.async_register(
@@ -128,19 +137,22 @@ async def async_setup_entry(
                 },
             )
 
-        entity: IdmHeatpumpEntity[int]
+        entity: IdmHeatpumpEntity[float]
 
         acknowledge = call.data.get("acknowledge_risk")
         if acknowledge is not True:
             raise HomeAssistantError(
-                "Must acknowledge risk to call set_temperature",
+                f"Must acknowledge risk to call {SERVICE_SET_TEMPERATURE}",
                 translation_domain=DOMAIN,
                 translation_key="risk_not_acknowledged",
             )
 
-        value: int = call.data.get("value")
+        value: float = call.data.get("value")
         LOGGER.debug(
-            "Calling set_temperature with value %s on %s", value, entity.entity_id
+            "Calling %s with value %s on %s",
+            SERVICE_SET_TEMPERATURE,
+            value,
+            entity.entity_id,
         )
         await entity.async_write_value(value)
 
@@ -167,19 +179,22 @@ async def async_setup_entry(
                 },
             )
 
-        entity: IdmHeatpumpEntity[int]
+        entity: IdmHeatpumpEntity[float]
 
         acknowledge = call.data.get("acknowledge_risk")
         if acknowledge is not True:
             raise HomeAssistantError(
-                "Must acknowledge risk to call set_humidity",
+                f"Must acknowledge risk to call {SERVICE_SET_HUMIDITY}",
                 translation_domain=DOMAIN,
                 translation_key="risk_not_acknowledged",
             )
 
-        value: int = call.data.get("value")
+        value: float = call.data.get("value")
         LOGGER.debug(
-            "Calling set_humidity with value %s on %s", value, entity.entity_id
+            "Calling %s with value %s on %s",
+            SERVICE_SET_HUMIDITY,
+            value,
+            entity.entity_id,
         )
         await entity.async_write_value(value)
 
@@ -187,6 +202,54 @@ async def async_setup_entry(
         domain=DOMAIN,
         service=SERVICE_SET_HUMIDITY,
         service_func=handle_set_humidity,
+    )
+
+    async def handle_set_room_mode(call: ServiceCall):
+        target = call.data.get("target")
+        entity = platform.entities[target]
+
+        if (
+            not isinstance(entity, IdmHeatpumpEntity)
+            or SensorFeatures.SET_ROOM_MODE not in entity.supported_features
+        ):
+            raise HomeAssistantError(
+                f"Entity {entity.entity_id} does not support this service.",
+                translation_domain=DOMAIN,
+                translation_key="entity_not_supported",
+                translation_placeholders={
+                    "entity_id": entity.entity_id,
+                },
+            )
+
+        entity: IdmHeatpumpEntity[RoomMode]
+
+        acknowledge = call.data.get("acknowledge_risk")
+        if acknowledge is not True:
+            raise HomeAssistantError(
+                f"Must acknowledge risk to call {SERVICE_SET_ROOM_MODE}",
+                translation_domain=DOMAIN,
+                translation_key="risk_not_acknowledged",
+            )
+
+        raw_value = call.data.get("value")
+
+        value = RoomMode[raw_value]
+
+        if value is None:
+            raise HomeAssistantError("invalid value: {value}")
+
+        LOGGER.debug(
+            "Calling %s with value %s on %s",
+            SERVICE_SET_ROOM_MODE,
+            value,
+            entity.entity_id,
+        )
+        await entity.async_write_value(value)
+
+    hass.services.async_register(
+        domain=DOMAIN,
+        service=SERVICE_SET_ROOM_MODE,
+        service_func=handle_set_room_mode,
     )
 
 
