@@ -1,8 +1,9 @@
 """Coordinator for idm_heatpump."""
+
+from asyncio import timeout
 from datetime import timedelta
 from typing import TypeVar
 
-import async_timeout
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
@@ -37,7 +38,7 @@ class IdmHeatpumpDataUpdateCoordinator(DataUpdateCoordinator[dict[str, any]]):
     async def _async_update_data(self):
         """Update data via library."""
         try:
-            async with async_timeout.timeout(self.timeout_delta.total_seconds()):
+            async with timeout(self.timeout_delta.total_seconds()):
                 has_error, data = await self.heatpump.async_get_data()
                 if has_error:
                     LOGGER.error("update partially failed")
@@ -51,7 +52,7 @@ class IdmHeatpumpDataUpdateCoordinator(DataUpdateCoordinator[dict[str, any]]):
     async def async_write_value(self, address: BaseSensorAddress[_T], value: _T):
         """Update data via library."""
         try:
-            async with async_timeout.timeout(self.timeout_delta.total_seconds()):
+            async with timeout(self.timeout_delta.total_seconds()):
                 return await self.heatpump.async_write_value(address, value)
         except TimeoutError as e:
             LOGGER.error("timeout while writing")
