@@ -20,8 +20,10 @@ jobs:
       - name: "Adjust version number"
         shell: "bash"
         run: |
-          yq -i -o json '.version="${{ github.event.release.tag_name }}"' \
-            "${{ github.workspace }}/custom_components/idm_heatpump/manifest.json"
+          cat <(echo "req") "${{ github.workspace }}/custom_components/idm_heatpump/manifest.json" | \
+            yq -p=csv -ojson '[.[].req]' | \
+            yq eval-all 'select(fi==0).requirements=select(fi==1)|select(fi==0)|.version="${{ github.event.release.tag_name }}"' \
+            custom_components/idm_heatpump/manifest.json -
 
       - name: "ZIP the integration directory"
         shell: "bash"
