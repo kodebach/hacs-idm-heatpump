@@ -111,7 +111,7 @@
                     "description": "The value to send."
                 }
             },
-            "acknowledge": {
+            "acknowledge_risk": {
                 "name": "Confirmation",
                 "description": "I accept the risks"
             }
@@ -155,6 +155,24 @@
         "set_humidity": {
             "name": "Set relative humidity value",
             "description": "Sends a relative humidity value to the heat pump.",
+            "fields": {
+                "target": {
+                    "name": "Target",
+                    "description": "The sensor for which to set the value."
+                },
+                "value": {
+                    "name": "Value",
+                    "description": "The value to send."
+                },
+                "acknowledge_risk": {
+                    "name": "Confirmation",
+                    "description": "I accept the risks"
+                }
+            }
+        },
+        "set_room_mode": {
+            "name": "Set room mode value",
+            "description": "Sends a room mode value to the heat pump.",
             "fields": {
                 "target": {
                     "name": "Target",

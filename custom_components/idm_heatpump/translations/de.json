@@ -169,6 +169,24 @@
                     "description": "Ich akzeptiere das Risiko"
                 }
             }
+        },
+        "set_room_mode": {
+            "name": "Raummodus setzen",
+            "description": "Sendet einen Wert vom Typ 'Raummodus' an die Wärmepumpe.",
+            "fields": {
+                "target": {
+                    "name": "Ziel",
+                    "description": "Der Sensor für welchen der Wert gesendet werden soll."
+                },
+                "value": {
+                    "name": "Wert",
+                    "description": "Der Wert der gesendet werden soll."
+                },
+                "acknowledge_risk": {
+                    "name": "Bestätigung",
+                    "description": "Ich akzeptiere das Risiko"
+                }
+            }
         }
     },
     "selector": {
