@@ -10,7 +10,7 @@ from pymodbus.constants import Endian
 from pymodbus.exceptions import ConnectionException, ModbusException
 from pymodbus.payload import BinaryPayloadBuilder, BinaryPayloadDecoder
 from pymodbus.pdu import ModbusResponse
-from pymodbus.register_read_message import ReadInputRegistersResponse
+from pymodbus.pdu.register_read_message import ReadInputRegistersResponse
 
 from .const import NAME_POWER_USAGE
 from .logger import LOGGER
@@ -146,7 +146,7 @@ class IdmHeatpump:
         try:
             result = await self._fetch_retry(group)
         except ModbusException as exception:
-            LOGGER.warn(
+            LOGGER.warning(
                 "Failed to fetch registers for group %d (count=%d): %s",
                 group.start,
                 group.count,
@@ -155,7 +155,7 @@ class IdmHeatpump:
             raise _FetchError() from exception
 
         if result.isError():
-            LOGGER.warn(
+            LOGGER.warning(
                 "Failed to fetch registers for group %d (count=%d): %s",
                 group.start,
                 group.count,
@@ -227,7 +227,7 @@ class IdmHeatpump:
                         decode_single(sensor, single_result)
 
         except ModbusException as exception:
-            LOGGER.warn(
+            LOGGER.warning(
                 "Failed to fetch registers for group %d (count=%d): %s",
                 group.start,
                 group.count,
@@ -259,7 +259,7 @@ class IdmHeatpump:
 
                     decode_single(sensor, single_result)
                 except ModbusException as exception:
-                    LOGGER.warn(
+                    LOGGER.warning(
                         "Failed to fetch registers for sensor %d: %s",
                         sensor.address,
                         exception,
@@ -277,7 +277,7 @@ class IdmHeatpump:
 
         return data
 
-    async def async_get_data(self) -> (bool, dict[str, any]):
+    async def async_get_data(self) -> tuple[bool, dict[str, any]]:
         """Get data from the heatpump."""
 
         if not self.client.connected:
