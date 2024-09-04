@@ -3,6 +3,7 @@
 For more details about this integration, please refer to
 https://github.com/custom-components/idm_heatpump
 """
+
 from datetime import timedelta
 
 from homeassistant.components import persistent_notification

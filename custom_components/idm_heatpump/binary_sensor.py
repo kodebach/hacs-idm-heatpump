@@ -1,4 +1,5 @@
 """Binary sensor platform for idm_heatpump."""
+
 from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
