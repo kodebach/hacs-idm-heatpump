@@ -22,7 +22,7 @@ jobs:
         run: |
           cat <(echo "req") "${{ github.workspace }}/custom_components/idm_heatpump/requirements.txt" | \
             yq -p=csv -ojson '[.[].req]' | \
-            yq eval-all 'select(fi==0).requirements=select(fi==1)|select(fi==0)|.version="${{ github.event.release.tag_name }}"' \
+            yq eval-all -i 'select(fi==0).requirements=select(fi==1)|select(fi==0)|.version="${{ github.event.release.tag_name }}"' \
             "${{ github.workspace }}/custom_components/idm_heatpump/manifest.json" -
 
       - name: "ZIP the integration directory"
