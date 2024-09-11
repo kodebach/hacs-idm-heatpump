@@ -541,6 +541,8 @@ class ZoneModule:
                         address=ZONE_OFFSETS[self.index] + ROOM_OFFSETS[room] + 5,
                         name=f"zone_{self.index+1}_room_{room+1}_mode",
                         force_single=True,
+                        device_class=SensorDeviceClass.ENUM,
+                        supported_features=SensorFeatures.SET_ROOM_MODE,
                     ),
                 ]
             ],
