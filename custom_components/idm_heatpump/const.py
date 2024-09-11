@@ -1,6 +1,6 @@
 """Constants for idm_heatpump."""
 
-from enum import IntEnum, IntFlag
+from enum import EnumMeta, IntEnum, IntFlag
 from typing import Any
 
 
@@ -15,12 +15,19 @@ class SensorFeatures(IntFlag):
     SET_ROOM_MODE = 16
 
 
-class _SensorEnum(IntEnum):
+class _CaseInsensitiveEnumMeta(EnumMeta):
+    def __getitem__(cls, item):
+        if isinstance(item, str):
+            item = item.upper()
+        return super().__getitem__(item)
+
+
+class _SensorEnum(IntEnum, metaclass=_CaseInsensitiveEnumMeta):
     def __str__(self) -> str:
         return self.name.lower()
 
 
-class _SensorFlag(IntFlag):
+class _SensorFlag(IntFlag, metaclass=_CaseInsensitiveEnumMeta):
     def __str__(self) -> str:
         return ", ".join([f.name.lower() for f in self])
 
