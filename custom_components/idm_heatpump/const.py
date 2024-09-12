@@ -13,6 +13,7 @@ class SensorFeatures(IntFlag):
     SET_TEMPERATURE = 4
     SET_HUMIDITY = 8
     SET_ROOM_MODE = 16
+    SET_BINARY = 32
 
 
 class _CaseInsensitiveEnumMeta(EnumMeta):
@@ -222,6 +223,7 @@ SERVICE_SET_BATTERY = "set_battery"
 SERVICE_SET_TEMPERATURE = "set_temperature"
 SERVICE_SET_HUMIDITY = "set_humidity"
 SERVICE_SET_ROOM_MODE = "set_room_mode"
+SERVICE_SET_BINARY = "set_binary"
 
 # Limits
 MIN_REFRESH_INTERVAL = {"hours": 0, "minutes": 1, "seconds": 0}

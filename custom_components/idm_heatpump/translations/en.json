@@ -187,6 +187,24 @@
                     "description": "I accept the risks"
                 }
             }
+        },
+        "set_binary": {
+            "name": "On/Off value setzen",
+            "description": "Set on/off value",
+            "fields": {
+                "target": {
+                    "name": "Target",
+                    "description": "The sensor for which to set the value."
+                },
+                "value": {
+                    "name": "Value",
+                    "description": "The value to send."
+                },
+                "acknowledge_risk": {
+                    "name": "Confirmation",
+                    "description": "I accept the risks"
+                }
+            }
         }
     },
     "selector": {

@@ -1135,14 +1135,17 @@ BINARY_SENSOR_ADDRESSES: dict[str, IdmBinarySensorAddress] = {
         IdmBinarySensorAddress(
             address=1710,
             name="request_heating",
+            supported_features=SensorFeatures.SET_BINARY,
         ),
         IdmBinarySensorAddress(
             address=1711,
             name="request_cooling",
+            supported_features=SensorFeatures.SET_BINARY,
         ),
         IdmBinarySensorAddress(
             address=1712,
             name="request_water",
+            supported_features=SensorFeatures.SET_BINARY,
         ),
     ]
 }

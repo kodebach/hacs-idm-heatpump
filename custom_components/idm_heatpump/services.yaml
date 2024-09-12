@@ -111,3 +111,21 @@ set_room_mode:
         constant:
           value: true
           translation_key: acknowledge_set_value
+
+set_binary:
+  fields:
+    target:
+      required: true
+      selector:
+        entity:
+          integration: idm_heatpump
+          domain: binary_sensor
+    value:
+      required: true
+      selector:
+        boolean:
+    acknowledge_risk:
+      selector:
+        constant:
+          value: true
+          translation_key: acknowledge_set_value

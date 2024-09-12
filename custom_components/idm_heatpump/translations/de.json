@@ -187,6 +187,24 @@
                     "description": "Ich akzeptiere das Risiko"
                 }
             }
+        },
+        "set_binary": {
+            "name": "An-/Aus-Wert setzen",
+            "description": "Sendet einen Wert vom Typ 'An/Aus' an die Wärmepumpe.",
+            "fields": {
+                "target": {
+                    "name": "Ziel",
+                    "description": "Der Sensor für welchen der Wert gesendet werden soll."
+                },
+                "value": {
+                    "name": "Wert",
+                    "description": "Der Wert der gesendet werden soll."
+                },
+                "acknowledge_risk": {
+                    "name": "Bestätigung",
+                    "description": "Ich akzeptiere das Risiko"
+                }
+            }
         }
     },
     "selector": {
