@@ -653,6 +653,8 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             enum=SystemStatus,
             address=1005,
             name="status_system",
+            device_class=SensorDeviceClass.ENUM,
+            supported_features=SensorFeatures.SET_SYSTEM_STATUS,
         ),
         _EnumSensorAddress(
             enum=SmartGridStatus,

@@ -12,9 +12,11 @@ from .const import (
     SERVICE_SET_HUMIDITY,
     SERVICE_SET_POWER,
     SERVICE_SET_ROOM_MODE,
+    SERVICE_SET_SYSTEM_STATUS,
     SERVICE_SET_TEMPERATURE,
     RoomMode,
     SensorFeatures,
+    SystemStatus,
 )
 from .coordinator import IdmHeatpumpDataUpdateCoordinator
 from .entity import IdmHeatpumpEntity
@@ -250,6 +252,54 @@ async def async_setup_entry(
         domain=DOMAIN,
         service=SERVICE_SET_ROOM_MODE,
         service_func=handle_set_room_mode,
+    )
+
+    async def handle_set_system_status(call: ServiceCall):
+        target = call.data.get("target")
+        entity = platform.entities[target]
+
+        if (
+            not isinstance(entity, IdmHeatpumpEntity)
+            or SensorFeatures.SET_SYSTEM_STATUS not in entity.supported_features
+        ):
+            raise HomeAssistantError(
+                f"Entity {entity.entity_id} does not support this service.",
+                translation_domain=DOMAIN,
+                translation_key="entity_not_supported",
+                translation_placeholders={
+                    "entity_id": entity.entity_id,
+                },
+            )
+
+        entity: IdmHeatpumpEntity[SystemStatus]
+
+        acknowledge = call.data.get("acknowledge_risk")
+        if acknowledge is not True:
+            raise HomeAssistantError(
+                f"Must acknowledge risk to call {SERVICE_SET_SYSTEM_STATUS}",
+                translation_domain=DOMAIN,
+                translation_key="risk_not_acknowledged",
+            )
+
+        raw_value = call.data.get("value")
+
+        value = SystemStatus[raw_value]
+
+        if value is None:
+            raise HomeAssistantError("invalid value: {value}")
+
+        LOGGER.debug(
+            "Calling %s with value %s on %s",
+            SERVICE_SET_SYSTEM_STATUS,
+            value,
+            entity.entity_id,
+        )
+        await entity.async_write_value(value)
+
+    hass.services.async_register(
+        domain=DOMAIN,
+        service=SERVICE_SET_SYSTEM_STATUS,
+        service_func=handle_set_system_status,
     )
 
 

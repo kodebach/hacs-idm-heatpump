@@ -205,6 +205,24 @@
                     "description": "I accept the risks"
                 }
             }
+        },
+        "set_system_status": {
+            "name": "Set system status value",
+            "description": "Sends a system status value to the heat pump.",
+            "fields": {
+                "target": {
+                    "name": "Target",
+                    "description": "The sensor for which to set the value."
+                },
+                "value": {
+                    "name": "Value",
+                    "description": "The value to send."
+                },
+                "acknowledge_risk": {
+                    "name": "Confirmation",
+                    "description": "I accept the risks"
+                }
+            }
         }
     },
     "selector": {
@@ -213,11 +231,20 @@
         },
         "room_mode_options": {
             "options": {
-                "off": "Aus",
-                "auto": "Automatik",
+                "off": "Off",
+                "auto": "Automatic",
                 "eco": "Eco",
                 "normal": "Normal",
-                "comfort": "Komfort"
+                "comfort": "Comfort"
+            }
+        },
+        "system_status_options": {
+            "options": {
+                "standby": "Standby",
+                "automatic": "Automatic",
+                "away": "Away",
+                "hot_water_only": "Hot water only",
+                "heating_cooling_only": "Heating/Cooling only"
             }
         }
     },

@@ -129,3 +129,29 @@ set_binary:
         constant:
           value: true
           translation_key: acknowledge_set_value
+
+set_system_status:
+  fields:
+    target:
+      required: true
+      selector:
+        entity:
+          integration: idm_heatpump
+          domain: sensor
+          device_class: enum
+    value:
+      required: true
+      selector:
+        select:
+          options:
+            - standby
+            - automatic
+            - away
+            - hot_water_only
+            - heating_cooling_only
+          translation_key: system_status_options
+    acknowledge_risk:
+      selector:
+        constant:
+          value: true
+          translation_key: acknowledge_set_value

@@ -205,6 +205,24 @@
                     "description": "Ich akzeptiere das Risiko"
                 }
             }
+        },
+        "set_system_status": {
+            "name": "Betriebsart System setzen",
+            "description": "Sendet einen Wert vom Typ 'Betriebsart System' an die Wärmepumpe.",
+            "fields": {
+                "target": {
+                    "name": "Ziel",
+                    "description": "Der Sensor für welchen der Wert gesendet werden soll."
+                },
+                "value": {
+                    "name": "Wert",
+                    "description": "Der Wert der gesendet werden soll."
+                },
+                "acknowledge_risk": {
+                    "name": "Bestätigung",
+                    "description": "Ich akzeptiere das Risiko"
+                }
+            }
         }
     },
     "selector": {
@@ -213,11 +231,20 @@
         },
         "room_mode_options": {
             "options": {
-                "off": "Off",
-                "auto": "Automatic",
+                "off": "Aus",
+                "auto": "Automatik",
                 "eco": "Eco",
                 "normal": "Normal",
-                "comfort": "Comfort"
+                "comfort": "Komfort"
+            }
+        },
+        "system_status_options": {
+            "options": {
+                "standby": "Standby",
+                "automatic": "Automatik",
+                "away": "Abwesend",
+                "hot_water_only": "Nur Warmwasser",
+                "heating_cooling_only": "Nur Heizung/Kühlung"
             }
         }
     },
