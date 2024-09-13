@@ -1,6 +1,6 @@
 {
 	"name": "IDM heat pump integration development",
-	"image": "mcr.microsoft.com/vscode/devcontainers/python:0-3.11-bullseye",
+	"image": "mcr.microsoft.com/devcontainers/python:3.12-bullseye",
 	"postCreateCommand": "scripts/setup",
 	"forwardPorts": [
 		8123
@@ -36,8 +36,8 @@
 				"[python]": {
 					"editor.formatOnSave": true,
 					"editor.codeActionsOnSave": {
-						"source.fixAll": true,
-						"source.organizeImports": true
+						"source.fixAll": "explicit",
+						"source.organizeImports": "explicit"
 					},
 					"editor.defaultFormatter": "charliermarsh.ruff"
 				}

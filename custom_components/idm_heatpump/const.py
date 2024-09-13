@@ -1,6 +1,6 @@
 """Constants for idm_heatpump."""
 
-from enum import IntEnum, IntFlag
+from enum import EnumMeta, IntEnum, IntFlag
 from typing import Any
 
 
@@ -10,14 +10,26 @@ class SensorFeatures(IntFlag):
     NONE = 0
     SET_POWER = 1
     SET_BATTERY = 2
+    SET_TEMPERATURE = 4
+    SET_HUMIDITY = 8
+    SET_ROOM_MODE = 16
+    SET_BINARY = 32
+    SET_SYSTEM_STATUS = 64
 
 
-class _SensorEnum(IntEnum):
+class _CaseInsensitiveEnumMeta(EnumMeta):
+    def __getitem__(cls, item):
+        if isinstance(item, str):
+            item = item.upper()
+        return super().__getitem__(item)
+
+
+class _SensorEnum(IntEnum, metaclass=_CaseInsensitiveEnumMeta):
     def __str__(self) -> str:
         return self.name.lower()
 
 
-class _SensorFlag(IntFlag):
+class _SensorFlag(IntFlag, metaclass=_CaseInsensitiveEnumMeta):
     def __str__(self) -> str:
         return ", ".join([f.name.lower() for f in self])
 
@@ -209,6 +221,11 @@ ISSUE_URL = "https://github.com/kodebach/hacs-idm-heatpump/issues"
 # Services
 SERVICE_SET_POWER = "set_power"
 SERVICE_SET_BATTERY = "set_battery"
+SERVICE_SET_TEMPERATURE = "set_temperature"
+SERVICE_SET_HUMIDITY = "set_humidity"
+SERVICE_SET_ROOM_MODE = "set_room_mode"
+SERVICE_SET_BINARY = "set_binary"
+SERVICE_SET_SYSTEM_STATUS = "set_system_status"
 
 # Limits
 MIN_REFRESH_INTERVAL = {"hours": 0, "minutes": 1, "seconds": 0}

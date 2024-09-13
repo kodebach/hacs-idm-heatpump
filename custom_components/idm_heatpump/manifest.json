@@ -8,8 +8,6 @@
   "documentation": "https://github.com/kodebach/hacs-idm-heatpump",
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/kodebach/hacs-idm-heatpump/issues",
-  "requirements": [
-    "pymodbus==3.5.0"
-  ],
+  "requirements": [],
   "version": "0.0.0"
 }

@@ -113,7 +113,7 @@ class IdmBinarySensorAddress(BaseSensorAddress[bool]):
         """Decode this sensor's value."""
         value = decoder.decode_16bit_uint()
         LOGGER.debug("raw value (uint16) for %s: %d", self.name, value)
-        return (True, value == 1)
+        return (True, value > 0)
 
     def encode(self, builder: BinaryPayloadBuilder, value: bool):
         """Encode this sensor's value."""
@@ -457,6 +457,14 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             name=f"curve_offset_{circuit_name}",
             unit=UnitOfTemperature.CELSIUS,
         ),
+        _FloatSensorAddress(
+            address=1650 + offset * 2,
+            name=f"temp_external_room_{circuit_name}",
+            unit=UnitOfTemperature.CELSIUS,
+            device_class=SensorDeviceClass.TEMPERATURE,
+            state_class=SensorStateClass.MEASUREMENT,
+            supported_features=SensorFeatures.SET_TEMPERATURE,
+        ),
     ]
 
 
@@ -506,6 +514,7 @@ class ZoneModule:
                         unit=UnitOfTemperature.CELSIUS,
                         device_class=SensorDeviceClass.TEMPERATURE,
                         state_class=SensorStateClass.MEASUREMENT,
+                        supported_features=SensorFeatures.SET_TEMPERATURE,
                         min_value=-30,
                         max_value=80,
                     ),
@@ -515,6 +524,7 @@ class ZoneModule:
                         unit=UnitOfTemperature.CELSIUS,
                         device_class=SensorDeviceClass.TEMPERATURE,
                         state_class=SensorStateClass.MEASUREMENT,
+                        supported_features=SensorFeatures.SET_TEMPERATURE,
                     ),
                     _UCharSensorAddress(
                         address=ZONE_OFFSETS[self.index] + ROOM_OFFSETS[room] + 4,
@@ -522,6 +532,7 @@ class ZoneModule:
                         unit=PERCENTAGE,
                         device_class=SensorDeviceClass.HUMIDITY,
                         state_class=SensorStateClass.MEASUREMENT,
+                        supported_features=SensorFeatures.SET_HUMIDITY,
                         min_value=0,
                         max_value=100,
                     ),
@@ -530,6 +541,8 @@ class ZoneModule:
                         address=ZONE_OFFSETS[self.index] + ROOM_OFFSETS[room] + 5,
                         name=f"zone_{self.index+1}_room_{room+1}_mode",
                         force_single=True,
+                        device_class=SensorDeviceClass.ENUM,
+                        supported_features=SensorFeatures.SET_ROOM_MODE,
                     ),
                 ]
             ],
@@ -640,6 +653,8 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             enum=SystemStatus,
             address=1005,
             name="status_system",
+            device_class=SensorDeviceClass.ENUM,
+            supported_features=SensorFeatures.SET_SYSTEM_STATUS,
         ),
         _EnumSensorAddress(
             enum=SmartGridStatus,
@@ -919,12 +934,31 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             min_value=0,
             max_value=100,
         ),
+        _FloatSensorAddress(
+            address=1690,
+            name="temp_external_outdoor",
+            unit=UnitOfTemperature.CELSIUS,
+            device_class=SensorDeviceClass.TEMPERATURE,
+            state_class=SensorStateClass.MEASUREMENT,
+            supported_features=SensorFeatures.SET_TEMPERATURE,
+        ),
+        _FloatSensorAddress(
+            address=1692,
+            name="temp_external_humidity",
+            unit=PERCENTAGE,
+            device_class=SensorDeviceClass.HUMIDITY,
+            state_class=SensorStateClass.MEASUREMENT,
+            supported_features=SensorFeatures.SET_HUMIDITY,
+            min_value=0,
+            max_value=100,
+        ),
         _UCharSensorAddress(
             address=1694,
             name="temp_external_request_heating",
             unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
+            supported_features=SensorFeatures.SET_TEMPERATURE,
             min_value=-5,
             max_value=80,
         ),
@@ -934,6 +968,7 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
+            supported_features=SensorFeatures.SET_TEMPERATURE,
             min_value=-5,
             max_value=80,
         ),
@@ -999,7 +1034,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=UnitOfPower.KILO_WATT,
             device_class=SensorDeviceClass.POWER,
             state_class=SensorStateClass.MEASUREMENT,
-            min_value=0,
         ),
         _FloatSensorAddress(
             address=1792,
@@ -1007,7 +1041,6 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             unit=UnitOfPower.KILO_WATT,
             device_class=SensorDeviceClass.POWER,
             state_class=SensorStateClass.MEASUREMENT,
-            min_value=0,
         ),
         _FloatSensorAddress(
             address=1850,
@@ -1104,14 +1137,17 @@ BINARY_SENSOR_ADDRESSES: dict[str, IdmBinarySensorAddress] = {
         IdmBinarySensorAddress(
             address=1710,
             name="request_heating",
+            supported_features=SensorFeatures.SET_BINARY,
         ),
         IdmBinarySensorAddress(
             address=1711,
             name="request_cooling",
+            supported_features=SensorFeatures.SET_BINARY,
         ),
         IdmBinarySensorAddress(
             address=1712,
             name="request_water",
+            supported_features=SensorFeatures.SET_BINARY,
         ),
     ]
 }

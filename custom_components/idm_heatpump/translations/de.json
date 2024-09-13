@@ -109,6 +109,10 @@
                 "value": {
                     "name": "Wert",
                     "description": "Der Wert der gesendet werden soll."
+                },
+                "acknowledge_risk": {
+                    "name": "Bestätigung",
+                    "description": "Ich akzeptiere das Risiko"
                 }
             }
         },
@@ -123,8 +127,129 @@
                 "value": {
                     "name": "Wert",
                     "description": "Der Wert der gesendet werden soll."
+                },
+                "acknowledge_risk": {
+                    "name": "Bestätigung",
+                    "description": "Ich akzeptiere das Risiko"
+                }
+            }
+        },
+        "set_temperature": {
+            "name": "Temperaturwert setzen",
+            "description": "Sendet einen Wert vom Typ 'Temperatur' an die Wärmepumpe.",
+            "fields": {
+                "target": {
+                    "name": "Ziel",
+                    "description": "Der Sensor für welchen der Wert gesendet werden soll."
+                },
+                "value": {
+                    "name": "Wert",
+                    "description": "Der Wert der gesendet werden soll."
+                },
+                "acknowledge_risk": {
+                    "name": "Bestätigung",
+                    "description": "Ich akzeptiere das Risiko"
+                }
+            }
+        },
+        "set_humidity": {
+            "name": "Luftfeuchtigkeitswert setzen",
+            "description": "Sendet einen Wert vom Typ 'Luftfeuchtigkeit' an die Wärmepumpe.",
+            "fields": {
+                "target": {
+                    "name": "Ziel",
+                    "description": "Der Sensor für welchen der Wert gesendet werden soll."
+                },
+                "value": {
+                    "name": "Wert",
+                    "description": "Der Wert der gesendet werden soll."
+                },
+                "acknowledge_risk": {
+                    "name": "Bestätigung",
+                    "description": "Ich akzeptiere das Risiko"
+                }
+            }
+        },
+        "set_room_mode": {
+            "name": "Raummodus setzen",
+            "description": "Sendet einen Wert vom Typ 'Raummodus' an die Wärmepumpe.",
+            "fields": {
+                "target": {
+                    "name": "Ziel",
+                    "description": "Der Sensor für welchen der Wert gesendet werden soll."
+                },
+                "value": {
+                    "name": "Wert",
+                    "description": "Der Wert der gesendet werden soll."
+                },
+                "acknowledge_risk": {
+                    "name": "Bestätigung",
+                    "description": "Ich akzeptiere das Risiko"
+                }
+            }
+        },
+        "set_binary": {
+            "name": "An-/Aus-Wert setzen",
+            "description": "Sendet einen Wert vom Typ 'An/Aus' an die Wärmepumpe.",
+            "fields": {
+                "target": {
+                    "name": "Ziel",
+                    "description": "Der Sensor für welchen der Wert gesendet werden soll."
+                },
+                "value": {
+                    "name": "Wert",
+                    "description": "Der Wert der gesendet werden soll."
+                },
+                "acknowledge_risk": {
+                    "name": "Bestätigung",
+                    "description": "Ich akzeptiere das Risiko"
+                }
+            }
+        },
+        "set_system_status": {
+            "name": "Betriebsart System setzen",
+            "description": "Sendet einen Wert vom Typ 'Betriebsart System' an die Wärmepumpe.",
+            "fields": {
+                "target": {
+                    "name": "Ziel",
+                    "description": "Der Sensor für welchen der Wert gesendet werden soll."
+                },
+                "value": {
+                    "name": "Wert",
+                    "description": "Der Wert der gesendet werden soll."
+                },
+                "acknowledge_risk": {
+                    "name": "Bestätigung",
+                    "description": "Ich akzeptiere das Risiko"
                 }
             }
         }
+    },
+    "selector": {
+        "acknowledge_set_value": {
+            "value": "Ich habe die Dokumentation von IDM gelesen, weiß was das setzen dieses Wertes bewirkt und akzeptiere das Risiko bei falscher Verwendung."
+        },
+        "room_mode_options": {
+            "options": {
+                "off": "Aus",
+                "auto": "Automatik",
+                "eco": "Eco",
+                "normal": "Normal",
+                "comfort": "Komfort"
+            }
+        },
+        "system_status_options": {
+            "options": {
+                "standby": "Standby",
+                "automatic": "Automatik",
+                "away": "Abwesend",
+                "hot_water_only": "Nur Warmwasser",
+                "heating_cooling_only": "Nur Heizung/Kühlung"
+            }
+        }
+    },
+    "exceptions": {
+        "entity_not_supported": "Entität {entity_id} unterstützt diesen Service nicht.",
+        "risk_not_acknowledged": "'Bestätigung' muss aktiviert sein (d.h. acknowledge_risk=true gesetzt) um diesen Service auszuführen."
     }
 }

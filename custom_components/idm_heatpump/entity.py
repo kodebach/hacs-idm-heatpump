@@ -1,4 +1,5 @@
 """IdmHeatpumpEntity class."""
+
 from abc import abstractmethod
 from typing import Generic, TypeVar
 

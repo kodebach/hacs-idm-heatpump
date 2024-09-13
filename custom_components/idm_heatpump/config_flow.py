@@ -1,4 +1,5 @@
 """Adds config flow for Blueprint."""
+
 from datetime import timedelta
 from typing import Any
 

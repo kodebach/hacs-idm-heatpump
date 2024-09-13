@@ -109,6 +109,10 @@
                 "value": {
                     "name": "Value",
                     "description": "The value to send."
+                },
+                "acknowledge_risk": {
+                    "name": "Bestätigung",
+                    "description": "Ich akzeptiere das Risiko"
                 }
             }
         },
@@ -123,8 +127,133 @@
                 "value": {
                     "name": "Value",
                     "description": "The value to send."
+                },
+                "acknowledge_risk": {
+                    "name": "Confirmation",
+                    "description": "I accept the risks"
                 }
             }
+        },
+        "set_temperature": {
+            "name": "Set temperature value",
+            "description": "Sends a temperature value to the heat pump.",
+            "fields": {
+                "target": {
+                    "name": "Target",
+                    "description": "The sensor for which to set the value."
+                },
+                "value": {
+                    "name": "Value",
+                    "description": "The value to send."
+                },
+                "acknowledge_risk": {
+                    "name": "Confirmation",
+                    "description": "I accept the risks"
+                }
+            }
+        },
+        "set_humidity": {
+            "name": "Set relative humidity value",
+            "description": "Sends a relative humidity value to the heat pump.",
+            "fields": {
+                "target": {
+                    "name": "Target",
+                    "description": "The sensor for which to set the value."
+                },
+                "value": {
+                    "name": "Value",
+                    "description": "The value to send."
+                },
+                "acknowledge_risk": {
+                    "name": "Confirmation",
+                    "description": "I accept the risks"
+                }
+            }
+        },
+        "set_room_mode": {
+            "name": "Set room mode value",
+            "description": "Sends a room mode value to the heat pump.",
+            "fields": {
+                "target": {
+                    "name": "Target",
+                    "description": "The sensor for which to set the value."
+                },
+                "value": {
+                    "name": "Value",
+                    "description": "The value to send."
+                },
+                "acknowledge_risk": {
+                    "name": "Confirmation",
+                    "description": "I accept the risks"
+                }
+            }
+        },
+        "set_binary": {
+            "name": "Set on/off value",
+            "description": "Set on/off value",
+            "fields": {
+                "target": {
+                    "name": "Target",
+                    "description": "The sensor for which to set the value."
+                },
+                "value": {
+                    "name": "Value",
+                    "description": "The value to send."
+                },
+                "acknowledge_risk": {
+                    "name": "Confirmation",
+                    "description": "I accept the risks"
+                }
+            }
+        },
+        "set_system_status": {
+            "name": "Set system status value",
+            "description": "Sends a system status value to the heat pump.",
+            "fields": {
+                "target": {
+                    "name": "Target",
+                    "description": "The sensor for which to set the value."
+                },
+                "value": {
+                    "name": "Value",
+                    "description": "The value to send."
+                },
+                "acknowledge_risk": {
+                    "name": "Confirmation",
+                    "description": "I accept the risks"
+                }
+            }
+        }
+    },
+    "selector": {
+        "acknowledge_set_value": {
+            "value": "I have read IDM's documentation, I know what effect setting this value has and I accept the risks in case of misuse."
+        },
+        "room_mode_options": {
+            "options": {
+                "off": "Off",
+                "auto": "Automatic",
+                "eco": "Eco",
+                "normal": "Normal",
+                "comfort": "Comfort"
+            }
+        },
+        "system_status_options": {
+            "options": {
+                "standby": "Standby",
+                "automatic": "Automatic",
+                "away": "Away",
+                "hot_water_only": "Hot water only",
+                "heating_cooling_only": "Heating/Cooling only"
+            }
+        }
+    },
+    "exceptions": {
+        "entity_not_supported": {
+            "message": "Entity {entity_id} does not support this service."
+        },
+        "risk_not_acknowledged": {
+            "message": "You must enable 'Confirmation' (i.e. set acknowledge_risk=true) to call this service."
         }
     }
 }

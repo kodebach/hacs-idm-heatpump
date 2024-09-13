@@ -13,6 +13,11 @@ set_power:
         number:
           mode: box
           unit_of_measurement: kW
+    acknowledge_risk:
+      selector:
+        constant:
+          value: true
+          translation_key: acknowledge_set_value
 
 set_battery:
   fields:
@@ -31,3 +36,122 @@ set_battery:
           min: 0
           max: 100
           unit_of_measurement: "%"
+    acknowledge_risk:
+      selector:
+        constant:
+          value: true
+          translation_key: acknowledge_set_value
+
+set_temperature:
+  fields:
+    target:
+      required: true
+      selector:
+        entity:
+          integration: idm_heatpump
+          domain: sensor
+          device_class: temperature
+    value:
+      required: true
+      selector:
+        number:
+          mode: box
+          unit_of_measurement: "°C"
+    acknowledge_risk:
+      selector:
+        constant:
+          value: true
+          translation_key: acknowledge_set_value
+
+set_humidity:
+  fields:
+    target:
+      required: true
+      selector:
+        entity:
+          integration: idm_heatpump
+          domain: sensor
+          device_class: humidity
+    value:
+      required: true
+      selector:
+        number:
+          mode: slider
+          min: 0
+          max: 100
+          unit_of_measurement: "%"
+    acknowledge_risk:
+      selector:
+        constant:
+          value: true
+          translation_key: acknowledge_set_value
+
+set_room_mode:
+  fields:
+    target:
+      required: true
+      selector:
+        entity:
+          integration: idm_heatpump
+          domain: sensor
+          device_class: enum
+    value:
+      required: true
+      selector:
+        select:
+          options:
+            - "off"
+            - auto
+            - eco
+            - normal
+            - comfort
+          translation_key: room_mode_options
+    acknowledge_risk:
+      selector:
+        constant:
+          value: true
+          translation_key: acknowledge_set_value
+
+set_binary:
+  fields:
+    target:
+      required: true
+      selector:
+        entity:
+          integration: idm_heatpump
+          domain: binary_sensor
+    value:
+      required: true
+      selector:
+        boolean:
+    acknowledge_risk:
+      selector:
+        constant:
+          value: true
+          translation_key: acknowledge_set_value
+
+set_system_status:
+  fields:
+    target:
+      required: true
+      selector:
+        entity:
+          integration: idm_heatpump
+          domain: sensor
+          device_class: enum
+    value:
+      required: true
+      selector:
+        select:
+          options:
+            - standby
+            - automatic
+            - away
+            - hot_water_only
+            - heating_cooling_only
+          translation_key: system_status_options
+    acknowledge_risk:
+      selector:
+        constant:
+          value: true
+          translation_key: acknowledge_set_value
