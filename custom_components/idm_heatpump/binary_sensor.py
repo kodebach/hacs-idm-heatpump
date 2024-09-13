@@ -51,7 +51,7 @@ async def async_setup_entry(
                 },
             )
 
-        entity: IdmHeatpumpEntity[float]
+        entity: IdmHeatpumpEntity[bool]
 
         acknowledge = call.data.get("acknowledge_risk")
         if acknowledge is not True:

@@ -189,7 +189,7 @@
             }
         },
         "set_binary": {
-            "name": "On/Off value setzen",
+            "name": "Set on/off value",
             "description": "Set on/off value",
             "fields": {
                 "target": {
