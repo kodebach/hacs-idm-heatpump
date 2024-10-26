@@ -119,6 +119,7 @@ class SystemStatus(_SensorEnum):
     STANDBY = 0
     AUTOMATIC = 1
     AWAY = 2
+    HOLIDAY = 3
     HOT_WATER_ONLY = 4
     HEATING_COOLING_ONLY = 5
 

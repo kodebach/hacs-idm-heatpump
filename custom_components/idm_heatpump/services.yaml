@@ -147,6 +147,7 @@ set_system_status:
             - standby
             - automatic
             - away
+            - holiday
             - hot_water_only
             - heating_cooling_only
           translation_key: system_status_options
