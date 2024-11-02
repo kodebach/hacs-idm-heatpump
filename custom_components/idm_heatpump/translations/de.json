@@ -243,6 +243,7 @@
                 "standby": "Standby",
                 "automatic": "Automatik",
                 "away": "Abwesend",
+                "holiday": "Urlaub",
                 "hot_water_only": "Nur Warmwasser",
                 "heating_cooling_only": "Nur Heizung/Kühlung"
             }
