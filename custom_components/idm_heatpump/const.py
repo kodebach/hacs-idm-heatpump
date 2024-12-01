@@ -15,6 +15,7 @@ class SensorFeatures(IntFlag):
     SET_ROOM_MODE = 16
     SET_BINARY = 32
     SET_SYSTEM_STATUS = 64
+    SET_CIRCUIT_MODE = 128
 
 
 class _CaseInsensitiveEnumMeta(EnumMeta):
@@ -225,6 +226,7 @@ SERVICE_SET_BATTERY = "set_battery"
 SERVICE_SET_TEMPERATURE = "set_temperature"
 SERVICE_SET_HUMIDITY = "set_humidity"
 SERVICE_SET_ROOM_MODE = "set_room_mode"
+SERVICE_SET_CIRCUIT_MODE = "set_circuit_mode"
 SERVICE_SET_BINARY = "set_binary"
 SERVICE_SET_SYSTEM_STATUS = "set_system_status"
 

@@ -188,6 +188,24 @@
                 }
             }
         },
+        "set_circuit_mode": {
+            "name": "Heizkreismodus setzen",
+            "description": "Sendet einen Wert vom Typ 'Heizkreismodus' an die Wärmepumpe.",
+            "fields": {
+                "target": {
+                    "name": "Ziel",
+                    "description": "Der Sensor für welchen der Wert gesendet werden soll."
+                },
+                "value": {
+                    "name": "Wert",
+                    "description": "Der Wert der gesendet werden soll."
+                },
+                "acknowledge_risk": {
+                    "name": "Bestätigung",
+                    "description": "Ich akzeptiere das Risiko"
+                }
+            }
+        },
         "set_binary": {
             "name": "An-/Aus-Wert setzen",
             "description": "Sendet einen Wert vom Typ 'An/Aus' an die Wärmepumpe.",
@@ -236,6 +254,16 @@
                 "eco": "Eco",
                 "normal": "Normal",
                 "comfort": "Komfort"
+            }
+        },
+        "circuit_mode_options": {
+            "options": {
+                "off": "Aus",
+                "timed": "Zeitprogramm",
+                "normal": "Normal",
+                "eco": "Eco",
+                "manual_heat": "Manuell Heizen",
+                "manual_cool": "Manuell Kühlen"
             }
         },
         "system_status_options": {

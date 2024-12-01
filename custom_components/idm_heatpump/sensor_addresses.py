@@ -369,6 +369,8 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             enum=CircuitMode,
             address=1393 + offset,
             name=f"mode_circuit_{circuit_name}",
+            device_class=SensorDeviceClass.ENUM,
+            supported_features=SensorFeatures.SET_CIRCUIT_MODE,
         ),
         _FloatSensorAddress(
             address=1401 + offset * 2,
