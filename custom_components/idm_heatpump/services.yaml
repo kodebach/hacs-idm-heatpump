@@ -112,6 +112,33 @@ set_room_mode:
           value: true
           translation_key: acknowledge_set_value
 
+set_circuit_mode:
+  fields:
+    target:
+      required: true
+      selector:
+        entity:
+          integration: idm_heatpump
+          domain: sensor
+          device_class: enum
+    value:
+      required: true
+      selector:
+        select:
+          options:
+            - "off"
+            - timed
+            - normal
+            - eco
+            - manual_heat
+            - manual_cool
+          translation_key: circuit_mode_options
+    acknowledge_risk:
+      selector:
+        constant:
+          value: true
+          translation_key: acknowledge_set_value
+
 set_binary:
   fields:
     target:

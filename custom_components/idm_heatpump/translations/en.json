@@ -188,6 +188,24 @@
                 }
             }
         },
+        "set_circuit_mode": {
+            "name": "Set circuit mode value",
+            "description": "Sends a ciruict mode value to the heat pump.",
+            "fields": {
+                "target": {
+                    "name": "Target",
+                    "description": "The sensor for which to set the value."
+                },
+                "value": {
+                    "name": "Value",
+                    "description": "The value to send."
+                },
+                "acknowledge_risk": {
+                    "name": "Confirmation",
+                    "description": "I accept the risks"
+                }
+            }
+        },
         "set_binary": {
             "name": "Set on/off value",
             "description": "Set on/off value",
@@ -236,6 +254,16 @@
                 "eco": "Eco",
                 "normal": "Normal",
                 "comfort": "Comfort"
+            }
+        },
+        "circuit_mode_options": {
+            "options": {
+                "off": "Off",
+                "timed": "Timed",
+                "normal": "Normal",
+                "eco": "Eco",
+                "manual_heat": "Manual Heating",
+                "manual_cool": "Manual Cooling"
             }
         },
         "system_status_options": {
