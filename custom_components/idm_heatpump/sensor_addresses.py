@@ -298,7 +298,8 @@ class _EnumSensorAddress(IdmSensorAddress[_EnumT], Generic[_EnumT]):
     def decode(self, registers: list[int]) -> tuple[bool, _EnumT]:
         value = self._decode_raw(registers)
         LOGGER.debug("raw value (uint16) for %s: %d", self.name, value)
-        if value == 0xFFFF:
+
+        if value == 0xFFFF and 0xFFFF not in list(map(int, self.enum)):
             # special case: unavailable
             return (False, self.enum(None))
 

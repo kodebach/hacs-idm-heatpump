@@ -117,6 +117,7 @@ class RoomMode(_SensorEnum):
 class SystemStatus(_SensorEnum):
     """IDM heat pump system status."""
 
+    OFF = 0xFFFF
     STANDBY = 0
     AUTOMATIC = 1
     AWAY = 2
