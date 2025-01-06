@@ -171,7 +171,7 @@ set_system_status:
       selector:
         select:
           options:
-            - off
+            - "off"
             - standby
             - automatic
             - away
