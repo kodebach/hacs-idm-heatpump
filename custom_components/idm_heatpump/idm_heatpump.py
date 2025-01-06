@@ -8,8 +8,8 @@ from typing import TypeVar
 from pymodbus.client import AsyncModbusTcpClient
 from pymodbus.constants import Endian
 from pymodbus.exceptions import ConnectionException, ModbusException
-from pymodbus.payload import BinaryPayloadBuilder, BinaryPayloadDecoder
-from pymodbus.register_read_message import ReadInputRegistersResponse
+from pymodbus.payload import BinaryPayloadBuilder
+from pymodbus.pdu.register_message import ReadInputRegistersResponse
 
 from .const import NAME_POWER_USAGE
 from .logger import LOGGER
@@ -171,13 +171,7 @@ class IdmHeatpump:
             result: ReadInputRegistersResponse,
         ):
             try:
-                available, value = sensor.decode(
-                    BinaryPayloadDecoder.fromRegisters(
-                        result.registers,
-                        byteorder=Endian.BIG,
-                        wordorder=Endian.LITTLE,
-                    )
-                )
+                available, value = sensor.decode(result.registers)
                 if available:
                     data[sensor.name] = value
             except ValueError as single_error:
@@ -190,21 +184,20 @@ class IdmHeatpump:
                 data[sensor.name] = None
 
         try:
-            decoder = BinaryPayloadDecoder.fromRegisters(
-                result.registers,
-                byteorder=Endian.BIG,
-                wordorder=Endian.LITTLE,
-            )
-
             LOGGER.debug("got decoder %d", group.start)
 
             if len(group.sensors) == 1:
                 # single sensor -> don't do refetch on error
                 decode_single(group.sensors[0], result)
             else:
+                register_ptr = 0
                 for sensor in group.sensors:
                     try:
-                        available, value = sensor.decode(decoder)
+                        registers = result.registers[
+                            register_ptr : register_ptr + sensor.size
+                        ]
+                        register_ptr += sensor.size
+                        available, value = sensor.decode(registers)
                         if available:
                             data[sensor.name] = value
                     except ValueError as error:

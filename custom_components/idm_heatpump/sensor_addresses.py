@@ -22,7 +22,7 @@ from homeassistant.const import (
     UnitOfPower,
     UnitOfTemperature,
 )
-from pymodbus.payload import BinaryPayloadBuilder, BinaryPayloadDecoder
+from pymodbus.client.mixin import ModbusClientMixin
 
 from .const import (
     CONF_DISPLAY_NAME,
@@ -60,16 +60,36 @@ class BaseSensorAddress(ABC, Generic[_T]):
     force_single: bool = False
 
     @property
-    @abstractmethod
     def size(self) -> int:
         """Get number of registers this sensor's value occupies."""
+        return self.datatype.value[1]
+
+    @property
+    @abstractmethod
+    def datatype(self) -> ModbusClientMixin.DATATYPE:
+        """Get the pymodbus datatype for this sensor."""
+
+    def _decode_raw(self, registers: list[int]):
+        assert len(registers) == self.size
+        return ModbusClientMixin.convert_from_registers(
+            registers,
+            self.datatype,
+            word_order="little",
+        )
+
+    def _encode_raw(self, value: int | float) -> list[int]:
+        return ModbusClientMixin.convert_to_registers(
+            value,
+            self.datatype,
+            word_order="little",
+        )
 
     @abstractmethod
-    def decode(self, decoder: BinaryPayloadDecoder) -> tuple[bool, _T]:
+    def decode(self, registers: list[int]) -> tuple[bool, _T]:
         """Decode this sensor's value."""
 
     @abstractmethod
-    def encode(self, builder: BinaryPayloadBuilder, value: _T) -> None:
+    def encode(self, value: _T) -> list[int]:
         """Encode this sensor's value."""
 
     @abstractmethod
@@ -105,19 +125,19 @@ class IdmBinarySensorAddress(BaseSensorAddress[bool]):
     device_class: BinarySensorDeviceClass | None = None
 
     @property
-    def size(self) -> int:
-        """Number of registers this sensor's value occupies."""
-        return 1
+    def datatype(self) -> ModbusClientMixin.DATATYPE:
+        """Get the pymodbus datatype for this sensor."""
+        return ModbusClientMixin.DATATYPE.UINT16
 
-    def decode(self, decoder: BinaryPayloadDecoder) -> tuple[bool, bool]:
+    def decode(self, registers: list[int]) -> tuple[bool, bool]:
         """Decode this sensor's value."""
-        value = decoder.decode_16bit_uint()
+        value = self._decode_raw(registers)
         LOGGER.debug("raw value (uint16) for %s: %d", self.name, value)
         return (True, value > 0)
 
-    def encode(self, builder: BinaryPayloadBuilder, value: bool):
+    def encode(self, value: bool) -> list[int]:
         """Encode this sensor's value."""
-        builder.add_16bit_uint(1 if value else 0)
+        return self._encode_raw(1 if value else 0)
 
     def entity_description(
         self, config_entry: ConfigEntry
@@ -139,11 +159,12 @@ class _FloatSensorAddress(IdmSensorAddress[float]):
     max_value: float | None = None
 
     @property
-    def size(self):
-        return 2
+    def datatype(self) -> ModbusClientMixin.DATATYPE:
+        """Get the pymodbus datatype for this sensor."""
+        return ModbusClientMixin.DATATYPE.FLOAT32
 
-    def decode(self, decoder: BinaryPayloadDecoder) -> tuple[bool, float]:
-        raw_value = decoder.decode_32bit_float()
+    def decode(self, registers: list[int]) -> tuple[bool, float]:
+        raw_value = self._decode_raw(registers)
         LOGGER.debug("raw value (float32) for %s: %d", self.name, raw_value)
         value = round(raw_value * self.scale, self.decimal_digits)
         LOGGER.debug("scaled & rounded value for %s: %d", self.name, value)
@@ -161,11 +182,11 @@ class _FloatSensorAddress(IdmSensorAddress[float]):
 
         return (True, value)
 
-    def encode(self, builder: BinaryPayloadBuilder, value: float):
+    def encode(self, value: float) -> list[int]:
         assert (self.min_value is None or value >= self.min_value) and (
             self.max_value is None or value <= self.max_value
         )
-        builder.add_32bit_float(value)
+        return self._encode_raw(value)
 
     def entity_description(self, config_entry: ConfigEntry) -> SensorEntityDescription:
         return SensorEntityDescription(
@@ -184,11 +205,12 @@ class _UCharSensorAddress(IdmSensorAddress[int]):
     max_value: int | None = 0xFFFE
 
     @property
-    def size(self):
-        return 1
+    def datatype(self) -> ModbusClientMixin.DATATYPE:
+        """Get the pymodbus datatype for this sensor."""
+        return ModbusClientMixin.DATATYPE.UINT16
 
-    def decode(self, decoder: BinaryPayloadDecoder) -> tuple[bool, int]:
-        value = decoder.decode_16bit_uint()
+    def decode(self, registers: list[int]) -> tuple[bool, int]:
+        value = self._decode_raw(registers)
         LOGGER.debug("raw value (uint16) for %s: %d", self.name, value)
 
         if self.max_value == 0xFFFE and value == 0xFFFF:
@@ -204,11 +226,11 @@ class _UCharSensorAddress(IdmSensorAddress[int]):
 
         return (True, value)
 
-    def encode(self, builder: BinaryPayloadBuilder, value: int):
+    def encode(self, value: int) -> list[int]:
         assert (self.min_value is None or value >= self.min_value) and (
             self.max_value is None or value <= self.max_value
         )
-        builder.add_16bit_uint(value)
+        return self._encode_raw(value)
 
     def entity_description(self, config_entry: ConfigEntry) -> SensorEntityDescription:
         return SensorEntityDescription(
@@ -227,11 +249,12 @@ class _WordSensorAddress(IdmSensorAddress[int]):
     max_value: int | None = None
 
     @property
-    def size(self):
-        return 1
+    def datatype(self) -> ModbusClientMixin.DATATYPE:
+        """Get the pymodbus datatype for this sensor."""
+        return ModbusClientMixin.DATATYPE.INT16
 
-    def decode(self, decoder: BinaryPayloadDecoder) -> tuple[bool, int]:
-        value = decoder.decode_16bit_int()
+    def decode(self, registers: list[int]) -> tuple[bool, int]:
+        value = self._decode_raw(registers)
 
         if self.min_value == 0 and value == -1:
             # special case: unavailable
@@ -247,11 +270,11 @@ class _WordSensorAddress(IdmSensorAddress[int]):
 
         return (True, value)
 
-    def encode(self, builder: BinaryPayloadBuilder, value: float):
+    def encode(self, value: int) -> list[int]:
         assert (self.min_value is None or value >= self.min_value) and (
             self.max_value is None or value <= self.max_value
         )
-        builder.add_16bit_uint(value)
+        return self._encode_raw(value)
 
     def entity_description(self, config_entry: ConfigEntry) -> SensorEntityDescription:
         return SensorEntityDescription(
@@ -268,11 +291,12 @@ class _EnumSensorAddress(IdmSensorAddress[_EnumT], Generic[_EnumT]):
     enum: type[_EnumT]
 
     @property
-    def size(self):
-        return 1
+    def datatype(self) -> ModbusClientMixin.DATATYPE:
+        """Get the pymodbus datatype for this sensor."""
+        return ModbusClientMixin.DATATYPE.UINT16
 
-    def decode(self, decoder: BinaryPayloadDecoder) -> tuple[bool, _EnumT]:
-        value = decoder.decode_16bit_uint()
+    def decode(self, registers: list[int]) -> tuple[bool, _EnumT]:
+        value = self._decode_raw(registers)
         LOGGER.debug("raw value (uint16) for %s: %d", self.name, value)
         if value == 0xFFFF:
             # special case: unavailable
@@ -283,8 +307,8 @@ class _EnumSensorAddress(IdmSensorAddress[_EnumT], Generic[_EnumT]):
         except ValueError as error:
             raise ValueError(f"decode failed for {value}") from error
 
-    def encode(self, builder: BinaryPayloadBuilder, value: _EnumT):
-        builder.add_16bit_uint(value.value)
+    def encode(self, value: _EnumT) -> list[int]:
+        return self._encode_raw(value.value)
 
     def entity_description(self, config_entry: ConfigEntry) -> SensorEntityDescription:
         return SensorEntityDescription(
@@ -300,11 +324,12 @@ class _BitFieldSensorAddress(IdmSensorAddress[_FlagT], Generic[_FlagT]):
     flag: type[_FlagT]
 
     @property
-    def size(self):
-        return 1
+    def datatype(self) -> ModbusClientMixin.DATATYPE:
+        """Get the pymodbus datatype for this sensor."""
+        return ModbusClientMixin.DATATYPE.UINT16
 
-    def decode(self, decoder: BinaryPayloadDecoder) -> tuple[bool, _FlagT]:
-        value = decoder.decode_16bit_uint()
+    def decode(self, registers: list[int]) -> tuple[bool, _FlagT]:
+        value = self._decode_raw(registers)
         LOGGER.debug("raw value (uint16) for %s: %d", self.name, value)
         if value == 0xFFFF:
             # special case: unavailable
@@ -315,8 +340,8 @@ class _BitFieldSensorAddress(IdmSensorAddress[_FlagT], Generic[_FlagT]):
         except ValueError as error:
             raise ValueError(f"decode failed for {value}") from error
 
-    def encode(self, builder: BinaryPayloadBuilder, value: _FlagT):
-        builder.add_16bit_uint(value)
+    def encode(self, value: _FlagT) -> list[int]:
+        return self._encode_raw(value)
 
     def entity_description(self, config_entry: ConfigEntry) -> SensorEntityDescription:
         return SensorEntityDescription(
