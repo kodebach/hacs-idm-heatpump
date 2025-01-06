@@ -30,7 +30,9 @@ class IdmHeatpumpEntity(CoordinatorEntity, Generic[_T]):
     coordinator: IdmHeatpumpDataUpdateCoordinator
 
     def __init__(
-        self, coordinator: IdmHeatpumpDataUpdateCoordinator, config_entry: ConfigEntry
+        self,
+        coordinator: IdmHeatpumpDataUpdateCoordinator,
+        config_entry: ConfigEntry,
     ):
         """Create entity."""
         super().__init__(coordinator)

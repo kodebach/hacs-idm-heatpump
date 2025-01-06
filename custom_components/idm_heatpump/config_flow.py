@@ -1,7 +1,8 @@
 """Adds config flow for Blueprint."""
 
+from copy import deepcopy
 from datetime import timedelta
-from typing import Any
+from typing import Any, Self
 
 import voluptuous as vol
 from homeassistant.config import cv
@@ -116,7 +117,7 @@ class IdmHeatpumpFlowHandler(ConfigFlow, domain=DOMAIN):
     @callback
     def async_get_options_flow(config_entry: ConfigEntry):
         """Return options flow."""
-        return IdmHeatpumpOptionsFlowHandler(config_entry)
+        return IdmHeatpumpOptionsFlowHandler()
 
     async def _test_hostname(self, hostname):
         """Return true if hostname is valid."""
@@ -126,14 +127,17 @@ class IdmHeatpumpFlowHandler(ConfigFlow, domain=DOMAIN):
             pass
         return False
 
+    def is_matching(self, other_flow: Self) -> bool:
+        """Return True if other_flow is matching this flow."""
+        return self._data[CONF_HOSTNAME] == other_flow._data[CONF_HOSTNAME]
+
 
 class IdmHeatpumpOptionsFlowHandler(OptionsFlow):
     """IDM heat pump config flow options handler."""
 
-    def __init__(self, config_entry: ConfigEntry):
+    def __init__(self):
         """Initialize HACS options flow."""
-        self.config_entry = config_entry
-        self.options = dict(config_entry.options)
+        self.options = deepcopy(dict(self.config_entry.options))
 
     async def async_step_init(self, user_input=None):
         """Manage the options."""
