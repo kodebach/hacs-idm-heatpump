@@ -6,9 +6,7 @@ from dataclasses import dataclass
 from typing import TypeVar
 
 from pymodbus.client import AsyncModbusTcpClient
-from pymodbus.constants import Endian
 from pymodbus.exceptions import ConnectionException, ModbusException
-from pymodbus.payload import BinaryPayloadBuilder
 from pymodbus.pdu.register_message import ReadInputRegistersResponse
 
 from .const import NAME_POWER_USAGE
@@ -306,13 +304,7 @@ class IdmHeatpump:
             await self.client.connect()
             LOGGER.debug("connected")
 
-        builder = BinaryPayloadBuilder(
-            byteorder=Endian.BIG,
-            wordorder=Endian.LITTLE,
-        )
-
-        address.encode(builder, value)
-        registers = builder.to_registers()
+        registers = address.encode(value)
         assert len(registers) == address.size
 
         response = await self.client.write_registers(
