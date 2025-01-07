@@ -72,15 +72,15 @@ class BaseSensorAddress(ABC, Generic[_T]):
     def _decode_raw(self, registers: list[int]):
         assert len(registers) == self.size
         return ModbusClientMixin.convert_from_registers(
-            registers,
-            self.datatype,
+            registers=registers,
+            data_type=self.datatype,
             word_order="little",
         )
 
     def _encode_raw(self, value: int | float) -> list[int]:
         return ModbusClientMixin.convert_to_registers(
-            value,
-            self.datatype,
+            value=value,
+            data_type=self.datatype,
             word_order="little",
         )
 
