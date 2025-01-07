@@ -3,6 +3,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, IntEnum, IntFlag
+from inspect import signature
 from typing import Generic, TypeVar
 
 from homeassistant.components.binary_sensor import (
@@ -71,18 +72,37 @@ class BaseSensorAddress(ABC, Generic[_T]):
 
     def _decode_raw(self, registers: list[int]):
         assert len(registers) == self.size
-        return ModbusClientMixin.convert_from_registers(
-            registers=registers,
-            data_type=self.datatype,
-            word_order="little",
-        )
+        if (
+            "word_order"
+            in signature(ModbusClientMixin.convert_from_registers).parameters
+        ):
+            return ModbusClientMixin.convert_from_registers(
+                registers=registers,
+                data_type=self.datatype,
+                word_order="little",
+            )
+        else:
+            return ModbusClientMixin.convert_from_registers(
+                registers=list(reversed(registers)),
+                data_type=self.datatype,
+            )
 
     def _encode_raw(self, value: int | float) -> list[int]:
-        return ModbusClientMixin.convert_to_registers(
-            value=value,
-            data_type=self.datatype,
-            word_order="little",
-        )
+        if "word_order" in signature(ModbusClientMixin.convert_to_registers).parameters:
+            return ModbusClientMixin.convert_to_registers(
+                value=value,
+                data_type=self.datatype,
+                word_order="little",
+            )
+        else:
+            return list(
+                reversed(
+                    ModbusClientMixin.convert_to_registers(
+                        value=value,
+                        data_type=self.datatype,
+                    )
+                )
+            )
 
     @abstractmethod
     def decode(self, registers: list[int]) -> tuple[bool, _T]:

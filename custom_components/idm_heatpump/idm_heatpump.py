@@ -7,7 +7,11 @@ from typing import TypeVar
 
 from pymodbus.client import AsyncModbusTcpClient
 from pymodbus.exceptions import ConnectionException, ModbusException
-from pymodbus.pdu.register_message import ReadInputRegistersResponse
+
+try:
+    from pymodbus.pdu.register_message import ReadInputRegistersResponse
+except ImportError:
+    from pymodbus.pdu.register_read_message import ReadInputRegistersResponse
 
 from .const import NAME_POWER_USAGE
 from .logger import LOGGER
