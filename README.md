@@ -50,7 +50,7 @@ To set it up, follow these steps:
 
 ### Further configuration
 
-[![Configure my setup!](https://my.home-assistant.io/badges/integration.svg)](https://scarif.ha.klmns.com/config/integrations/integration/idm_heatpump)
+[![Configure my setup!](https://my.home-assistant.io/badges/integration.svg)](https://my.home-assistant.io/redirect/integration/?domain=idm_heatpump)
 
 For further configuration you can click "Configure" on the settings page for the integration.
 
