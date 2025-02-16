@@ -292,6 +292,9 @@
         },
         "risk_not_acknowledged": {
             "message": "You must enable 'Confirmation' (i.e. set acknowledge_risk=true) to call this service."
+        },
+        "integer_required": {
+            "message": "Enitty {entity_id} supports only integer values."
         }
     }
 }

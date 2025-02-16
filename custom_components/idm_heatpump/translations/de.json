@@ -287,7 +287,14 @@
         }
     },
     "exceptions": {
-        "entity_not_supported": "Entität {entity_id} unterstützt diesen Service nicht.",
-        "risk_not_acknowledged": "'Bestätigung' muss aktiviert sein (d.h. acknowledge_risk=true gesetzt) um diesen Service auszuführen."
+        "entity_not_supported": {
+            "message": "Entität {entity_id} unterstützt diesen Service nicht."
+        },
+        "risk_not_acknowledged": {
+            "message": "'Bestätigung' muss aktiviert sein (d.h. acknowledge_risk=true gesetzt) um diesen Service auszuführen."
+        },
+        "integer_required": {
+            "message": "Entität {entity_id} unterstützt nur ganzzahlige Werte."
+        }
     }
 }

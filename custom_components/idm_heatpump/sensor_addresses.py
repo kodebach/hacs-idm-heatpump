@@ -424,6 +424,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
+            supported_features=SensorFeatures.SET_TEMPERATURE,
             min_value=-10,
             max_value=80,
         ),
@@ -433,6 +434,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
+            supported_features=SensorFeatures.SET_TEMPERATURE,
             min_value=-10,
             max_value=80,
         ),
@@ -504,6 +506,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             address=1505 + offset,
             name=f"curve_offset_{circuit_name}",
             unit=UnitOfTemperature.CELSIUS,
+            supported_features=SensorFeatures.SET_TEMPERATURE,
         ),
         _FloatSensorAddress(
             address=1650 + offset * 2,

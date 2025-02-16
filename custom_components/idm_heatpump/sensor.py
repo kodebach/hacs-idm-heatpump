@@ -5,18 +5,19 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, HomeAssistantError, ServiceCall
 from homeassistant.helpers import entity_platform
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from pymodbus.client.mixin import ModbusClientMixin
 
 from .const import (
     DOMAIN,
     SERVICE_SET_BATTERY,
+    SERVICE_SET_CIRCUIT_MODE,
     SERVICE_SET_HUMIDITY,
     SERVICE_SET_POWER,
     SERVICE_SET_ROOM_MODE,
-    SERVICE_SET_CIRCUIT_MODE,
     SERVICE_SET_SYSTEM_STATUS,
     SERVICE_SET_TEMPERATURE,
-    RoomMode,
     CircuitMode,
+    RoomMode,
     SensorFeatures,
     SystemStatus,
 )
@@ -141,8 +142,6 @@ async def async_setup_entry(
                 },
             )
 
-        entity: IdmHeatpumpEntity[float]
-
         acknowledge = call.data.get("acknowledge_risk")
         if acknowledge is not True:
             raise HomeAssistantError(
@@ -151,7 +150,23 @@ async def async_setup_entry(
                 translation_key="risk_not_acknowledged",
             )
 
+        entity: IdmHeatpumpEntity[int | float]
+
         value: float = call.data.get("value")
+
+        if entity.sensor_address.datatype != ModbusClientMixin.DATATYPE.FLOAT32:
+            if int(value) != value:
+                raise HomeAssistantError(
+                    f"Must be integer value to use {SERVICE_SET_TEMPERATURE} on {entity.entity_id}",
+                    translation_domain=DOMAIN,
+                    translation_key="integer_required",
+                    translation_placeholders={
+                        "entity_id": entity.entity_id,
+                    },
+                )
+
+            value = int(value)
+
         LOGGER.debug(
             "Calling %s with value %s on %s",
             SERVICE_SET_TEMPERATURE,
