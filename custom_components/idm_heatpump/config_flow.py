@@ -135,12 +135,11 @@ class IdmHeatpumpFlowHandler(ConfigFlow, domain=DOMAIN):
 class IdmHeatpumpOptionsFlowHandler(OptionsFlow):
     """IDM heat pump config flow options handler."""
 
-    def __init__(self):
-        """Initialize HACS options flow."""
-        self.options = deepcopy(dict(self.config_entry.options))
+    options: dict[str, Any]
 
     async def async_step_init(self, user_input=None):
         """Manage the options."""
+        self.options = deepcopy(dict(self.config_entry.options))
         return await self.async_step_options(user_input)
 
     async def async_step_options(self, user_input=None):
