@@ -242,6 +242,7 @@ CONF_HOSTNAME = "hostname"
 CONF_DISPLAY_NAME = "display_name"
 
 OPT_REFRESH_INTERVAL = "refresh_interval"
+OPT_ALLOW_FAST_REFRESH = "allow_fast_refresh"
 OPT_REQUEST_TIMEOUT = "request_timeout"
 OPT_HEATING_CIRCUITS = "heating_circuits"
 OPT_ZONE_COUNT = "zone_count"

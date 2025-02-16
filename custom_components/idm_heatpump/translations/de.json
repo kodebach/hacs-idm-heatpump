@@ -12,10 +12,16 @@
             "options": {
                 "data": {
                     "refresh_interval": "Aktualisierungsinterval",
+                    "allow_fast_refresh": "Aktualisierungsinterval kleiner 1 min erlauben",
                     "request_timeout": "Kommunikationstimeout",
                     "heating_circuits": "Heizkreise",
                     "zone_count": "Anzahl Zonenmodule",
-                    "read_without_groups": "Sensoren einzeln laden"
+                    "read_without_groups": "Sensoren einzeln laden",
+                    "max_power_usage": "Maximale Leistungsaufnahme"
+                },
+                "data_description": {
+                    "allow_fast_refresh": "Kurze Aktualisierungsintervalle sind aufgrund von Berichten übermögliche Probleme (https://github.com/kodebach/hacs-idm-heatpump/issues/16) standardmäßig gesperrt.",
+                    "max_power_usage": "Der Sensor 'Aktuelle Leistungsaufnahme Wärmepumpe' wird auf 'Unknown' gesetzt, falls die Wärmepumpe einen Wert über dem Maximum sendet. Die führt zu Lücken im Verlauf anstelle von unmöglich hohen Werten, welche die Achsenskalierung beeinflussen würden. Wenn kein Wert gesetzt ist, oder 0 als Maximum gesetzt ist, werden alle Werte der Wärmepumpe direkt übernommen."
                 }
             },
             "zones": {
@@ -57,6 +63,7 @@
             "options": {
                 "data": {
                     "refresh_interval": "Aktualisierungsinterval",
+                    "allow_fast_refresh": "Aktualisierungsinterval kleiner 1 min erlauben",
                     "request_timeout": "Kommunikationstimeout",
                     "heating_circuits": "Heizkreise",
                     "zone_count": "Anzahl Zonenmodule",
@@ -64,7 +71,8 @@
                     "max_power_usage": "Maximale Leistungsaufnahme"
                 },
                 "data_description": {
-                    "max_power_usage": "Der Sensor 'Aktuelle Leistungsaufnahme Wärmepumpe' wird auf 'Unbekannt' gesetzt, falls die Wärmepumpe einen Wert höher als das Maximum sendet. Dadurch entstehen im Verlauf Lücken anstelle von unmöglich hohen Werten, welche die Achsenskalierung verzerren würden. Falls kein Wert oder 0 gesetzt ist, werden alle Werte der Wärmepumpe direkt verwendet."
+                    "allow_fast_refresh": "Kurze Aktualisierungsintervalle sind aufgrund von Berichten übermögliche Probleme (https://github.com/kodebach/hacs-idm-heatpump/issues/16) standardmäßig gesperrt.",
+                    "max_power_usage": "Der Sensor 'Aktuelle Leistungsaufnahme Wärmepumpe' wird auf 'Unknown' gesetzt, falls die Wärmepumpe einen Wert über dem Maximum sendet. Die führt zu Lücken im Verlauf anstelle von unmöglich hohen Werten, welche die Achsenskalierung beeinflussen würden. Wenn kein Wert gesetzt ist, oder 0 als Maximum gesetzt ist, werden alle Werte der Wärmepumpe direkt übernommen."
                 }
             },
             "zones": {

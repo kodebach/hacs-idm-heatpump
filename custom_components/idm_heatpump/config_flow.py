@@ -20,6 +20,7 @@ from .const import (
     MAX_ROOM_COUNT,
     MAX_ZONE_COUNT,
     MIN_REFRESH_INTERVAL,
+    OPT_ALLOW_FAST_REFRESH,
     OPT_HEATING_CIRCUITS,
     OPT_MAX_POWER_USAGE,
     OPT_READ_WITHOUT_GROUPS,
@@ -184,6 +185,10 @@ def _async_step_base_options(
                 OPT_REFRESH_INTERVAL,
                 default=options.get(OPT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL),
             ): vol.All(selector({"duration": {}})),
+            vol.Optional(
+                OPT_ALLOW_FAST_REFRESH,
+                default=options.get(OPT_ALLOW_FAST_REFRESH, False),
+            ): selector({"boolean": {}}),
             vol.Required(
                 OPT_REQUEST_TIMEOUT,
                 default=options.get(OPT_REQUEST_TIMEOUT, DEFAULT_REQUEST_TIMEOUT),
@@ -241,9 +246,9 @@ def _async_step_base_options(
     if user_input is not None:
         options.update(user_input)
 
-        if timedelta(**options[OPT_REFRESH_INTERVAL]) < timedelta(
-            **MIN_REFRESH_INTERVAL
-        ):
+        if not options[OPT_ALLOW_FAST_REFRESH] and timedelta(
+            **options[OPT_REFRESH_INTERVAL]
+        ) < timedelta(**MIN_REFRESH_INTERVAL):
             errors[OPT_REFRESH_INTERVAL] = "min_refresh_interval"
 
         if timedelta(**options[OPT_REFRESH_INTERVAL]) < timedelta(

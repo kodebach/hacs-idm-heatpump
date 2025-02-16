@@ -12,10 +12,16 @@
             "options": {
                 "data": {
                     "refresh_interval": "Refresh Interval",
+                    "allow_fast_refresh": "Allow refresh interval smaller than 1 min",
                     "request_timeout": "Communication Timeout",
                     "heating_circuits": "Heating Circuits",
                     "zone_count": "Number of zone modules",
-                    "read_without_groups": "Read sensors individually"
+                    "read_without_groups": "Read sensors individually",
+                    "max_power_usage": "Maximum power draw"
+                },
+                "data_description": {
+                    "allow_fast_refresh": "Short refresh are blocked by default because of reports about possible issues (https://github.com/kodebach/hacs-idm-heatpump/issues/16).",
+                    "max_power_usage": "The sensor 'Aktuelle Leistungsaufnahme Wärmepumpe' will be set to 'Unknown', if the heat pump sends a value above the maximum. This creates gaps in the history instead of impossibly high values, which would throw of the axis scaling. If no value is defined or it is set to 0, all values from the heat pump will be used directly."
                 }
             },
             "zones": {
@@ -57,6 +63,7 @@
             "options": {
                 "data": {
                     "refresh_interval": "Refresh Interval",
+                    "allow_fast_refresh": "Allow refresh interval smaller than 1 min",
                     "request_timeout": "Communication Timeout",
                     "heating_circuits": "Heating Circuits",
                     "zone_count": "Number of zone modules",
@@ -64,6 +71,7 @@
                     "max_power_usage": "Maximum power draw"
                 },
                 "data_description": {
+                    "allow_fast_refresh": "Short refresh are blocked by default because of reports about possible issues (https://github.com/kodebach/hacs-idm-heatpump/issues/16).",
                     "max_power_usage": "The sensor 'Aktuelle Leistungsaufnahme Wärmepumpe' will be set to 'Unknown', if the heat pump sends a value above the maximum. This creates gaps in the history instead of impossibly high values, which would throw of the axis scaling. If no value is defined or it is set to 0, all values from the heat pump will be used directly."
                 }
             },
