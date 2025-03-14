@@ -53,7 +53,13 @@ class IdmHeatpumpDataUpdateCoordinator(DataUpdateCoordinator[dict[str, any]]):
         """Update data via library."""
         try:
             async with timeout(self.timeout_delta.total_seconds()):
-                return await self.heatpump.async_write_value(address, value)
+                result = await self.heatpump.async_write_value(address, value)
+                
+                updated_data = self.data.copy() if self.data else {}
+                updated_data[address.name] = value
+                self.async_set_updated_data(updated_data)
+
+                return result
         except TimeoutError as e:
             LOGGER.error("timeout while writing")
             raise e
