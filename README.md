@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> This integration is not affiliated with iDM Energiesysteme GmbH and is provided as-is and without warranty.
+
 # IDM heat pump
 
 [![GitHub Release][releases-shield]][releases]
@@ -6,9 +9,9 @@
 
 [![hacs][hacsbadge]][hacs]
 
-_Component to integrate with [IDM heat pumps][idm_heatpump]._
+_Component to integrate with [IDM heat pumps][https://www.idm-energie.at/]._
 
-> **Note**:
+> [!NOTE]
 > Your heat pump needs to have the Navigator 2.0 control unit.
 > Other versions of the control unit may not work correctly.
 
