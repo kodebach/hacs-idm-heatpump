@@ -87,4 +87,6 @@ class IdmHeatpumpEntity(CoordinatorEntity, Generic[_T]):
 
     async def async_write_value(self, value: _T):
         """Write value to heatpump."""
-        return await self.coordinator.async_write_value(self.sensor_address, value)
+        await self.coordinator.async_write_value(self.sensor_address, value)
+
+        self.async_write_ha_state()

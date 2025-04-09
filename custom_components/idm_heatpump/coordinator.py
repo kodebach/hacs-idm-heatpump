@@ -5,7 +5,7 @@ from datetime import timedelta
 from typing import TypeVar
 
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+from homeassistant.helpers.update_coordinator import TimestampDataUpdateCoordinator
 
 from .const import DOMAIN
 from .idm_heatpump import IdmHeatpump
@@ -15,7 +15,7 @@ from .sensor_addresses import BaseSensorAddress
 _T = TypeVar("_T")
 
 
-class IdmHeatpumpDataUpdateCoordinator(DataUpdateCoordinator[dict[str, any]]):
+class IdmHeatpumpDataUpdateCoordinator(TimestampDataUpdateCoordinator[dict[str, any]]):
     """Class to manage fetching data from the API."""
 
     heatpump: IdmHeatpump
@@ -53,15 +53,11 @@ class IdmHeatpumpDataUpdateCoordinator(DataUpdateCoordinator[dict[str, any]]):
         """Update data via library."""
         try:
             async with timeout(self.timeout_delta.total_seconds()):
-                result = await self.heatpump.async_write_value(address, value)
-
-                updated_data = self.data.copy() if self.data else {}
-                updated_data[address.name] = value
-                self.async_set_updated_data(updated_data)
-
-                return result
+                await self.heatpump.async_write_value(address, value)
         except TimeoutError as e:
             LOGGER.error("timeout while writing")
             raise e
         except Exception as exception:
             raise exception
+
+        self.data[address.name] = value
