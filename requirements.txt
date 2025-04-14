@@ -1,5 +1,5 @@
 colorlog==6.9.0
 homeassistant>=2025.1.0
 pip>=21.3.1
-ruff==0.11.0
+ruff==0.11.5
 -r custom_components/idm_heatpump/requirements.txt
