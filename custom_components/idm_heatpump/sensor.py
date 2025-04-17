@@ -45,6 +45,7 @@ def _convert_temperature(value: Any | None, entity: IdmHeatpumpEntity) -> float 
             )
 
         value = int(value)
+    return value
 
 
 async def async_setup_entry(
