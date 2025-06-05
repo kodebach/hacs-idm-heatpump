@@ -1,5 +1,5 @@
 ---
-name: "Bug report"
+name: "Bug Report (DE)"
 description: "Einen Fehler in der Integration melden"
 body:
   - type: markdown

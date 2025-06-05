@@ -1,5 +1,5 @@
 ---
-name: "Feature request"
+name: "Feature request (EN)"
 description: "Suggest an idea for this project"
 body:
   - type: markdown
