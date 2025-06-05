@@ -1,0 +1,45 @@
+---
+name: "Feature request"
+description: "Vorschlag für ein neues Feature"
+body:
+  - type: markdown
+    attributes:
+      value: Bevor du einen Feature Request erstellst, such bitte in den bestehenden Issues, ob jemand anderes diesen Vorschlag bereits gemacht hat.
+  - type: checkboxes
+    attributes:
+      label: Checklist
+      options:
+        - label: Ich habe das Formular so gut ich kann ausgefüllt.
+          required: true
+        - label: Ich habe nur ein Feature beschrieben (wenn du mehrere Vorschläge hast erstelle bitte separate Issues).
+          required: true
+        - label: Es gibt noch [keinen Issue](https://github.com/kodebach/hacs-idm-heatpump/labels/feature%20request) zu diesem Feature.
+          required: true
+
+  - type: textarea
+    attributes:
+      label: "Welches Problem willst du mit dem neuen Feature lösen?"
+      description: "Kein kurze, aber verständliche Beschreibung des Problems"
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: "Lösungsvorschlag"
+      description: "Beschreibe die Lösung, die du dir für das Problem vorstellst."
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: "Alternativen"
+      description: "Beschreibe alternative Lösung für das Problem, die du bereits in Betracht gezogen hast."
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: "Zusätzlicher Kontext"
+      description: "Andere Infos, die zum Verständnis des Problems oder der Lösung hilfreich sind."
+    validations:
+      required: true

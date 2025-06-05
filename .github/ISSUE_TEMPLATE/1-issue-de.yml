@@ -1,0 +1,54 @@
+---
+name: "Bug report"
+description: "Einen Fehler in der Integration melden"
+body:
+  - type: markdown
+    attributes:
+      value: Bevor du einen Issue erstellst, verwende die Suche und sieh nach, ob andere User das Problem bereits gemeldet haben.
+  - type: textarea
+    attributes:
+      label: "System Health Info"
+      description: "Füge hier die Daten aus den System-Informationen in Home Assistant ein (https://my.home-assistant.io/redirect/system_health/)"
+    validations:
+      required: true
+  - type: checkboxes
+    attributes:
+      label: Checklist
+      options:
+        - label: Ich habe das Debug-Protokoll aktiviert.
+          required: true
+        - label: Ich habe das Formular so gut ich kann ausgefüllt.
+          required: true
+        - label: Ich habe nur ein Problem beschrieben (wenn du mehrere Probleme hast erstelle bitte separate Issues).
+          required: true
+        - label: Es gibt noch [keinen Issue](https://github.com/kodebach/hacs-idm-heatpump/labels/bug) zu diesem Problem.
+          required: true
+  - type: textarea
+    attributes:
+      label: "Beschreibe das Problem"
+      description: "Eine verständliche Beschreibung des Fehlers"
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Reproduktionsschritte
+      description: "Ohne Erklärung wie man den Fehler reproduzieren kann, ist es schwer Fehler zu beheben. **Bitte fülle diesen Abschnitt aus**, falls der Fehler nicht von selbst auftritt."
+      value: |
+        1.
+        2.
+        3.
+        ...
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "Debug-Protokoll"
+      description: "Das Debug-Protokoll der Integration (https://my.home-assistant.io/redirect/integration/?domain=idm_heatpump) oder der gesamten Home Assistant Instanz (https://www.home-assistant.io/integrations/logger/). Das Debug-Protokoll muss aktiviert sein, **während** der Fehler reproduziert wurde."
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: "Diagnostics dump"
+      description: "Ziehe hier die Diagnosedaten-Datei hinein (siehe dazu https://www.home-assistant.io/integrations/diagnostics/)"
