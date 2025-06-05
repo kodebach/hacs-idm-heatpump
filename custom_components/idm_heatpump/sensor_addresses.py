@@ -1024,6 +1024,14 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             max_value=80,
         ),
         _FloatSensorAddress(
+            address=1748,
+            name="energy_heat_heating",
+            unit=UnitOfEnergy.KILO_WATT_HOUR,
+            device_class=SensorDeviceClass.ENERGY,
+            state_class=SensorStateClass.TOTAL_INCREASING,
+            min_value=0,
+        ),
+        _FloatSensorAddress(
             address=1750,
             name="energy_heat_total",
             unit=UnitOfEnergy.KILO_WATT_HOUR,
@@ -1211,6 +1219,7 @@ SENSOR_NAMES: dict[int, str] = {
     82: "Hausverbrauch",
     84: "Batterieentladung",
     86: "Batterie Füllstand",
+    88: "PV-Zielwert",  # TODO
     1000: "Außentemperatur",
     1002: "Gemittelte Außentemperatur",
     1004: "Aktuelle Störungsnummer",
@@ -1387,15 +1396,15 @@ SENSOR_NAMES: dict[int, str] = {
     1710: "Anforderung Heizen",
     1711: "Anforderung Kühlen",
     1712: "Anforderung Warmwasserladung",
-    1713: "Externe Ansteuerung einmalige Warmwasserladung",  # TODO
-    1714: "Externe Anforderung Sole-/Zwischenkreispumpe",  # TODO
-    1715: "Externe Anforderung Grundwasserpumpe",  # TODO
+    1713: "Anforderung einmalige Warmwasserladung",  # TODO
+    1714: "Anforderung Sole-/Zwischenkreispumpe",  # TODO
+    1715: "Anforderung Grundwasserpumpe",  # TODO
     1716: "GLT Wärmespeichertemperatur",
     1718: "GLT Kältespeichertemperatur",
     1720: "GLT TWW-Erwärmertemperatur unten",
     1722: "GLT TWW-Erwärmertemperatur oben",
     1748: "Wärmemenge Heizen",
-    1750: "Wärmemenge Heizen",
+    1750: "Wärmemenge gesamt",
     1752: "Wärmemenge Kühlen",
     1754: "Wärmemenge Warmwasser",
     1756: "Wärmemenge Abtauung",
@@ -1419,7 +1428,7 @@ SENSOR_NAMES: dict[int, str] = {
     4122: "Aktuelle Leistungsaufnahme Wärmepumpe",
     4124: "elektrische Gesamtleistung",  # TODO
     4126: "thermische Leistung (basierend auf Durchflusssensor)",  # TODO
-    4128: "Wärmemenge gesamt",  # TODO
+    4128: "Wärmemenge gesamt",  # idetical to 1750
     **dict(
         zn
         for zone in range(10)
