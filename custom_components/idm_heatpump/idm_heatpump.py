@@ -3,6 +3,7 @@
 import asyncio
 import collections
 from dataclasses import dataclass
+from inspect import signature
 from typing import TypeVar
 
 from pymodbus.client import AsyncModbusTcpClient
@@ -11,7 +12,9 @@ from pymodbus.exceptions import ConnectionException, ModbusException
 try:
     from pymodbus.pdu.register_message import ReadInputRegistersResponse
 except ImportError:
-    from pymodbus.pdu.register_read_message import ReadInputRegistersResponse
+    from pymodbus.pdu.register_read_message import (  # pyright: ignore[reportMissingImports]
+        ReadInputRegistersResponse,
+    )
 
 from .const import NAME_POWER_USAGE
 from .logger import LOGGER
@@ -123,11 +126,18 @@ class IdmHeatpump:
 
     async def _fetch_registers(self, group: _SensorGroup) -> ReadInputRegistersResponse:
         LOGGER.debug("reading registers %d (count=%d)", group.start, group.count)
-        return await self.client.read_input_registers(
-            address=group.start,
-            count=group.count,
-            slave=1,
-        )
+        if "device_id" in signature(self.client.read_input_registers).parameters:
+            return await self.client.read_input_registers(
+                address=group.start,
+                count=group.count,
+                device_id=1,
+            )
+        else:
+            return await self.client.read_input_registers(  # pylint: disable=unexpected-keyword-arg
+                address=group.start,
+                count=group.count,
+                slave=1,
+            )
 
     async def _fetch_retry(self, group: _SensorGroup) -> ReadInputRegistersResponse:
         try:
@@ -311,11 +321,18 @@ class IdmHeatpump:
         registers = address.encode(value)
         assert len(registers) == address.size
 
-        response = await self.client.write_registers(
-            address=address.address,
-            values=registers,
-            slave=1,
-        )
+        if "device_id" in signature(self.client.write_registers).parameters:
+            response = await self.client.write_registers(
+                address=address.address,
+                values=registers,
+                device_id=1,
+            )
+        else:
+            response = await self.client.write_registers(  # pylint: disable=unexpected-keyword-arg
+                address=address.address,
+                values=registers,
+                slave=1,
+            )
         assert not response.isError()
 
     @staticmethod
