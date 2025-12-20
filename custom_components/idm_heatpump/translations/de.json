@@ -11,8 +11,8 @@
             },
             "options": {
                 "data": {
-                    "refresh_interval": "Aktualisierungsinterval",
-                    "allow_fast_refresh": "Aktualisierungsinterval kleiner 1 min erlauben",
+                    "refresh_interval": "Aktualisierungsintervall",
+                    "allow_fast_refresh": "Aktualisierungsintervall kleiner 1 min erlauben",
                     "request_timeout": "Kommunikationstimeout",
                     "heating_circuits": "Heizkreise",
                     "zone_count": "Anzahl Zonenmodule",
@@ -20,7 +20,7 @@
                     "max_power_usage": "Maximale Leistungsaufnahme"
                 },
                 "data_description": {
-                    "allow_fast_refresh": "Kurze Aktualisierungsintervalle sind aufgrund von Berichten übermögliche Probleme (https://github.com/kodebach/hacs-idm-heatpump/issues/16) standardmäßig gesperrt.",
+                    "allow_fast_refresh": "Kurze Aktualisierungsintervalle sind aufgrund von Berichten über mögliche Probleme (https://github.com/kodebach/hacs-idm-heatpump/issues/16) standardmäßig gesperrt.",
                     "max_power_usage": "Der Sensor 'Aktuelle Leistungsaufnahme Wärmepumpe' wird auf 'Unknown' gesetzt, falls die Wärmepumpe einen Wert über dem Maximum sendet. Die führt zu Lücken im Verlauf anstelle von unmöglich hohen Werten, welche die Achsenskalierung beeinflussen würden. Wenn kein Wert gesetzt ist, oder 0 als Maximum gesetzt ist, werden alle Werte der Wärmepumpe direkt übernommen."
                 }
             },
@@ -50,9 +50,9 @@
             }
         },
         "error": {
-            "hostname": "Wärmepumpe mit unter hostname/ip nicht gefunden.",
-            "min_refresh_interval": "Aktualisierungsinterval muss mindestens 1 Minute sein.",
-            "request_refresh_interval": "Kommunikationstimeout muss kleiner als Aktualisierungsinterval sein."
+            "hostname": "Wärmepumpe unter hostname/ip nicht gefunden.",
+            "min_refresh_interval": "Aktualisierungsintervall muss mindestens 1 Minute sein.",
+            "request_refresh_interval": "Kommunikationstimeout muss kleiner als Aktualisierungsintervall sein."
         },
         "abort": {
             "already_configured": "Dieser Hostname ist bereits für eine andere IDM Wärmepumpe in Verwendung."
@@ -62,8 +62,8 @@
         "step": {
             "options": {
                 "data": {
-                    "refresh_interval": "Aktualisierungsinterval",
-                    "allow_fast_refresh": "Aktualisierungsinterval kleiner 1 min erlauben",
+                    "refresh_interval": "Aktualisierungsintervall",
+                    "allow_fast_refresh": "Aktualisierungsintervall kleiner 1 min erlauben",
                     "request_timeout": "Kommunikationstimeout",
                     "heating_circuits": "Heizkreise",
                     "zone_count": "Anzahl Zonenmodule",
@@ -71,7 +71,7 @@
                     "max_power_usage": "Maximale Leistungsaufnahme"
                 },
                 "data_description": {
-                    "allow_fast_refresh": "Kurze Aktualisierungsintervalle sind aufgrund von Berichten übermögliche Probleme (https://github.com/kodebach/hacs-idm-heatpump/issues/16) standardmäßig gesperrt.",
+                    "allow_fast_refresh": "Kurze Aktualisierungsintervalle sind aufgrund von Berichten über mögliche Probleme (https://github.com/kodebach/hacs-idm-heatpump/issues/16) standardmäßig gesperrt.",
                     "max_power_usage": "Der Sensor 'Aktuelle Leistungsaufnahme Wärmepumpe' wird auf 'Unknown' gesetzt, falls die Wärmepumpe einen Wert über dem Maximum sendet. Die führt zu Lücken im Verlauf anstelle von unmöglich hohen Werten, welche die Achsenskalierung beeinflussen würden. Wenn kein Wert gesetzt ist, oder 0 als Maximum gesetzt ist, werden alle Werte der Wärmepumpe direkt übernommen."
                 }
             },
@@ -101,8 +101,8 @@
             }
         },
         "error": {
-            "min_refresh_interval": "Aktualisierungsinterval muss mindestens 1 Minute sein.",
-            "request_refresh_interval": "Kommunikationstimeout muss kleiner als Aktualisierungsinterval sein."
+            "min_refresh_interval": "Aktualisierungsintervall muss mindestens 1 Minute sein.",
+            "request_refresh_interval": "Kommunikationstimeout muss kleiner als Aktualisierungsintervall sein."
         }
     },
     "services": {
@@ -298,3 +298,4 @@
         }
     }
 }
+
