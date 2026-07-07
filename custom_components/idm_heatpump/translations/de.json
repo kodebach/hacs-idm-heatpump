@@ -13,6 +13,7 @@
                 "data": {
                     "refresh_interval": "Aktualisierungsintervall",
                     "allow_fast_refresh": "Aktualisierungsintervall kleiner 1 min erlauben",
+                    "force_update": "Sensor-Aktualisierung bei jedem Intervall erzwingen",
                     "request_timeout": "Kommunikationstimeout",
                     "heating_circuits": "Heizkreise",
                     "zone_count": "Anzahl Zonenmodule",
@@ -21,6 +22,7 @@
                 },
                 "data_description": {
                     "allow_fast_refresh": "Kurze Aktualisierungsintervalle sind aufgrund von Berichten über mögliche Probleme (siehe [Issue #16]({issue_url})) standardmäßig gesperrt.",
+                    "force_update": "Wenn aktiviert, speichert jeder Sensor bei jeder Aktualisierung einen neuen Zustand, auch wenn sich der Wert nicht geändert hat. Das kann die Größe der Recorder-Datenbank und des Verlaufs deutlich erhöhen. Standardmäßig deaktiviert – nur aktivieren, wenn ein Datenpunkt pro Intervall benötigt wird (z. B. für Statistiken oder Diagramme).",
                     "max_power_usage": "Der Sensor 'Aktuelle Leistungsaufnahme Wärmepumpe' wird auf 'Unknown' gesetzt, falls die Wärmepumpe einen Wert über dem Maximum sendet. Die führt zu Lücken im Verlauf anstelle von unmöglich hohen Werten, welche die Achsenskalierung beeinflussen würden. Wenn kein Wert gesetzt ist, oder 0 als Maximum gesetzt ist, werden alle Werte der Wärmepumpe direkt übernommen."
                 }
             },
@@ -64,6 +66,7 @@
                 "data": {
                     "refresh_interval": "Aktualisierungsintervall",
                     "allow_fast_refresh": "Aktualisierungsintervall kleiner 1 min erlauben",
+                    "force_update": "Sensor-Aktualisierung bei jedem Intervall erzwingen",
                     "request_timeout": "Kommunikationstimeout",
                     "heating_circuits": "Heizkreise",
                     "zone_count": "Anzahl Zonenmodule",
@@ -72,6 +75,7 @@
                 },
                 "data_description": {
                     "allow_fast_refresh": "Kurze Aktualisierungsintervalle sind aufgrund von Berichten über mögliche Probleme (siehe [Issue #16]({issue_url})) standardmäßig gesperrt.",
+                    "force_update": "Wenn aktiviert, speichert jeder Sensor bei jeder Aktualisierung einen neuen Zustand, auch wenn sich der Wert nicht geändert hat. Das kann die Größe der Recorder-Datenbank und des Verlaufs deutlich erhöhen. Standardmäßig deaktiviert – nur aktivieren, wenn ein Datenpunkt pro Intervall benötigt wird (z. B. für Statistiken oder Diagramme).",
                     "max_power_usage": "Der Sensor 'Aktuelle Leistungsaufnahme Wärmepumpe' wird auf 'Unknown' gesetzt, falls die Wärmepumpe einen Wert über dem Maximum sendet. Die führt zu Lücken im Verlauf anstelle von unmöglich hohen Werten, welche die Achsenskalierung beeinflussen würden. Wenn kein Wert gesetzt ist, oder 0 als Maximum gesetzt ist, werden alle Werte der Wärmepumpe direkt übernommen."
                 }
             },
