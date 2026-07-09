@@ -3,7 +3,7 @@
         "step": {
             "user": {
                 "title": "IDM Wärmepumpe",
-                "description": "Für Hilfe mit der Konfiguration: https://github.com/kodebach/hacs-idm-heatpump",
+                "description": "Für Hilfe mit der Konfiguration siehe [hier]({docs_url}).",
                 "data": {
                     "display_name": "Anzeigename",
                     "hostname": "Hostname/IP"
@@ -20,7 +20,7 @@
                     "max_power_usage": "Maximale Leistungsaufnahme"
                 },
                 "data_description": {
-                    "allow_fast_refresh": "Kurze Aktualisierungsintervalle sind aufgrund von Berichten über mögliche Probleme (https://github.com/kodebach/hacs-idm-heatpump/issues/16) standardmäßig gesperrt.",
+                    "allow_fast_refresh": "Kurze Aktualisierungsintervalle sind aufgrund von Berichten über mögliche Probleme (siehe [Issue #16]({issue_url})) standardmäßig gesperrt.",
                     "max_power_usage": "Der Sensor 'Aktuelle Leistungsaufnahme Wärmepumpe' wird auf 'Unknown' gesetzt, falls die Wärmepumpe einen Wert über dem Maximum sendet. Die führt zu Lücken im Verlauf anstelle von unmöglich hohen Werten, welche die Achsenskalierung beeinflussen würden. Wenn kein Wert gesetzt ist, oder 0 als Maximum gesetzt ist, werden alle Werte der Wärmepumpe direkt übernommen."
                 }
             },
@@ -71,7 +71,7 @@
                     "max_power_usage": "Maximale Leistungsaufnahme"
                 },
                 "data_description": {
-                    "allow_fast_refresh": "Kurze Aktualisierungsintervalle sind aufgrund von Berichten über mögliche Probleme (https://github.com/kodebach/hacs-idm-heatpump/issues/16) standardmäßig gesperrt.",
+                    "allow_fast_refresh": "Kurze Aktualisierungsintervalle sind aufgrund von Berichten über mögliche Probleme (siehe [Issue #16]({issue_url})) standardmäßig gesperrt.",
                     "max_power_usage": "Der Sensor 'Aktuelle Leistungsaufnahme Wärmepumpe' wird auf 'Unknown' gesetzt, falls die Wärmepumpe einen Wert über dem Maximum sendet. Die führt zu Lücken im Verlauf anstelle von unmöglich hohen Werten, welche die Achsenskalierung beeinflussen würden. Wenn kein Wert gesetzt ist, oder 0 als Maximum gesetzt ist, werden alle Werte der Wärmepumpe direkt übernommen."
                 }
             },
@@ -120,7 +120,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Bestätigung",
-                    "description": "Ich akzeptiere das Risiko"
+                    "description": "Ich habe die Dokumentation von IDM gelesen, weiß was das setzen dieses Wertes bewirkt und akzeptiere das Risiko bei falscher Verwendung."
                 }
             }
         },
@@ -138,7 +138,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Bestätigung",
-                    "description": "Ich akzeptiere das Risiko"
+                    "description": "Ich habe die Dokumentation von IDM gelesen, weiß was das setzen dieses Wertes bewirkt und akzeptiere das Risiko bei falscher Verwendung."
                 }
             }
         },
@@ -156,7 +156,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Bestätigung",
-                    "description": "Ich akzeptiere das Risiko"
+                    "description": "Ich habe die Dokumentation von IDM gelesen, weiß was das setzen dieses Wertes bewirkt und akzeptiere das Risiko bei falscher Verwendung."
                 }
             }
         },
@@ -174,7 +174,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Bestätigung",
-                    "description": "Ich akzeptiere das Risiko"
+                    "description": "Ich habe die Dokumentation von IDM gelesen, weiß was das setzen dieses Wertes bewirkt und akzeptiere das Risiko bei falscher Verwendung."
                 }
             }
         },
@@ -192,7 +192,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Bestätigung",
-                    "description": "Ich akzeptiere das Risiko"
+                    "description": "Ich habe die Dokumentation von IDM gelesen, weiß was das setzen dieses Wertes bewirkt und akzeptiere das Risiko bei falscher Verwendung."
                 }
             }
         },
@@ -210,7 +210,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Bestätigung",
-                    "description": "Ich akzeptiere das Risiko"
+                    "description": "Ich habe die Dokumentation von IDM gelesen, weiß was das setzen dieses Wertes bewirkt und akzeptiere das Risiko bei falscher Verwendung."
                 }
             }
         },
@@ -228,7 +228,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Bestätigung",
-                    "description": "Ich akzeptiere das Risiko"
+                    "description": "Ich habe die Dokumentation von IDM gelesen, weiß was das setzen dieses Wertes bewirkt und akzeptiere das Risiko bei falscher Verwendung."
                 }
             }
         },
@@ -246,15 +246,12 @@
                 },
                 "acknowledge_risk": {
                     "name": "Bestätigung",
-                    "description": "Ich akzeptiere das Risiko"
+                    "description": "Ich habe die Dokumentation von IDM gelesen, weiß was das setzen dieses Wertes bewirkt und akzeptiere das Risiko bei falscher Verwendung."
                 }
             }
         }
     },
     "selector": {
-        "acknowledge_set_value": {
-            "value": "Ich habe die Dokumentation von IDM gelesen, weiß was das setzen dieses Wertes bewirkt und akzeptiere das Risiko bei falscher Verwendung."
-        },
         "room_mode_options": {
             "options": {
                 "off": "Aus",

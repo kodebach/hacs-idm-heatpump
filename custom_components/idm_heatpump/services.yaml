@@ -17,7 +17,7 @@ set_power:
       selector:
         constant:
           value: true
-          translation_key: acknowledge_set_value
+          label: ""
 
 set_battery:
   fields:
@@ -40,7 +40,7 @@ set_battery:
       selector:
         constant:
           value: true
-          translation_key: acknowledge_set_value
+          label: ""
 
 set_temperature:
   fields:
@@ -61,7 +61,7 @@ set_temperature:
       selector:
         constant:
           value: true
-          translation_key: acknowledge_set_value
+          label: ""
 
 set_humidity:
   fields:
@@ -84,7 +84,7 @@ set_humidity:
       selector:
         constant:
           value: true
-          translation_key: acknowledge_set_value
+          label: ""
 
 set_room_mode:
   fields:
@@ -110,7 +110,7 @@ set_room_mode:
       selector:
         constant:
           value: true
-          translation_key: acknowledge_set_value
+          label: ""
 
 set_circuit_mode:
   fields:
@@ -137,7 +137,7 @@ set_circuit_mode:
       selector:
         constant:
           value: true
-          translation_key: acknowledge_set_value
+          label: ""
 
 set_binary:
   fields:
@@ -155,7 +155,7 @@ set_binary:
       selector:
         constant:
           value: true
-          translation_key: acknowledge_set_value
+          label: ""
 
 set_system_status:
   fields:
@@ -183,4 +183,4 @@ set_system_status:
       selector:
         constant:
           value: true
-          translation_key: acknowledge_set_value
+          label: ""

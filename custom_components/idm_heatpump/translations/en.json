@@ -3,7 +3,7 @@
         "step": {
             "user": {
                 "title": "IDM Heat Pump",
-                "description": "If you need help with the configuration have a look here: https://github.com/kodebach/hacs-idm-heatpump",
+                "description": "If you need help with the configuration have a look [here]({docs_url}).",
                 "data": {
                     "display_name": "Display Name",
                     "hostname": "Hostname/IP"
@@ -20,7 +20,7 @@
                     "max_power_usage": "Maximum power draw"
                 },
                 "data_description": {
-                    "allow_fast_refresh": "Short refresh are blocked by default because of reports about possible issues (https://github.com/kodebach/hacs-idm-heatpump/issues/16).",
+                    "allow_fast_refresh": "Short refresh are blocked by default because of reports about possible issues (see [issue #16]({issue_url})).",
                     "max_power_usage": "The sensor 'Aktuelle Leistungsaufnahme Wärmepumpe' will be set to 'Unknown', if the heat pump sends a value above the maximum. This creates gaps in the history instead of impossibly high values, which would throw of the axis scaling. If no value is defined or it is set to 0, all values from the heat pump will be used directly."
                 }
             },
@@ -71,7 +71,7 @@
                     "max_power_usage": "Maximum power draw"
                 },
                 "data_description": {
-                    "allow_fast_refresh": "Short refresh are blocked by default because of reports about possible issues (https://github.com/kodebach/hacs-idm-heatpump/issues/16).",
+                    "allow_fast_refresh": "Short refresh are blocked by default because of reports about possible issues (see [issue #16]({issue_url})).",
                     "max_power_usage": "The sensor 'Aktuelle Leistungsaufnahme Wärmepumpe' will be set to 'Unknown', if the heat pump sends a value above the maximum. This creates gaps in the history instead of impossibly high values, which would throw of the axis scaling. If no value is defined or it is set to 0, all values from the heat pump will be used directly."
                 }
             },
@@ -119,8 +119,8 @@
                     "description": "The value to send."
                 },
                 "acknowledge_risk": {
-                    "name": "Bestätigung",
-                    "description": "Ich akzeptiere das Risiko"
+                    "name": "Confirmation",
+                    "description": "I have read IDM's documentation, I know what effect setting this value has and I accept the risks in case of misuse."
                 }
             }
         },
@@ -138,7 +138,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Confirmation",
-                    "description": "I accept the risks"
+                    "description": "I have read IDM's documentation, I know what effect setting this value has and I accept the risks in case of misuse."
                 }
             }
         },
@@ -156,7 +156,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Confirmation",
-                    "description": "I accept the risks"
+                    "description": "I have read IDM's documentation, I know what effect setting this value has and I accept the risks in case of misuse."
                 }
             }
         },
@@ -174,7 +174,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Confirmation",
-                    "description": "I accept the risks"
+                    "description": "I have read IDM's documentation, I know what effect setting this value has and I accept the risks in case of misuse."
                 }
             }
         },
@@ -192,7 +192,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Confirmation",
-                    "description": "I accept the risks"
+                    "description": "I have read IDM's documentation, I know what effect setting this value has and I accept the risks in case of misuse."
                 }
             }
         },
@@ -210,7 +210,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Confirmation",
-                    "description": "I accept the risks"
+                    "description": "I have read IDM's documentation, I know what effect setting this value has and I accept the risks in case of misuse."
                 }
             }
         },
@@ -228,7 +228,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Confirmation",
-                    "description": "I accept the risks"
+                    "description": "I have read IDM's documentation, I know what effect setting this value has and I accept the risks in case of misuse."
                 }
             }
         },
@@ -246,15 +246,12 @@
                 },
                 "acknowledge_risk": {
                     "name": "Confirmation",
-                    "description": "I accept the risks"
+                    "description": "I have read IDM's documentation, I know what effect setting this value has and I accept the risks in case of misuse."
                 }
             }
         }
     },
     "selector": {
-        "acknowledge_set_value": {
-            "value": "I have read IDM's documentation, I know what effect setting this value has and I accept the risks in case of misuse."
-        },
         "room_mode_options": {
             "options": {
                 "off": "Off",
