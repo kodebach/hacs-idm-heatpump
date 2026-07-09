@@ -120,7 +120,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Bestätigung",
-                    "description": "Ich akzeptiere das Risiko"
+                    "description": "Ich habe die Dokumentation von IDM gelesen, weiß was das setzen dieses Wertes bewirkt und akzeptiere das Risiko bei falscher Verwendung."
                 }
             }
         },
@@ -138,7 +138,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Bestätigung",
-                    "description": "Ich akzeptiere das Risiko"
+                    "description": "Ich habe die Dokumentation von IDM gelesen, weiß was das setzen dieses Wertes bewirkt und akzeptiere das Risiko bei falscher Verwendung."
                 }
             }
         },
@@ -156,7 +156,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Bestätigung",
-                    "description": "Ich akzeptiere das Risiko"
+                    "description": "Ich habe die Dokumentation von IDM gelesen, weiß was das setzen dieses Wertes bewirkt und akzeptiere das Risiko bei falscher Verwendung."
                 }
             }
         },
@@ -174,7 +174,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Bestätigung",
-                    "description": "Ich akzeptiere das Risiko"
+                    "description": "Ich habe die Dokumentation von IDM gelesen, weiß was das setzen dieses Wertes bewirkt und akzeptiere das Risiko bei falscher Verwendung."
                 }
             }
         },
@@ -192,7 +192,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Bestätigung",
-                    "description": "Ich akzeptiere das Risiko"
+                    "description": "Ich habe die Dokumentation von IDM gelesen, weiß was das setzen dieses Wertes bewirkt und akzeptiere das Risiko bei falscher Verwendung."
                 }
             }
         },
@@ -210,7 +210,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Bestätigung",
-                    "description": "Ich akzeptiere das Risiko"
+                    "description": "Ich habe die Dokumentation von IDM gelesen, weiß was das setzen dieses Wertes bewirkt und akzeptiere das Risiko bei falscher Verwendung."
                 }
             }
         },
@@ -228,7 +228,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Bestätigung",
-                    "description": "Ich akzeptiere das Risiko"
+                    "description": "Ich habe die Dokumentation von IDM gelesen, weiß was das setzen dieses Wertes bewirkt und akzeptiere das Risiko bei falscher Verwendung."
                 }
             }
         },
@@ -246,15 +246,12 @@
                 },
                 "acknowledge_risk": {
                     "name": "Bestätigung",
-                    "description": "Ich akzeptiere das Risiko"
+                    "description": "Ich habe die Dokumentation von IDM gelesen, weiß was das setzen dieses Wertes bewirkt und akzeptiere das Risiko bei falscher Verwendung."
                 }
             }
         }
     },
     "selector": {
-        "acknowledge_set_value": {
-            "value": "Ich habe die Dokumentation von IDM gelesen, weiß was das setzen dieses Wertes bewirkt und akzeptiere das Risiko bei falscher Verwendung."
-        },
         "room_mode_options": {
             "options": {
                 "off": "Aus",

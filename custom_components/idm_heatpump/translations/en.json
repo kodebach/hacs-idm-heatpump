@@ -119,8 +119,8 @@
                     "description": "The value to send."
                 },
                 "acknowledge_risk": {
-                    "name": "Bestätigung",
-                    "description": "Ich akzeptiere das Risiko"
+                    "name": "Confirmation",
+                    "description": "I have read IDM's documentation, I know what effect setting this value has and I accept the risks in case of misuse."
                 }
             }
         },
@@ -138,7 +138,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Confirmation",
-                    "description": "I accept the risks"
+                    "description": "I have read IDM's documentation, I know what effect setting this value has and I accept the risks in case of misuse."
                 }
             }
         },
@@ -156,7 +156,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Confirmation",
-                    "description": "I accept the risks"
+                    "description": "I have read IDM's documentation, I know what effect setting this value has and I accept the risks in case of misuse."
                 }
             }
         },
@@ -174,7 +174,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Confirmation",
-                    "description": "I accept the risks"
+                    "description": "I have read IDM's documentation, I know what effect setting this value has and I accept the risks in case of misuse."
                 }
             }
         },
@@ -192,7 +192,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Confirmation",
-                    "description": "I accept the risks"
+                    "description": "I have read IDM's documentation, I know what effect setting this value has and I accept the risks in case of misuse."
                 }
             }
         },
@@ -210,7 +210,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Confirmation",
-                    "description": "I accept the risks"
+                    "description": "I have read IDM's documentation, I know what effect setting this value has and I accept the risks in case of misuse."
                 }
             }
         },
@@ -228,7 +228,7 @@
                 },
                 "acknowledge_risk": {
                     "name": "Confirmation",
-                    "description": "I accept the risks"
+                    "description": "I have read IDM's documentation, I know what effect setting this value has and I accept the risks in case of misuse."
                 }
             }
         },
@@ -246,15 +246,12 @@
                 },
                 "acknowledge_risk": {
                     "name": "Confirmation",
-                    "description": "I accept the risks"
+                    "description": "I have read IDM's documentation, I know what effect setting this value has and I accept the risks in case of misuse."
                 }
             }
         }
     },
     "selector": {
-        "acknowledge_set_value": {
-            "value": "I have read IDM's documentation, I know what effect setting this value has and I accept the risks in case of misuse."
-        },
         "room_mode_options": {
             "options": {
                 "off": "Off",
