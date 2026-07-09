@@ -33,6 +33,9 @@ from .const import (
 from .idm_heatpump import IdmHeatpump
 from .sensor_addresses import HeatingCircuit
 
+CONFIG_HELP_URL = "https://github.com/kodebach/hacs-idm-heatpump"
+FAST_REFRESH_ISSUE_URL = "https://github.com/kodebach/hacs-idm-heatpump/issues/16"
+
 
 class IdmHeatpumpFlowHandler(ConfigFlow, domain=DOMAIN):
     """Config flow for IDM heat pump."""
@@ -79,6 +82,7 @@ class IdmHeatpumpFlowHandler(ConfigFlow, domain=DOMAIN):
             step_id="user",
             data_schema=schema,
             errors=errors,
+            description_placeholders={"docs_url": CONFIG_HELP_URL},
         )
 
     async def async_step_options(self, user_input=None):
@@ -94,6 +98,7 @@ class IdmHeatpumpFlowHandler(ConfigFlow, domain=DOMAIN):
             step_id="options",
             data_schema=schema,
             errors=errors,
+            description_placeholders={"issue_url": FAST_REFRESH_ISSUE_URL},
         )
 
     async def async_step_zones(self, user_input=None):
@@ -155,6 +160,7 @@ class IdmHeatpumpOptionsFlowHandler(OptionsFlow):
             step_id="options",
             data_schema=schema,
             errors=errors,
+            description_placeholders={"issue_url": FAST_REFRESH_ISSUE_URL},
         )
 
     async def async_step_zones(self, user_input=None):
