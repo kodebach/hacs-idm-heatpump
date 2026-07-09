@@ -13,6 +13,7 @@
                 "data": {
                     "refresh_interval": "Refresh Interval",
                     "allow_fast_refresh": "Allow refresh interval smaller than 1 min",
+                    "force_update": "Force sensor updates on every refresh",
                     "request_timeout": "Communication Timeout",
                     "heating_circuits": "Heating Circuits",
                     "zone_count": "Number of zone modules",
@@ -21,6 +22,7 @@
                 },
                 "data_description": {
                     "allow_fast_refresh": "Short refresh are blocked by default because of reports about possible issues (see [issue #16]({issue_url})).",
+                    "force_update": "When enabled, every sensor records a new state on each refresh even if the value did not change. This can significantly increase the size of the recorder database and history. Leave off unless you need a data point per refresh (e.g. for statistics or charts).",
                     "max_power_usage": "The sensor 'Aktuelle Leistungsaufnahme Wärmepumpe' will be set to 'Unknown', if the heat pump sends a value above the maximum. This creates gaps in the history instead of impossibly high values, which would throw of the axis scaling. If no value is defined or it is set to 0, all values from the heat pump will be used directly."
                 }
             },
@@ -64,6 +66,7 @@
                 "data": {
                     "refresh_interval": "Refresh Interval",
                     "allow_fast_refresh": "Allow refresh interval smaller than 1 min",
+                    "force_update": "Force sensor updates on every refresh",
                     "request_timeout": "Communication Timeout",
                     "heating_circuits": "Heating Circuits",
                     "zone_count": "Number of zone modules",
@@ -72,6 +75,7 @@
                 },
                 "data_description": {
                     "allow_fast_refresh": "Short refresh are blocked by default because of reports about possible issues (see [issue #16]({issue_url})).",
+                    "force_update": "When enabled, every sensor records a new state on each refresh even if the value did not change. This can significantly increase the size of the recorder database and history. Leave off unless you need a data point per refresh (e.g. for statistics or charts).",
                     "max_power_usage": "The sensor 'Aktuelle Leistungsaufnahme Wärmepumpe' will be set to 'Unknown', if the heat pump sends a value above the maximum. This creates gaps in the history instead of impossibly high values, which would throw of the axis scaling. If no value is defined or it is set to 0, all values from the heat pump will be used directly."
                 }
             },

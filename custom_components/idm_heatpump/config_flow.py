@@ -21,6 +21,7 @@ from .const import (
     MAX_ZONE_COUNT,
     MIN_REFRESH_INTERVAL,
     OPT_ALLOW_FAST_REFRESH,
+    OPT_FORCE_UPDATE,
     OPT_HEATING_CIRCUITS,
     OPT_MAX_POWER_USAGE,
     OPT_READ_WITHOUT_GROUPS,
@@ -230,6 +231,10 @@ def _async_step_base_options(
             vol.Required(
                 OPT_READ_WITHOUT_GROUPS,
                 default=options.get(OPT_READ_WITHOUT_GROUPS, False),
+            ): bool,
+            vol.Required(
+                OPT_FORCE_UPDATE,
+                default=options.get(OPT_FORCE_UPDATE, False),
             ): bool,
             vol.Optional(
                 OPT_MAX_POWER_USAGE,

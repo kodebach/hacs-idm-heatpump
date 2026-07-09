@@ -15,6 +15,7 @@ from .const import (
     MANUFACTURER,
     MODEL_MAIN,
     MODEL_ZONE,
+    OPT_FORCE_UPDATE,
     SensorFeatures,
 )
 from .coordinator import IdmHeatpumpDataUpdateCoordinator
@@ -37,6 +38,7 @@ class IdmHeatpumpEntity(CoordinatorEntity, Generic[_T]):
         """Create entity."""
         super().__init__(coordinator)
         self.config_entry = config_entry
+        self._attr_force_update = config_entry.options.get(OPT_FORCE_UPDATE, False)
 
     @property
     @abstractmethod
