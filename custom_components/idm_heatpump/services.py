@@ -25,16 +25,16 @@ async def _handle_set(
     convert_value: Callable[[Any | None, IdmHeatpumpEntity], _T],
     call: ServiceCall,
 ):
-    platform = None
-    for p in entity_platform.async_get_platforms(hass, DOMAIN):
-        if p.domain == platform_domain:
-            platform = p
-
-    if platform is None:
-        raise HomeAssistantError(f"Platform {platform} not found for {DOMAIN}")
-
     target = call.data.get("target")
-    entity = platform.entities[target]
+    entity = None
+
+    for p in entity_platform.async_get_platforms(hass, DOMAIN):
+        if p.domain == platform_domain and target in p.entities:
+            entity = p.entities[target]
+            break
+
+    if entity is None:
+        raise HomeAssistantError(f"Entity {target} not found for {DOMAIN}")
 
     if (
         not isinstance(entity, IdmHeatpumpEntity)
