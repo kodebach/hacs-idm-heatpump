@@ -3,18 +3,14 @@
 import asyncio
 import collections
 from dataclasses import dataclass
-from inspect import signature
 from typing import TypeVar
 
-from pymodbus.client import AsyncModbusTcpClient
-from pymodbus.exceptions import ConnectionException, ModbusException
-
-try:
-    from pymodbus.pdu.register_message import ReadInputRegistersResponse
-except ImportError:
-    from pymodbus.pdu.register_read_message import (  # pyright: ignore[reportMissingImports]
-        ReadInputRegistersResponse,
-    )
+from modbus_connection import (
+    ModbusConnectionError,
+    ModbusError,
+    ModbusTimeoutError,
+    ModbusUnit,
+)
 
 from .const import NAME_POWER_USAGE
 from .logger import LOGGER
@@ -43,21 +39,21 @@ class IdmHeatpump:
         count: int
         sensors: list[BaseSensorAddress]
 
-    client: AsyncModbusTcpClient
+    unit: ModbusUnit
     sensors: list[BaseSensorAddress]
     sensor_groups: list[_SensorGroup] = []
     max_power_usage: float | None
 
     def __init__(
         self,
-        hostname: str,
+        unit: ModbusUnit,
         circuits: list[HeatingCircuit],
         zones: list[ZoneModule],
         no_groups: bool,
         max_power_usage: float | None,
     ) -> None:
         """Create heatpump."""
-        self.client = AsyncModbusTcpClient(host=hostname)
+        self.unit = unit
 
         self.max_power_usage = max_power_usage
 
@@ -124,31 +120,14 @@ class IdmHeatpump:
                         sensors=[*self.sensor_groups[-1].sensors, sensor],
                     )
 
-    async def _fetch_registers(self, group: _SensorGroup) -> ReadInputRegistersResponse:
+    async def _fetch_registers(self, group: _SensorGroup) -> list[int]:
         LOGGER.debug("reading registers %d (count=%d)", group.start, group.count)
-        if "device_id" in signature(self.client.read_input_registers).parameters:
-            return await self.client.read_input_registers(
-                address=group.start,
-                count=group.count,
-                device_id=1,
-            )
-        else:
-            return await self.client.read_input_registers(  # pylint: disable=unexpected-keyword-arg
-                address=group.start,
-                count=group.count,
-                slave=1,
-            )
+        return await self.unit.read_input_registers(group.start, group.count)
 
-    async def _fetch_retry(self, group: _SensorGroup) -> ReadInputRegistersResponse:
+    async def _fetch_retry(self, group: _SensorGroup) -> list[int]:
         try:
             return await self._fetch_registers(group)
-        except ConnectionException:
-            if not self.client.connected:
-                await self.client.connect()
-            return await self._fetch_registers(group)
-        except asyncio.exceptions.TimeoutError:
-            if not self.client.connected:
-                await self.client.connect()
+        except (ModbusConnectionError, ModbusTimeoutError):
             return await self._fetch_registers(group)
 
     async def _fetch_sensors(self, group: _SensorGroup) -> dict[str, any]:
@@ -156,7 +135,7 @@ class IdmHeatpump:
 
         try:
             result = await self._fetch_retry(group)
-        except ModbusException as exception:
+        except ModbusError as exception:
             LOGGER.warning(
                 "Failed to fetch registers for group %d (count=%d): %s",
                 group.start,
@@ -165,25 +144,16 @@ class IdmHeatpump:
             )
             raise _FetchError() from exception
 
-        if result.isError():
-            LOGGER.warning(
-                "Failed to fetch registers for group %d (count=%d): %s",
-                group.start,
-                group.count,
-                result,
-            )
-            raise _FetchError()
-
         LOGGER.debug("got registers %d", group.start)
 
         data: dict[str, any] = {}
 
         def decode_single(
             sensor: BaseSensorAddress,
-            result: ReadInputRegistersResponse,
+            registers: list[int],
         ):
             try:
-                available, value = sensor.decode(result.registers)
+                available, value = sensor.decode(registers)
                 if available:
                     data[sensor.name] = value
             except ValueError as single_error:
@@ -205,9 +175,7 @@ class IdmHeatpump:
                 register_ptr = 0
                 for sensor in group.sensors:
                     try:
-                        registers = result.registers[
-                            register_ptr : register_ptr + sensor.size
-                        ]
+                        registers = result[register_ptr : register_ptr + sensor.size]
                         register_ptr += sensor.size
                         available, value = sensor.decode(registers)
                         if available:
@@ -230,7 +198,7 @@ class IdmHeatpump:
 
                         decode_single(sensor, single_result)
 
-        except ModbusException as exception:
+        except ModbusError as exception:
             LOGGER.warning(
                 "Failed to fetch registers for group %d (count=%d): %s",
                 group.start,
@@ -262,7 +230,7 @@ class IdmHeatpump:
                     )
 
                     decode_single(sensor, single_result)
-                except ModbusException as exception:
+                except ModbusError as exception:
                     LOGGER.warning(
                         "Failed to fetch registers for sensor %d: %s",
                         sensor.address,
@@ -283,10 +251,6 @@ class IdmHeatpump:
 
     async def async_get_data(self) -> tuple[bool, dict[str, any]]:
         """Get data from the heatpump."""
-
-        if not self.client.connected:
-            await self.client.connect()
-            LOGGER.debug("connected")
 
         groups = await asyncio.gather(
             *[self._fetch_sensors(group) for group in self.sensor_groups],
@@ -314,32 +278,15 @@ class IdmHeatpump:
 
     async def async_write_value(self, address: BaseSensorAddress[_T], value: _T):
         """Write value to one of the addresses of this heat pump."""
-        if not self.client.connected:
-            await self.client.connect()
-            LOGGER.debug("connected")
-
         registers = address.encode(value)
         assert len(registers) == address.size
-
-        if "device_id" in signature(self.client.write_registers).parameters:
-            response = await self.client.write_registers(
-                address=address.address,
-                values=registers,
-                device_id=1,
-            )
-        else:
-            response = await self.client.write_registers(  # pylint: disable=unexpected-keyword-arg
-                address=address.address,
-                values=registers,
-                slave=1,
-            )
-        assert not response.isError()
+        await self.unit.write_registers(address.address, registers)
 
     @staticmethod
-    async def test_hostname(hostname: str) -> bool:
-        """Check if the hostname is reachable via Modbus."""
+    async def test_unit(unit: ModbusUnit) -> bool:
+        """Check if a Modbus unit is reachable."""
         heatpump = IdmHeatpump(
-            hostname,
+            unit,
             circuits=[],
             zones=[],
             no_groups=True,

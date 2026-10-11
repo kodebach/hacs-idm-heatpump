@@ -5,11 +5,13 @@ from datetime import timedelta
 from typing import Any, Self
 
 import voluptuous as vol
+from homeassistant.components.modbus import async_get_temporary_unit
 from homeassistant.config import cv
 from homeassistant.config_entries import ConfigEntry, ConfigFlow, OptionsFlow
 from homeassistant.const import UnitOfPower
 from homeassistant.core import callback
 from homeassistant.helpers.selector import selector
+from modbus_connection import ModbusTcpParams
 
 from .const import (
     CONF_DISPLAY_NAME,
@@ -129,7 +131,12 @@ class IdmHeatpumpFlowHandler(ConfigFlow, domain=DOMAIN):
     async def _test_hostname(self, hostname):
         """Return true if hostname is valid."""
         try:
-            return await IdmHeatpump.test_hostname(hostname)
+            async with async_get_temporary_unit(
+                self.hass,
+                ModbusTcpParams(host=hostname, port=502),
+                1,
+            ) as unit:
+                return await IdmHeatpump.test_unit(unit)
         except Exception:  # pylint: disable=broad-except
             pass
         return False

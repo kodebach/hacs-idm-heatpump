@@ -24,6 +24,9 @@ Platform | Description
 
 ## Installation
 
+This integration requires Home Assistant 2026.9.0 or newer.
+It uses Home Assistant's Modbus integration for shared Modbus TCP connections.
+
 ### Configuration of the heat pump
 
 The integration communicates with the heat pump via Modbus TCP.

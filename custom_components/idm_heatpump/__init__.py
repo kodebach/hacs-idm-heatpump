@@ -7,11 +7,13 @@ https://github.com/custom-components/idm_heatpump
 from datetime import timedelta
 
 from homeassistant.components import persistent_notification
+from homeassistant.components.modbus import async_get_unit
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv
 from homeassistant.loader import async_get_integration
+from modbus_connection import ModbusTcpParams
 
 from .const import (
     CONF_HOSTNAME,
@@ -58,11 +60,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     )
 
     hostname = entry.data.get(CONF_HOSTNAME)
+    unit = async_get_unit(
+        hass,
+        entry,
+        ModbusTcpParams(host=hostname, port=502),
+        1,
+    )
     zone_count = entry.options.get(OPT_ZONE_COUNT, 0)
     max_power_usage = entry.options.get(OPT_MAX_POWER_USAGE, 0.0)
 
     heatpump = IdmHeatpump(
-        hostname=hostname,
+        unit=unit,
         circuits=[
             HeatingCircuit[c] for c in entry.options.get(OPT_HEATING_CIRCUITS, [])
         ],
@@ -109,13 +117,6 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Handle removal of an entry."""
     unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     if unload_ok:
-        coordinator: IdmHeatpumpDataUpdateCoordinator = hass.data[DOMAIN][
-            entry.entry_id
-        ]
-
-        # Ensure disconnected and cleanup stop sub
-        coordinator.heatpump.client.close()
-
         del hass.data[DOMAIN][entry.entry_id]
 
     if not hass.data[DOMAIN]:

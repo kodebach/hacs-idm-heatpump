@@ -7,7 +7,6 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant, HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from pymodbus.client.mixin import ModbusClientMixin
 
 from .const import (
     DOMAIN,
@@ -33,7 +32,7 @@ _T = TypeVar("_T")
 
 def _convert_temperature(value: Any | None, entity: IdmHeatpumpEntity) -> float | int:
     value = float(value)
-    if entity.sensor_address.datatype != ModbusClientMixin.DATATYPE.FLOAT32:
+    if not entity.sensor_address.is_float:
         if int(value) != value:
             raise HomeAssistantError(
                 f"Must be integer value to use {SERVICE_SET_TEMPERATURE} on {entity.entity_id}",

@@ -1,5 +1,5 @@
 colorlog==6.12.0
-homeassistant>=2025.1.0
+homeassistant>=2026.9.0
+modbus-connection>=4.10.0,<5
 pip>=26.2.1
 ruff==0.16.10
--r custom_components/idm_heatpump/requirements.txt
