@@ -15,7 +15,7 @@ jobs:
       contents: write
     steps:
       - name: "Checkout the repository"
-        uses: "actions/checkout@v7.0.0"
+        uses: "actions/checkout@v7.0.1"
 
       - name: "Adjust version number"
         shell: "bash"
@@ -32,6 +32,6 @@ jobs:
           zip idm_heatpump.zip -r ./
 
       - name: "Upload the ZIP file to the release"
-        uses: softprops/action-gh-release@v3.0.1
+        uses: softprops/action-gh-release@v3.0.3
         with:
           files: ${{ github.workspace }}/custom_components/idm_heatpump/idm_heatpump.zip
