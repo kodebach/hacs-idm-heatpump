@@ -297,6 +297,117 @@
         "integer_required": {
             "message": "Entität {entity_id} unterstützt nur ganzzahlige Werte."
         }
+    },
+    "entity": {
+        "sensor": {
+            "heat_pump_status_enum": {
+                "state": {
+                    "off": "Aus",
+                    "heating": "Heizen",
+                    "cooling": "Kühlen",
+                    "water": "Warmwasser",
+                    "defrosting": "Abtauen"
+                }
+            },
+            "isc_mode_enum": {
+                "state": {
+                    "off": "Keine Abwärme",
+                    "heating": "Heizen",
+                    "water": "Warmwasser",
+                    "source": "Wärmequelle"
+                }
+            },
+            "circuit_mode_enum": {
+                "state": {
+                    "off": "Aus",
+                    "timed": "Zeitprogramm",
+                    "normal": "Normal",
+                    "eco": "Eco",
+                    "manual_heat": "Manuell Heizen",
+                    "manual_cool": "Manuell Kühlen"
+                }
+            },
+            "active_circuit_mode_enum": {
+                "state": {
+                    "off": "Aus",
+                    "heating": "Heizen",
+                    "cooling": "Kühlen"
+                }
+            },
+            "zone_mode_enum": {
+                "state": {
+                    "cooling": "Kühlen",
+                    "heating": "Heizen"
+                }
+            },
+            "room_mode_enum": {
+                "state": {
+                    "off": "Aus",
+                    "automatic": "Automatik",
+                    "eco": "Eco",
+                    "normal": "Normal",
+                    "comfort": "Komfort"
+                }
+            },
+            "system_status_enum": {
+                "state": {
+                    "off": "Komplett Aus (kein Frostschutz)",
+                    "standby": "Standby",
+                    "automatic": "Automatik",
+                    "away": "Abwesend",
+                    "holiday": "Urlaub",
+                    "hot_water_only": "Nur Warmwasser",
+                    "heating_cooling_only": "Nur Heizung/Kühlung"
+                }
+            },
+            "smart_grid_status_enum": {
+                "state": {
+                    "grid_blocked_solar_off": "EVU-Sperre u. kein günstiger Strom",
+                    "grid_allowed_solar_off": "EVU-Bezug u. kein günstiger Strom",
+                    "grid_unused_solar_on": "Kein EVU-Bezug u. günstiger Strom",
+                    "grid_blocked_solar_on": "EVU-Sperre u. günstiger Strom"
+                }
+            },
+            "solar_mode_enum": {
+                "state": {
+                    "auto": "Automatik",
+                    "water": "Warmwasser",
+                    "heating": "Heizen",
+                    "water_heating": "Warmwasser + Heizen",
+                    "source_pool": "Wärmequelle / Pool"
+                }
+            },
+            "valve_state_heating_cooling_enum": {
+                "state": {
+                    "heating": "Heizen",
+                    "cooling": "Kühlen"
+                }
+            },
+            "valve_state_heating_water_enum": {
+                "state": {
+                    "heating": "Heizen",
+                    "hot_water": "Warmwasser"
+                }
+            },
+            "valve_state_storage_heat_source_enum": {
+                "state": {
+                    "storage": "Speicher",
+                    "heat_source": "Wärmequelle"
+                }
+            },
+            "valve_state_heat_source_cold_storage_enum": {
+                "state": {
+                    "heat_source": "Wärmequelle",
+                    "cold_storage": "Kältespeicher"
+                }
+            },
+            "valve_state_storage_bypass_enum": {
+                "state": {
+                    "storage": "Speicher",
+                    "bypass": "Bypass"
+                }
+            }
+        }
     }
 }
 
