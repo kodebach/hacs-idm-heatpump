@@ -102,6 +102,7 @@ class IdmSensorAddress(BaseSensorAddress[_T]):
 
     device_class: SensorDeviceClass | None = None
     state_class: SensorStateClass | None = None
+    translation_key: str | None = None
 
 
 @dataclass(kw_only=True)
@@ -288,6 +289,7 @@ class _EnumSensorAddress(IdmSensorAddress[_EnumT], Generic[_EnumT]):
             name=f"{config_entry.data.get(CONF_DISPLAY_NAME)}: {SENSOR_NAMES.get(self.address)}",
             device_class=self.device_class,
             state_class=self.state_class,
+            translation_key=self.translation_key,
         )
 
 
@@ -317,6 +319,7 @@ class _BitFieldSensorAddress(IdmSensorAddress[_FlagT], Generic[_FlagT]):
             name=f"{config_entry.data.get(CONF_DISPLAY_NAME)}: {SENSOR_NAMES.get(self.address)}",
             device_class=self.device_class,
             state_class=self.state_class,
+            translation_key=self.translation_key,
         )
 
 
@@ -364,6 +367,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             name=f"mode_circuit_{circuit_name}",
             device_class=SensorDeviceClass.ENUM,
             supported_features=SensorFeatures.SET_CIRCUIT_MODE,
+            translation_key="circuit_mode_enum",
         ),
         _FloatSensorAddress(
             address=1401 + offset * 2,
@@ -448,6 +452,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             enum=ActiveCircuitMode,
             address=1498 + offset,
             name=f"mode_active_circuit_{circuit_name}",
+            translation_key="active_circuit_mode_enum",
         ),
         _UCharSensorAddress(
             address=1505 + offset,
@@ -501,6 +506,7 @@ class ZoneModule:
                 enum=ZoneMode,
                 address=ZONE_OFFSETS[self.index],
                 name=f"zone_{self.index+1}_mode",
+                translation_key="zone_mode_enum",
             ),
             *[
                 s
@@ -541,6 +547,7 @@ class ZoneModule:
                         force_single=True,
                         device_class=SensorDeviceClass.ENUM,
                         supported_features=SensorFeatures.SET_ROOM_MODE,
+                        translation_key="room_mode_enum",
                     ),
                 ]
             ],
@@ -653,11 +660,13 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             name="status_system",
             device_class=SensorDeviceClass.ENUM,
             supported_features=SensorFeatures.SET_SYSTEM_STATUS,
+            translation_key="system_status_enum",
         ),
         _EnumSensorAddress(
             enum=SmartGridStatus,
             address=1006,
             name="status_smart_grid",
+            translation_key="smart_grid_status_enum",
         ),
         _FloatSensorAddress(
             address=1008,
@@ -788,6 +797,7 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             flag=HeatPumpStatus,
             address=1090,
             name="status_heat_pump",
+            translation_key="heat_pump_status_enum",
         ),
         _WordSensorAddress(
             address=1104,
@@ -833,41 +843,49 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             address=1110,
             name="valve_state_circuit_heating_cooling",
             enum=ValveStateHeatingCooling,
+            translation_key="valve_state_heating_cooling_enum",
         ),
         _EnumSensorAddress(
             address=1111,
             name="valve_state_storage_heating_cooling",
             enum=ValveStateHeatingCooling,
+            translation_key="valve_state_heating_cooling_enum",
         ),
         _EnumSensorAddress(
             address=1112,
             name="valve_state_main_heating_water",
             enum=ValveStateHeatingWater,
+            translation_key="valve_state_heating_water_enum",
         ),
         _EnumSensorAddress(
             address=1113,
             name="valve_state_source_heating_cooling",
             enum=ValveStateHeatingCooling,
+            translation_key="valve_state_heating_cooling_enum",
         ),
         _EnumSensorAddress(
             address=1114,
             name="valve_state_solar_heating_water",
             enum=ValveStateHeatingWater,
+            translation_key="valve_state_heating_water_enum",
         ),
         _EnumSensorAddress(
             address=1115,
             name="valve_state_solar_storage_source",
             enum=ValveStateStorageHeatSource,
+            translation_key="valve_state_storage_heat_source_enum",
         ),
         _EnumSensorAddress(
             address=1116,
             name="valve_state_isc_heating_cooling",
             enum=ValveStateHeatSourceColdStorage,
+            translation_key="valve_state_heat_source_cold_storage_enum",
         ),
         _EnumSensorAddress(
             address=1117,
             name="valve_state_isc_bypass",
             enum=ValveStateStorageBypass,
+            translation_key="valve_state_storage_bypass_enum",
         ),
         _WordSensorAddress(
             address=1120,
@@ -1073,6 +1091,7 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             enum=SolarMode,
             address=1856,
             name="mode_solar",
+            translation_key="solar_mode_enum",
         ),
         _FloatSensorAddress(
             address=1857,
@@ -1099,6 +1118,7 @@ SENSOR_ADDRESSES: dict[str, IdmSensorAddress] = {
             flag=IscMode,
             address=1874,
             name="mode_isc",
+            translation_key="isc_mode_enum",
         ),
         _FloatSensorAddress(
             address=4122,
