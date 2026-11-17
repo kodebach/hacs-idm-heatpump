@@ -409,6 +409,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
+            supported_features=SensorFeatures.SET_TEMPERATURE,
             min_value=5,
             max_value=95,
         ),
@@ -418,6 +419,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
+            supported_features=SensorFeatures.SET_TEMPERATURE,
             min_value=-10,
             max_value=80,
         ),
@@ -427,6 +429,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
+            supported_features=SensorFeatures.SET_TEMPERATURE,
             min_value=-10,
             max_value=80,
         ),
@@ -445,6 +448,7 @@ def heating_circuit_sensors(circuit: HeatingCircuit) -> list[IdmSensorAddress]:
             unit=UnitOfTemperature.CELSIUS,
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
+            supported_features=SensorFeatures.SET_TEMPERATURE,
             min_value=5,
             max_value=95,
         ),
@@ -505,7 +509,7 @@ class ZoneModule:
             _EnumSensorAddress(
                 enum=ZoneMode,
                 address=ZONE_OFFSETS[self.index],
-                name=f"zone_{self.index+1}_mode",
+                name=f"zone_{self.index + 1}_mode",
                 translation_key="zone_mode_enum",
             ),
             *[
@@ -514,7 +518,7 @@ class ZoneModule:
                 for s in [
                     _FloatSensorAddress(
                         address=ZONE_OFFSETS[self.index] + ROOM_OFFSETS[room],
-                        name=f"zone_{self.index+1}_room_{room+1}_temp_current",
+                        name=f"zone_{self.index + 1}_room_{room + 1}_temp_current",
                         unit=UnitOfTemperature.CELSIUS,
                         device_class=SensorDeviceClass.TEMPERATURE,
                         state_class=SensorStateClass.MEASUREMENT,
@@ -524,7 +528,7 @@ class ZoneModule:
                     ),
                     _FloatSensorAddress(
                         address=ZONE_OFFSETS[self.index] + ROOM_OFFSETS[room] + 2,
-                        name=f"zone_{self.index+1}_room_{room+1}_temp_target",
+                        name=f"zone_{self.index + 1}_room_{room + 1}_temp_target",
                         unit=UnitOfTemperature.CELSIUS,
                         device_class=SensorDeviceClass.TEMPERATURE,
                         state_class=SensorStateClass.MEASUREMENT,
@@ -532,7 +536,7 @@ class ZoneModule:
                     ),
                     _UCharSensorAddress(
                         address=ZONE_OFFSETS[self.index] + ROOM_OFFSETS[room] + 4,
-                        name=f"zone_{self.index+1}_room_{room+1}_humidity",
+                        name=f"zone_{self.index + 1}_room_{room + 1}_humidity",
                         unit=PERCENTAGE,
                         device_class=SensorDeviceClass.HUMIDITY,
                         state_class=SensorStateClass.MEASUREMENT,
@@ -543,7 +547,7 @@ class ZoneModule:
                     _EnumSensorAddress(
                         enum=RoomMode,
                         address=ZONE_OFFSETS[self.index] + ROOM_OFFSETS[room] + 5,
-                        name=f"zone_{self.index+1}_room_{room+1}_mode",
+                        name=f"zone_{self.index + 1}_room_{room + 1}_mode",
                         force_single=True,
                         device_class=SensorDeviceClass.ENUM,
                         supported_features=SensorFeatures.SET_ROOM_MODE,
@@ -559,12 +563,12 @@ class ZoneModule:
         sensors = [
             IdmBinarySensorAddress(
                 address=ZONE_OFFSETS[self.index] + 1,
-                name=f"zone_{self.index+1}_dehumidifier",
+                name=f"zone_{self.index + 1}_dehumidifier",
             ),
             *[
                 IdmBinarySensorAddress(
                     address=ZONE_OFFSETS[self.index] + ROOM_OFFSETS[room] + 6,
-                    name=f"zone_{self.index+1}_room_{room+1}_relay",
+                    name=f"zone_{self.index + 1}_room_{room + 1}_relay",
                 )
                 for room in range(self.room_count)
             ],
@@ -574,7 +578,7 @@ class ZoneModule:
             sensors.append(
                 IdmBinarySensorAddress(
                     address=ZONE_OFFSETS[self.index] + 64,
-                    name=f"zone_{self.index+1}_room_9_relay",
+                    name=f"zone_{self.index + 1}_room_9_relay",
                 )
             )
 
@@ -1400,35 +1404,35 @@ SENSOR_NAMES: dict[int, str] = {
         zn
         for zone in range(10)
         for zn in [
-            (ZONE_OFFSETS[zone], f"Zonenmodul {zone+1} Modus"),
-            (ZONE_OFFSETS[zone] + 1, f"Zonenmodul {zone+1} Entfeuchtungsausgang"),
+            (ZONE_OFFSETS[zone], f"Zonenmodul {zone + 1} Modus"),
+            (ZONE_OFFSETS[zone] + 1, f"Zonenmodul {zone + 1} Entfeuchtungsausgang"),
             *[
                 rn
                 for room in range(8)
                 for rn in [
                     (
                         ZONE_OFFSETS[zone] + ROOM_OFFSETS[room],
-                        f"Zonenmodul {zone+1} Raum {room+1} Raumtemperatur",
+                        f"Zonenmodul {zone + 1} Raum {room + 1} Raumtemperatur",
                     ),
                     (
                         ZONE_OFFSETS[zone] + ROOM_OFFSETS[room] + 2,
-                        f"Zonenmodul {zone+1} Raum {room+1} Raumsolltemperatur",
+                        f"Zonenmodul {zone + 1} Raum {room + 1} Raumsolltemperatur",
                     ),
                     (
                         ZONE_OFFSETS[zone] + ROOM_OFFSETS[room] + 4,
-                        f"Zonenmodul {zone+1} Raum {room+1} Raumfeuchte",
+                        f"Zonenmodul {zone + 1} Raum {room + 1} Raumfeuchte",
                     ),
                     (
                         ZONE_OFFSETS[zone] + ROOM_OFFSETS[room] + 5,
-                        f"Zonenmodul {zone+1} Raum {room+1} Betriebsart",
+                        f"Zonenmodul {zone + 1} Raum {room + 1} Betriebsart",
                     ),
                     (
                         ZONE_OFFSETS[zone] + ROOM_OFFSETS[room] + 6,
-                        f"Zonenmodul {zone+1} Raum {room+1} Status Relais",
+                        f"Zonenmodul {zone + 1} Raum {room + 1} Status Relais",
                     ),
                 ]
             ],
-            (ZONE_OFFSETS[zone] + 64, f"Zonenmodul {zone+1} Raum 9 Status Relais"),
+            (ZONE_OFFSETS[zone] + 64, f"Zonenmodul {zone + 1} Raum 9 Status Relais"),
         ]
     ),
 }
